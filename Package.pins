@@ -1,0 +1,12 @@
+{
+  "autoPin": true,
+  "pins": [
+    {
+      "package": "RxSwift",
+      "reason": null,
+      "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
+      "version": "3.4.0"
+    }
+  ],
+  "version": 1
+}

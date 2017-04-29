@@ -1,0 +1,23 @@
+language: objective-c
+
+os:
+    - osx
+language: generic
+sudo: required
+dist: trusty
+osx_image: xcode8.3
+env:
+  - BUILD="pod lib lint RxFeedback.podspec --verbose"
+  - BUILD="swift build"
+  - BUILD="carthage build --no-skip-current --platform iOS"
+  - BUILD="carthage build --no-skip-current --platform tvOS"
+
+script: $BUILD
+
+notifications:
+  slack: rxswift:3ykt2Z61f8GkdvhCZTYPduOL
+  email: false
+
+after_success:
+  - sleep 5 # workaround https://github.com/travis-ci/travis-ci/issues/4725
+
