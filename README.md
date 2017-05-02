@@ -6,6 +6,32 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/RxFeedback.png" width="502px" />
 
+```swift
+/**
+     Simulation of a discrete system (finite-state machine) with feedback loops.
+     Interpretations:
+     - [system with feedback loops](https://en.wikipedia.org/wiki/Control_theory)
+     - [fixpoint solver](https://en.wikipedia.org/wiki/Fixed_point)
+     - [local equilibrium point calculator](https://en.wikipedia.org/wiki/Mechanical_equilibrium)
+     - ....
+
+     System simulation will be started upon subscription and stopped after subscription is disposed.
+
+     System state is represented as a `State` parameter.
+     Events are represented by `Event` parameter.
+
+     - parameter initialState: Initial state of the system.
+     - parameter accumulator: Calculates new system state from existing state and a transition event (system integrator, reducer).
+     - parameter feedback: Feedback loops that produce events depending on current system state.
+     - returns: Current state of the system.
+     */
+    public static func system<State, Event>(
+            initialState: State,
+            reduce: @escaping (State, Event) -> State,
+            feedback: (Observable<State>) -> Observable<Event>...
+        ) -> Observable<State>
+```
+
 # Why
 
 * Simple
@@ -83,25 +109,15 @@ Observable.system(
         },
     scheduler: MainScheduler.instance,
     feedback:
-        // UI is user feedback
-        UI.bind { state in (
-            [
-                state.map { $0.myStateOfMind }.bind(to: myLabel.rx.text),
-                state.map { $0.machineStateOfMind }.bind(to: machinesLabel.rx.text),
-                state.map { !$0.doIHaveTheBall }.bind(to: throwTheBallButton.rx.isHidden),
-            ], [
-                throwTheBallButton.rx.tap.map { Event.throwToMachine }
-            ]
-        )},
+        // UI is human feedback
+        bindUI,
         // NoUI, machine feedback
-        react(query: { $0.machinePitching }, effects: pitchBall)
-    )
-
-let pitchBall =  { () -> Observable<Event> in
-    return Observable<Int>
-            .timer(1.0, scheduler: MainScheduler.instance)
-            .map { _ in Event.throwToHuman }
-}
+        react(query: { $0.machinePitching }, effects: { () -> Observable<Event> in
+            return Observable<Int>
+                .timer(1.0, scheduler: MainScheduler.instance)
+                .map { _ in Event.throwToHuman }
+        })
+)
 
 ```
 
@@ -115,27 +131,14 @@ Driver.system(
     reduce: State.reduce,
     feedback:
         // UI, user feedback
-        UI.bind { state in (
-            [
-                state.map { $0.search }.drive(searchText.rx.text),
-                state.map { $0.lastError?.displayMessage }.drive(status.rx.textOrHide),
-                state.map { $0.results }.drive(searchResults.rx.items(cellIdentifier: "repo"))(configureRepository),
-
-                state.map { $0.loadNextPage?.description }.drive(loadNextPageLabel.rx.textOrHide),
-            ], [
-                searchText.rx.text.orEmpty.changed.asDriver().map(Event.searchChanged),
-                triggerLoadNextPage(state)
-            ]
-        ) },
+        bindUI,
         // NoUI, automatic feedback
-        react(query: { $0.loadNextPage }, effects: loadNextPage)
+        react(query: { $0.loadNextPage }, effects: { resource in
+            return URLSession.shared.loadRepositories(resource: resource)
+                .asDriver(onErrorJustReturn: .failure(.offline))
+                .map(Event.response)
+        })
     )
-
-func loadNextPage(_ resource: URL) -> Driver<Event> {
-    return URLSession.shared.loadRepositories(resource: resource)
-        .asDriver(onErrorJustReturn: .failure(.offline))
-        .map(Event.response)
-}
 ```
 
 Run `RxFeedback.xcodeproj` > `Example` to find out more.

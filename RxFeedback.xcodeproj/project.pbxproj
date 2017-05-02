@@ -1831,6 +1831,7 @@
 				C83B7CD11EB7BCE5003055E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DD7502821C68FCFC006590AF /* Build configuration list for PBXNativeTarget "RxFeedback-macOS Tests" */ = {
 			isa = XCConfigurationList;

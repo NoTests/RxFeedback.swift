@@ -59,6 +59,7 @@ extension State {
         case .searchChanged(let search):
             var result = state
             result.search = search
+            result.results = []
             return result
         case .startLoadingNextPage:
             var result = state
@@ -105,7 +106,7 @@ class GithubPaginatedSearchViewController: UIViewController {
 
         searchResults.register(UITableViewCell.self, forCellReuseIdentifier: "repo")
 
-        func triggerLoadNextPage(_ state: Driver<State>) -> Driver<Event> {
+        let triggerLoadNextPage: (Driver<State>) -> Driver<Event> = { state in
             return state.flatMapLatest { state -> Driver<Event> in
                 if state.shouldLoadNextPage {
                     return Driver.empty()
@@ -120,32 +121,32 @@ class GithubPaginatedSearchViewController: UIViewController {
             cell.detailTextLabel?.text = repo.url.description
         }
 
-        func loadNextPage(_ resource: URL) -> Driver<Event> {
-            return URLSession.shared.loadRepositories(resource: resource)
-                .asDriver(onErrorJustReturn: .failure(.offline))
-                .map(Event.response)
-        }
+        let bindUI: (Driver<State>) -> Driver<Event> = UI.bind { state in (
+            [
+                state.map { $0.search }.drive(searchText.rx.text),
+                state.map { $0.lastError?.displayMessage }.drive(status.rx.textOrHide),
+                state.map { $0.results }.drive(searchResults.rx.items(cellIdentifier: "repo"))(configureRepository),
+
+                state.map { $0.loadNextPage?.description }.drive(loadNextPageLabel.rx.textOrHide),
+                ], [
+                    searchText.rx.text.orEmpty.changed.asDriver().map(Event.searchChanged),
+                    triggerLoadNextPage(state)
+            ]
+        )}
 
         Driver.system(
             initialState: State.empty,
             reduce: State.reduce,
             feedback:
                 // UI, user feedback
-                UI.bind { state in (
-                    [
-                        state.map { $0.search }.drive(searchText.rx.text),
-                        state.map { $0.lastError?.displayMessage }.drive(status.rx.textOrHide),
-                        state.map { $0.results }.drive(searchResults.rx.items(cellIdentifier: "repo"))(configureRepository),
-
-                        state.map { $0.loadNextPage?.description }.drive(loadNextPageLabel.rx.textOrHide),
-                    ], [
-                        searchText.rx.text.orEmpty.changed.asDriver().map(Event.searchChanged),
-                        triggerLoadNextPage(state)
-                    ]
-                ) },
+                bindUI,
                 // NoUI, automatic feedback
-                react(query: { $0.loadNextPage }, effects: loadNextPage)
-        )
+                react(query: { $0.loadNextPage }, effects: { resource in
+                    return URLSession.shared.loadRepositories(resource: resource)
+                        .asDriver(onErrorJustReturn: .failure(.offline))
+                        .map(Event.response)
+                })
+            )
             .drive()
             .disposed(by: disposeBag)
     }

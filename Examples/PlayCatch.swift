@@ -42,6 +42,16 @@ class PlayCatchViewController: UIViewController {
                 .map { _ in Event.throwToHuman }
         }
 
+        let bindUI: (Observable<State>) -> Observable<Event> = UI.bind { state in (
+            [
+                state.map { $0.myStateOfMind }.bind(to: myLabel.rx.text),
+                state.map { $0.machineStateOfMind }.bind(to: machinesLabel.rx.text),
+                state.map { !$0.doIHaveTheBall }.bind(to: throwTheBallButton.rx.isHidden),
+                ], [
+                    throwTheBallButton.rx.tap.map { Event.throwToMachine }
+            ]
+        )}
+
         Observable.system(
             initialState: State.humanHasIt,
             reduce: { (state: State, event: Event) -> State in
@@ -55,17 +65,13 @@ class PlayCatchViewController: UIViewController {
             scheduler: MainScheduler.instance,
             feedback:
                 // UI is human feedback
-                UI.bind { state in (
-                    [
-                        state.map { $0.myStateOfMind }.bind(to: myLabel.rx.text),
-                        state.map { $0.machineStateOfMind }.bind(to: machinesLabel.rx.text),
-                        state.map { !$0.doIHaveTheBall }.bind(to: throwTheBallButton.rx.isHidden),
-                    ], [
-                        throwTheBallButton.rx.tap.map { Event.throwToMachine }
-                    ]
-                )},
+                bindUI,
                 // NoUI, machine feedback
-                react(query: { $0.machinePitching }, effects: pitchBall)
+                react(query: { $0.machinePitching }, effects: { () -> Observable<Event> in
+                    return Observable<Int>
+                        .timer(1.0, scheduler: MainScheduler.instance)
+                        .map { _ in Event.throwToHuman }
+                })
         )
         .subscribe()
         .disposed(by: disposeBag)
