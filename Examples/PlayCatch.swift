@@ -36,19 +36,13 @@ class PlayCatchViewController: UIViewController {
         let machinesLabel = self.machinesLabel!
         let throwTheBallButton = self.throwTheBallButton!
 
-        let pitchBall =  { () -> Observable<Event> in
-            return Observable<Int>
-                .timer(1.0, scheduler: MainScheduler.instance)
-                .map { _ in Event.throwToHuman }
-        }
-
         let bindUI: (Observable<State>) -> Observable<Event> = UI.bind { state in (
             [
                 state.map { $0.myStateOfMind }.bind(to: myLabel.rx.text),
                 state.map { $0.machineStateOfMind }.bind(to: machinesLabel.rx.text),
                 state.map { !$0.doIHaveTheBall }.bind(to: throwTheBallButton.rx.isHidden),
-                ], [
-                    throwTheBallButton.rx.tap.map { Event.throwToMachine }
+            ], [
+                throwTheBallButton.rx.tap.map { Event.throwToMachine }
             ]
         )}
 
