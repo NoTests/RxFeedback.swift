@@ -82,6 +82,26 @@
                                             <segue destination="Snz-UR-rCV" kind="show" id="jFf-bA-crZ"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="OpI-Mo-pNC" style="IBUITableViewCellStyleDefault" id="IUp-TB-etI">
+                                        <rect key="frame" x="0.0" y="132" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IUp-TB-etI" id="MhA-R7-Yd6">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Todo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OpI-Mo-pNC">
+                                                    <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="Aoa-E6-vWK" kind="show" id="oQU-Wp-Ftb"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -149,7 +169,28 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Kq-My-cxd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1958" y="364"/>
+            <point key="canvasLocation" x="1977" y="348"/>
+        </scene>
+        <!--Tasks-->
+        <scene sceneID="eQH-bS-eJp">
+            <objects>
+                <viewController id="Aoa-E6-vWK" customClass="TodoViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="rkL-E8-SCk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Tasks" id="J5I-mh-W3E">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" style="done" id="r2I-kR-Z0m"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="editDone" destination="r2I-kR-Z0m" id="630-Bh-rDn"/>
+                        <outlet property="tableView" destination="rkL-E8-SCk" id="Cqe-iy-YWS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YSa-TN-twg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="250" y="1263"/>
         </scene>
         <!--Play Catch View Controller-->
         <scene sceneID="nZ7-32-OEF">

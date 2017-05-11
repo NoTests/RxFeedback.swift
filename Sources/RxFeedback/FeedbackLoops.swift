@@ -132,3 +132,37 @@ public func react<State, Control, Event>(
         }
     }
 }
+
+/**
+ Control feedback loop that tries to immediatelly perform the latest required effect.
+
+ * State: State type of the system.
+ * Control: Subset of state used to control the feedback loop.
+
+ When query result exists (not `nil`), feedback loop is active and it performs events.
+
+ When query result is `nil`, feedback loops doesn't perform any effect.
+
+ - parameter query: State type of the system
+ - parameter effects: Control state which is subset of state.
+ - returns: Feedback loop performing the effects.
+ */
+public func react<State, Control: Hashable, Event>(
+    query: @escaping (State) -> Set<Control>,
+    effects: @escaping (Control) -> Driver<Event>
+    ) -> (Driver<State>) -> Driver<Event> {
+    return { state in
+        let query = state.map(query)
+
+        let newQueries = Driver.zip(query, query.startWith(Set())) { $0.subtracting($1) }
+
+        return newQueries.flatMap { controls in
+            return Driver.merge(controls.map { control -> Driver<Event> in
+                return query.filter { !$0.contains(control) }
+                    .map { _ in Driver<Event>.empty() }
+                    .startWith(effects(control))
+                    .switchLatest()
+            })
+        }
+    }
+}

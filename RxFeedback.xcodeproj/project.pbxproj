@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		52D6D9871BEFF229002C0205 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
 		52D6D99B1BEFF375002C0205 /* RxFeedbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D6D9971BEFF375002C0205 /* RxFeedbackTests.swift */; };
+		C80987441EC4882E00EE2C23 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987431EC4882E00EE2C23 /* Todo.swift */; };
+		C80987621EC4A28300EE2C23 /* Todo+Plumbing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */; };
+		C80987631EC4A28E00EE2C23 /* Todo+Lenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */; };
+		C80987641EC4A29700EE2C23 /* Todo+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987601EC4A1BF00EE2C23 /* Todo+Storage.swift */; };
+		C80987661EC4A4CB00EE2C23 /* Safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987651EC4A4CB00EE2C23 /* Safe.swift */; };
+		C80987681EC4BC2E00EE2C23 /* Todo+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987671EC4BC2E00EE2C23 /* Todo+UI.swift */; };
+		C80987691EC4BCE400EE2C23 /* Todo+Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987581EC4916000EE2C23 /* Todo+Feedback.swift */; };
+		C809876B1EC4CEB900EE2C23 /* Array+NSMutableString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809876A1EC4CEB900EE2C23 /* Array+NSMutableString.swift */; };
+		C81CFE741EC4E48600D19DC3 /* UIAlertController+Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */; };
 		C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
 		C834A86A1EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
 		C834A86B1EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
@@ -296,6 +305,15 @@
 		52D6DA0F1BF000BD002C0205 /* RxFeedback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxFeedback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD2FAA261CD0B6D800659CF4 /* RxFeedback.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RxFeedback.plist; sourceTree = "<group>"; };
 		AD2FAA281CD0B6E100659CF4 /* RxFeedbackTests.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RxFeedbackTests.plist; sourceTree = "<group>"; };
+		C80987431EC4882E00EE2C23 /* Todo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		C80987581EC4916000EE2C23 /* Todo+Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+Feedback.swift"; sourceTree = "<group>"; };
+		C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+Lenses.swift"; sourceTree = "<group>"; };
+		C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+Plumbing.swift"; sourceTree = "<group>"; };
+		C80987601EC4A1BF00EE2C23 /* Todo+Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+Storage.swift"; sourceTree = "<group>"; };
+		C80987651EC4A4CB00EE2C23 /* Safe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Safe.swift; sourceTree = "<group>"; };
+		C80987671EC4BC2E00EE2C23 /* Todo+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+UI.swift"; sourceTree = "<group>"; };
+		C809876A1EC4CEB900EE2C23 /* Array+NSMutableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+NSMutableString.swift"; sourceTree = "<group>"; };
+		C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Prompt.swift"; sourceTree = "<group>"; };
 		C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableType+RxFeedback.swift"; sourceTree = "<group>"; };
 		C834A86D1EB6796D00E6B15E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C834A8761EB679FB00E6B15E /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -404,6 +422,11 @@
 		52D6D9721BEFF229002C0205 = {
 			isa = PBXGroup;
 			children = (
+				C834A8671EB6794F00E6B15E /* RxFeedback */,
+				C89B963E1EB697D200BDAB24 /* Examples */,
+				52D6D97D1BEFF229002C0205 /* Products */,
+				52D6D99C1BEFF38C002C0205 /* Configs */,
+				C89B96311EB697BF00BDAB24 /* Support */,
 				C83B7C4F1EB7BA14003055E0 /* Build */,
 				C83B7C2B1EB7B794003055E0 /* dependencies.sh */,
 				C84645941EB794BC0008AD87 /* Package.swift */,
@@ -411,11 +434,6 @@
 				C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */,
 				C834A86D1EB6796D00E6B15E /* README.md */,
 				52D6D9971BEFF375002C0205 /* RxFeedbackTests.swift */,
-				52D6D99C1BEFF38C002C0205 /* Configs */,
-				C89B96311EB697BF00BDAB24 /* Support */,
-				C89B963E1EB697D200BDAB24 /* Examples */,
-				52D6D97D1BEFF229002C0205 /* Products */,
-				C834A8671EB6794F00E6B15E /* RxFeedback */,
 			);
 			sourceTree = "<group>";
 		};
@@ -540,6 +558,9 @@
 				C89B96381EB697BF00BDAB24 /* Info.plist */,
 				C84645901EB775AF0008AD87 /* SystemError.swift */,
 				C84645921EB78D320008AD87 /* UILabel+Extensions.swift */,
+				C80987651EC4A4CB00EE2C23 /* Safe.swift */,
+				C809876A1EC4CEB900EE2C23 /* Array+NSMutableString.swift */,
+				C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -550,6 +571,12 @@
 				C89B963F1EB697D200BDAB24 /* Counter.swift */,
 				C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */,
 				C846457A1EB76DD60008AD87 /* GithubPaginatedSearch.swift */,
+				C80987431EC4882E00EE2C23 /* Todo.swift */,
+				C80987671EC4BC2E00EE2C23 /* Todo+UI.swift */,
+				C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */,
+				C80987601EC4A1BF00EE2C23 /* Todo+Storage.swift */,
+				C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */,
+				C80987581EC4916000EE2C23 /* Todo+Feedback.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -1184,11 +1211,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C80987441EC4882E00EE2C23 /* Todo.swift in Sources */,
+				C80987661EC4A4CB00EE2C23 /* Safe.swift in Sources */,
 				C84645931EB78D320008AD87 /* UILabel+Extensions.swift in Sources */,
 				C846457B1EB76DD60008AD87 /* GithubPaginatedSearch.swift in Sources */,
 				C89B96401EB697D200BDAB24 /* Counter.swift in Sources */,
 				C84645911EB775AF0008AD87 /* SystemError.swift in Sources */,
+				C80987691EC4BCE400EE2C23 /* Todo+Feedback.swift in Sources */,
+				C80987641EC4A29700EE2C23 /* Todo+Storage.swift in Sources */,
+				C81CFE741EC4E48600D19DC3 /* UIAlertController+Prompt.swift in Sources */,
+				C809876B1EC4CEB900EE2C23 /* Array+NSMutableString.swift in Sources */,
+				C80987681EC4BC2E00EE2C23 /* Todo+UI.swift in Sources */,
+				C80987621EC4A28300EE2C23 /* Todo+Plumbing.swift in Sources */,
 				C89B96391EB697BF00BDAB24 /* AppDelegate.swift in Sources */,
+				C80987631EC4A28E00EE2C23 /* Todo+Lenses.swift in Sources */,
 				C89B965F1EB69B2100BDAB24 /* PlayCatch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
