@@ -32,7 +32,7 @@ extension ObservableType where E == Any {
             initialState: State,
             reduce: @escaping (State, Event) -> State,
             scheduler: SchedulerType,
-            feedback: (Observable<State>) -> Observable<Event>...
+            feedback: [(Observable<State>) -> Observable<Event>]
         ) -> Observable<State> {
         return Observable<State>.deferred {
             let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
@@ -46,6 +46,15 @@ extension ObservableType where E == Any {
                     replaySubject.onNext(output)
                 })
         }
+    }
+
+    public static func system<State, Event>(
+            initialState: State,
+            reduce: @escaping (State, Event) -> State,
+            scheduler: SchedulerType,
+            feedback: (Observable<State>) -> Observable<Event>...
+        ) -> Observable<State> {
+        return system(initialState: initialState, reduce: reduce, scheduler: scheduler, feedback: feedback)
     }
 }
 
@@ -71,7 +80,7 @@ extension SharedSequenceConvertibleType where E == Any {
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
-            feedback: (SharedSequence<SharingStrategy, State>) -> SharedSequence<SharingStrategy, Event>...
+            feedback: [(SharedSequence<SharingStrategy, State>) -> SharedSequence<SharingStrategy, Event>]
         ) -> SharedSequence<SharingStrategy, State> {
         return SharedSequence<SharingStrategy, State>.deferred {
             let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
@@ -86,5 +95,13 @@ extension SharedSequenceConvertibleType where E == Any {
                     replaySubject.onNext(output)
                 })
         }
+    }
+
+    public static func system<State, Event>(
+            initialState: State,
+            reduce: @escaping (State, Event) -> State,
+            feedback: (SharedSequence<SharingStrategy, State>) -> SharedSequence<SharingStrategy, Event>...
+        ) -> SharedSequence<SharingStrategy, State> {
+        return system(initialState: initialState, reduce: reduce, feedback: feedback)
     }
 }
