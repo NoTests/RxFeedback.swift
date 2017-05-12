@@ -28,7 +28,6 @@ class TodoViewController: UIViewController {
         let synchronize: (Task) -> Single<SyncState> = { task in
             return Single.just(arc4random_uniform(3) != 0 ? .success : .failed(SystemError("")))
                 .delaySubscription(TimeInterval(arc4random_uniform(3)) / 3.0 * 2.0, scheduler: MainScheduler.instance)
-                .debug()
         }
 
         let tasks = [

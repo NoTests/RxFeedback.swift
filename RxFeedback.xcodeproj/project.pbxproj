@@ -572,11 +572,11 @@
 				C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */,
 				C846457A1EB76DD60008AD87 /* GithubPaginatedSearch.swift */,
 				C80987431EC4882E00EE2C23 /* Todo.swift */,
+				C80987581EC4916000EE2C23 /* Todo+Feedback.swift */,
 				C80987671EC4BC2E00EE2C23 /* Todo+UI.swift */,
 				C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */,
 				C80987601EC4A1BF00EE2C23 /* Todo+Storage.swift */,
 				C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */,
-				C80987581EC4916000EE2C23 /* Todo+Feedback.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";

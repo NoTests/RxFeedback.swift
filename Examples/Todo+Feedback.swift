@@ -14,7 +14,10 @@ import RxFeedback
 extension Todo {
     typealias Feedback = (Driver<Todo>) -> Driver<Todo.Event>
     
-    static func system(initialState: Todo, ui: @escaping Feedback, synchronizeTask: @escaping (Task) -> Single<SyncState>) -> Driver<Todo> {
+    static func system(initialState: Todo,
+                       ui: @escaping Feedback,
+                       synchronizeTask: @escaping (Task) -> Single<SyncState>) -> Driver<Todo> {
+
         let synchronizeFeedback: Feedback = react(query: { $0.tasksToSynchronize }) { task -> Driver<Todo.Event> in
             return synchronizeTask(task.value)
                 .map { Todo.Event.synchronizationChanged(task, $0) }
