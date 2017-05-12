@@ -25,9 +25,10 @@ class TodoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // this dependency would be ideally injected in some way
         let synchronize: (Task) -> Single<SyncState> = { task in
             return Single.just(arc4random_uniform(3) != 0 ? .success : .failed(SystemError("")))
-                .delaySubscription(TimeInterval(arc4random_uniform(3)) / 3.0 * 2.0, scheduler: MainScheduler.instance)
+                .delaySubscription(0.5 + TimeInterval(arc4random_uniform(3)) / 3.0 * 2.0, scheduler: MainScheduler.instance)
         }
 
         let tasks = [
@@ -70,11 +71,12 @@ class TodoViewController: UIViewController {
         return UI.bind { state in
             let tasks = state.map { [Row.new] + ($0.unfinishedTasks + $0.completedTasks).map(Row.task) }
             let editing = state.map { $0.isEditing }
+            let editButtonTitle = editing.map { $0 ? "Done" : "Edit" }
             
             return ([
-                    tasks.drive(self.tableView!.rx.items(cellIdentifier: "Cell"))(bindCell),
-                    editing.drive(onNext: { tableView.isEditing = $0 }),
-                    editing.map { $0 ? "Done" : "Edit" }.drive(editDone.rx.title)
+                    tasks.drive(tableView.rx.items(cellIdentifier: "Cell"))(bindCell),
+                    editing.drive(tableView.rx.isEditing),
+                    editButtonTitle.drive(editDone.rx.title)
                 ],
                 [
                     editDone.rx.tap.asDriver().map { _ in Todo.Event.toggleEditingMode },

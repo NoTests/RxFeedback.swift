@@ -42,10 +42,6 @@ struct Todo {
     var tasks: Storage<Version<Task>> = Storage()
 
     var isEditing: Bool = false
-
-    static func `for`(tasks: [Task]) -> Todo {
-        return tasks.reduce(Todo()) { (all, task) in Todo.reduce(state: all, event: .created(Version(task)))  }
-    }
 }
 
 extension Todo {
@@ -62,6 +58,12 @@ extension Todo {
         case .toggleEditingMode:
             return state.map { $0.isEditing = !$0.isEditing }
         }
+    }
+}
+
+extension Todo {
+    static func `for`(tasks: [Task]) -> Todo {
+        return tasks.reduce(Todo()) { (all, task) in Todo.reduce(state: all, event: .created(Version(task)))  }
     }
 }
 
