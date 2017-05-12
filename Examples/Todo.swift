@@ -70,7 +70,6 @@ extension Todo {
     var tasksByDate: [Version<Task>] {
         return self.tasks
             .sorted(key: { $0.value.created })
-            .reversed()
     }
     var completedTasks: [Version<Task>] {
         return tasksByDate

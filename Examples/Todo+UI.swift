@@ -25,8 +25,6 @@ class TodoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableView!.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.description())
-
         let synchronize: (Task) -> Single<SyncState> = { task in
             return Single.just(arc4random_uniform(3) != 0 ? .success : .failed(SystemError("")))
                 .delaySubscription(TimeInterval(arc4random_uniform(3)) / 3.0 * 2.0, scheduler: MainScheduler.instance)
@@ -34,8 +32,10 @@ class TodoViewController: UIViewController {
         }
 
         let tasks = [
+            Task.create(title: "Write RxSwift", date: Date()),
             Task.create(title: "Give a lecture", date: Date()),
-            Task.create(title: "Enjoy", date: Date())
+            Task.create(title: "Enjoy", date: Date()),
+            Task.create(title: "Let's stop at Enjoy", date: Date()),
         ]
 
         Todo.system(
@@ -73,7 +73,7 @@ class TodoViewController: UIViewController {
             let editing = state.map { $0.isEditing }
             
             return ([
-                    tasks.drive(self.tableView!.rx.items(cellIdentifier: UITableViewCell.description()))(bindCell),
+                    tasks.drive(self.tableView!.rx.items(cellIdentifier: "Cell"))(bindCell),
                     editing.drive(onNext: { tableView.isEditing = $0 }),
                     editing.map { $0 ? "Done" : "Edit" }.drive(editDone.rx.title)
                 ],
@@ -115,10 +115,10 @@ extension Version where Value == Task {
         }())
     }
     var title: NSAttributedString {
-        return [self.syncTitle,  "  ", self.value.title, " ", self.detail].joinedAttributed(separator: "")
+        return [self.value.title, " ", self.value.isCompleted ? " ✅" : ""].joinedAttributed(separator: "")
     }
     var detail: NSAttributedString {
-        return [self.value.isCompleted ? " ✅" : ""].joinedAttributed(separator: "")
+        return [self.syncTitle,].joinedAttributed(separator: "")
     }
 }
 
