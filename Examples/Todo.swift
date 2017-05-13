@@ -82,7 +82,7 @@ extension Todo {
             .filter { !$0.value.isCompleted && !$0.value.isArchived }
     }
     var tasksToSynchronize: Set<Version<Task>> {
-        return Set(self.tasksByDate.filter { $0.value.needsSynchronization }.prefix(3))
+        return Set(self.tasksByDate.filter { $0.value.needsSynchronization }.prefix(1))
     }
 }
 

@@ -27,8 +27,12 @@ class TodoViewController: UIViewController {
 
         // this dependency would be ideally injected in some way
         let synchronize: (Task) -> Single<SyncState> = { task in
-            return Single.just(arc4random_uniform(3) != 0 ? .success : .failed(SystemError("")))
-                .delaySubscription(0.5 + TimeInterval(arc4random_uniform(3)) / 3.0 * 2.0, scheduler: MainScheduler.instance)
+            return Single<SyncState>.create { single in
+                    let state: SingleEvent<SyncState> = arc4random_uniform(3) != 0 ? .success(.success) : .error(SystemError(""))
+                    single(state)
+                    return Disposables.create()
+                }
+                .delaySubscription(TimeInterval.random(min: 0.5, max: 2.0), scheduler: MainScheduler.instance)
         }
 
         let tasks = [
@@ -36,7 +40,7 @@ class TodoViewController: UIViewController {
             Task.create(title: "Give a lecture", date: Date()),
             Task.create(title: "Enjoy", date: Date()),
             Task.create(title: "Let's stop at Enjoy", date: Date()),
-        ]
+        ] + (1 ... 10).map { Task.create(title: "Task \($0)", date: Date()) }
 
         Todo.system(
             initialState: Todo.for(tasks: tasks),
@@ -47,7 +51,9 @@ class TodoViewController: UIViewController {
         self.tableView!.rx.setDelegate(self)
             .disposed(by: disposeBag)
     }
+}
 
+extension TodoViewController {
     var bindings: Todo.Feedback {
         let bindCell: (Int, Row, UITableViewCell) -> () = { index, element, cell in
             cell.textLabel?.attributedText =  element.title

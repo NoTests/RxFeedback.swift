@@ -18,6 +18,7 @@
 		C80987691EC4BCE400EE2C23 /* Todo+Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987581EC4916000EE2C23 /* Todo+Feedback.swift */; };
 		C809876B1EC4CEB900EE2C23 /* Array+NSMutableString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809876A1EC4CEB900EE2C23 /* Array+NSMutableString.swift */; };
 		C80F72231EC6389A006091FC /* UITableView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80F72221EC6389A006091FC /* UITableView+Rx.swift */; };
+		C80F72261EC63CC1006091FC /* Float+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80F72251EC63CC1006091FC /* Float+Extensions.swift */; };
 		C81CFE741EC4E48600D19DC3 /* UIAlertController+Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */; };
 		C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
 		C834A86A1EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
@@ -315,6 +316,7 @@
 		C80987671EC4BC2E00EE2C23 /* Todo+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+UI.swift"; sourceTree = "<group>"; };
 		C809876A1EC4CEB900EE2C23 /* Array+NSMutableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+NSMutableString.swift"; sourceTree = "<group>"; };
 		C80F72221EC6389A006091FC /* UITableView+Rx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Rx.swift"; sourceTree = "<group>"; };
+		C80F72251EC63CC1006091FC /* Float+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Float+Extensions.swift"; sourceTree = "<group>"; };
 		C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Prompt.swift"; sourceTree = "<group>"; };
 		C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ObservableType+RxFeedback.swift"; sourceTree = "<group>"; };
 		C834A86D1EB6796D00E6B15E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 				C809876A1EC4CEB900EE2C23 /* Array+NSMutableString.swift */,
 				C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */,
 				C80F72221EC6389A006091FC /* UITableView+Rx.swift */,
+				C80F72251EC63CC1006091FC /* Float+Extensions.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1215,6 +1218,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C80987441EC4882E00EE2C23 /* Todo.swift in Sources */,
+				C80F72261EC63CC1006091FC /* Float+Extensions.swift in Sources */,
 				C80987661EC4A4CB00EE2C23 /* Safe.swift in Sources */,
 				C84645931EB78D320008AD87 /* UILabel+Extensions.swift in Sources */,
 				C846457B1EB76DD60008AD87 /* GithubPaginatedSearch.swift in Sources */,
