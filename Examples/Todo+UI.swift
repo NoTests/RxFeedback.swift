@@ -79,12 +79,12 @@ extension TodoViewController {
             let editing = state.map { $0.isEditing }
             let editButtonTitle = editing.map { $0 ? "Done" : "Edit" }
             
-            return ([
+            let subscriptions = [
                     tasks.drive(tableView.rx.items(cellIdentifier: "Cell"))(bindCell),
                     editing.drive(tableView.rx.isEditing),
                     editButtonTitle.drive(editDone.rx.title)
-                ],
-                [
+                ]
+            let events = [
                     editDone.rx.tap.asDriver().map { _ in Todo.Event.toggleEditingMode },
                     
                     tableView.rx.modelSelected(Row.self).asDriver()
@@ -96,7 +96,8 @@ extension TodoViewController {
                             return promptForTask.asDriver(onErrorDriveWith: Driver.empty())
                         }
 
-                ])
+                ]
+            return UI.Bindings(subscriptions: subscriptions, events: events)
         }
     }
 }
