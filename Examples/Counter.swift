@@ -44,13 +44,15 @@ class CounterViewController: UIViewController {
             scheduler: MainScheduler.instance,
             feedback:
                 // UI is user feedback
-                UI.bind { state in
-                    ([
+                UI.bind { state -> UI.Bindings<Event> in
+                    let subscriptions = [
                         state.map(String.init).bind(to: label.rx.text)
-                    ], [
+                    ]
+                    let events = [
                         plus.rx.tap.map { Event.increment },
                         minus.rx.tap.map { Event.decrement }
-                    ])
+                    ]
+                    return UI.Bindings(subscriptions: subscriptions, events: events)
                 }
             )
             .subscribe()
