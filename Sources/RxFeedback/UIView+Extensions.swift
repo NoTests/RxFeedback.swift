@@ -65,11 +65,11 @@ extension UI {
     
     /**
      Bi-directional binding of a system State to UI and UI into Events,
-     Strongify element.
+     Strongify owner.
      */
-    public static func bind<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType, Observable<State>) -> (Bindings<Event>))
-        -> (Observable<State>) -> Observable<Event> where ElementType: AnyObject {
-            return bind(bindingsStrongify(element, bindings))
+    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Observable<State>) -> (Bindings<Event>))
+        -> (Observable<State>) -> Observable<Event> where WeakOwner: AnyObject {
+            return bind(bindingsStrongify(owner, bindings))
     }
 
     /**
@@ -88,31 +88,20 @@ extension UI {
     
     /**
      Bi-directional binding of a system State to UI and UI into Events,
-     Strongify element.
+     Strongify owner.
      */
-    public static func bind<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType, Driver<State>) -> (Bindings<Event>))
-        -> (Driver<State>) -> Driver<Event> where ElementType: AnyObject {
-            return bind(bindingsStrongify(element, bindings))
+    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
+        -> (Driver<State>) -> Driver<Event> where WeakOwner: AnyObject {
+            return bind(bindingsStrongify(owner, bindings))
     }
     
-    
-    private static func bindingsStrongify<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType,  Observable<State>) -> (Bindings<Event>))
-        -> (Observable<State>) -> (Bindings<Event>) where ElementType: AnyObject {
-            return { [weak element] state -> Bindings<Event> in
-                guard let strongElement = element else {
+    private static func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Event>))
+        -> (O) -> (Bindings<Event>) where WeakOwner: AnyObject {
+            return { [weak owner] state -> Bindings<Event> in
+                guard let strongOwner = owner else {
                     return Bindings(subscriptions: [], events: [Observable<Event>]())
                 }
-                return bindings(strongElement, state)
-            }
-    }
-    
-    private static func bindingsStrongify<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType,  Driver<State>) -> (Bindings<Event>))
-        -> (Driver<State>) -> (Bindings<Event>) where ElementType: AnyObject {
-            return { [weak element] state -> Bindings<Event> in
-                guard let strongElement = element else {
-                    return Bindings(subscriptions: [], events: [Driver<Event>]())
-                }
-                return bindings(strongElement, state)
+                return bindings(strongOwner, state)
             }
     }
     
