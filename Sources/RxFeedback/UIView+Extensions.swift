@@ -62,6 +62,15 @@ extension UI {
             })
         }
     }
+    
+    /**
+     Bi-directional binding of a system State to UI and UI into Events,
+     Strongify element.
+     */
+    public static func bind<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType, Observable<State>) -> (Bindings<Event>))
+        -> (Observable<State>) -> Observable<Event> where ElementType: AnyObject {
+            return bind(bindingsStrongify(element, bindings))
+    }
 
     /**
      Bi-directional binding of a system State to UI and UI into Events.
@@ -76,5 +85,36 @@ extension UI {
             }).asDriver(onErrorDriveWith: Driver.empty())
         }
     }
+    
+    /**
+     Bi-directional binding of a system State to UI and UI into Events,
+     Strongify element.
+     */
+    public static func bind<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType, Driver<State>) -> (Bindings<Event>))
+        -> (Driver<State>) -> Driver<Event> where ElementType: AnyObject {
+            return bind(bindingsStrongify(element, bindings))
+    }
+    
+    
+    private static func bindingsStrongify<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType,  Observable<State>) -> (Bindings<Event>))
+        -> (Observable<State>) -> (Bindings<Event>) where ElementType: AnyObject {
+            return { [weak element] state -> Bindings<Event> in
+                guard let strongElement = element else {
+                    return Bindings(subscriptions: [], events: [Observable<Event>]())
+                }
+                return bindings(strongElement, state)
+            }
+    }
+    
+    private static func bindingsStrongify<State, Event, ElementType>(_ element: ElementType, _ bindings: @escaping (ElementType,  Driver<State>) -> (Bindings<Event>))
+        -> (Driver<State>) -> (Bindings<Event>) where ElementType: AnyObject {
+            return { [weak element] state -> Bindings<Event> in
+                guard let strongElement = element else {
+                    return Bindings(subscriptions: [], events: [Driver<Event>]())
+                }
+                return bindings(strongElement, state)
+            }
+    }
+    
 }
 

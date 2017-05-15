@@ -32,18 +32,14 @@ class PlayCatchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let myLabel = self.myLabel!
-        let machinesLabel = self.machinesLabel!
-        let throwTheBallButton = self.throwTheBallButton!
-
-        let bindUI: (Observable<State>) -> Observable<Event> = UI.bind { state in
+        let bindUI: (Observable<State>) -> Observable<Event> = UI.bind(self) { me, state in
             let subscriptions = [
-                state.map { $0.myStateOfMind }.bind(to: myLabel.rx.text),
-                state.map { $0.machineStateOfMind }.bind(to: machinesLabel.rx.text),
-                state.map { !$0.doIHaveTheBall }.bind(to: throwTheBallButton.rx.isHidden),
+                state.map { $0.myStateOfMind }.bind(to: me.myLabel!.rx.text),
+                state.map { $0.machineStateOfMind }.bind(to: me.machinesLabel!.rx.text),
+                state.map { !$0.doIHaveTheBall }.bind(to: me.throwTheBallButton!.rx.isHidden),
             ]
             let events = [
-                throwTheBallButton.rx.tap.map { Event.throwToMachine }
+                me.throwTheBallButton!.rx.tap.map { Event.throwToMachine }
             ]
             return UI.Bindings(subscriptions: subscriptions, events: events)
         }

@@ -99,10 +99,7 @@ class GithubPaginatedSearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let searchText = self.searchText!
         let searchResults = self.searchResults!
-        let status = self.status!
-        let loadNextPageLabel = self.loadNextPage!
 
         searchResults.register(UITableViewCell.self, forCellReuseIdentifier: "repo")
 
@@ -121,16 +118,16 @@ class GithubPaginatedSearchViewController: UIViewController {
             cell.detailTextLabel?.text = repo.url.description
         }
 
-        let bindUI: (Driver<State>) -> Driver<Event> = UI.bind { state in
+        let bindUI: (Driver<State>) -> Driver<Event> = UI.bind(self) { me, state in
             let subscriptions = [
-                state.map { $0.search }.drive(searchText.rx.text),
-                state.map { $0.lastError?.displayMessage }.drive(status.rx.textOrHide),
+                state.map { $0.search }.drive(me.searchText!.rx.text),
+                state.map { $0.lastError?.displayMessage }.drive(me.status!.rx.textOrHide),
                 state.map { $0.results }.drive(searchResults.rx.items(cellIdentifier: "repo"))(configureRepository),
 
-                state.map { $0.loadNextPage?.description }.drive(loadNextPageLabel.rx.textOrHide),
+                state.map { $0.loadNextPage?.description }.drive(me.loadNextPage!.rx.textOrHide),
                 ]
             let events = [
-                    searchText.rx.text.orEmpty.changed.asDriver().map(Event.searchChanged),
+                    me.searchText!.rx.text.orEmpty.changed.asDriver().map(Event.searchChanged),
                     triggerLoadNextPage(state)
             ]
             return UI.Bindings(subscriptions: subscriptions, events: events)
