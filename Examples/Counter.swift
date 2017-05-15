@@ -27,10 +27,6 @@ class CounterViewController: UIViewController {
             case decrement
         }
 
-        let label = self.label!
-        let minus = self.minus!
-        let plus = self.plus!
-
         Observable.system(
             initialState: 0,
             reduce: { (state, event) -> State in
@@ -44,13 +40,13 @@ class CounterViewController: UIViewController {
             scheduler: MainScheduler.instance,
             feedback:
                 // UI is user feedback
-                UI.bind { state -> UI.Bindings<Event> in
+                UI.bind(self) { me, state -> UI.Bindings<Event> in
                     let subscriptions = [
-                        state.map(String.init).bind(to: label.rx.text)
+                        state.map(String.init).bind(to: me.label!.rx.text)
                     ]
                     let events = [
-                        plus.rx.tap.map { Event.increment },
-                        minus.rx.tap.map { Event.decrement }
+                        me.plus!.rx.tap.map { Event.increment },
+                        me.minus!.rx.tap.map { Event.decrement }
                     ]
                     return UI.Bindings(subscriptions: subscriptions, events: events)
                 }
