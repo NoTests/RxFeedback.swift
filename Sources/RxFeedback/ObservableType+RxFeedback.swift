@@ -87,8 +87,17 @@ extension SharedSequenceConvertibleType where E == Any {
 
             let outputDriver = replaySubject.asSharedSequence(onErrorDriveWith: SharedSequence<SharingStrategy, State>.empty())
 
-            let events = SharedSequence.merge(feedback.map { $0(outputDriver) })
+            // This is a hack because of reentrancy. We need to make sure events are being sent async.
+            // In case MainScheduler is being used MainScheduler.asyncInstance is used to make sure state is modified async.
+            // If there is some unknown scheduler instance (like TestScheduler), just use it.
+            let originalScheduler = SharedSequence<SharingStrategy, State>.SharingStrategy.scheduler
+            let scheduler = (originalScheduler as? MainScheduler).map { _ in MainScheduler.asyncInstance } ?? originalScheduler
 
+            let events = SharedSequence.merge(feedback.map { $0(outputDriver) })
+                .asObservable()
+                .observeOn(scheduler)
+                .asSharedSequence(onErrorDriveWith: SharedSequence<SharingStrategy, Event>.empty())
+            
             return events.scan(initialState, accumulator: reduce)
                 .startWith(initialState)
                 .do(onNext: { output in
