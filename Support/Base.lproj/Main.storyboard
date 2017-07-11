@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="N4i-Me-ig3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="N4i-Me-ig3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -346,7 +346,7 @@ is the same as designing UI
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tXW-8s-FwT" userLabel="Effects">
-                                <rect key="frame" x="0.0" y="267" width="375" height="400"/>
+                                <rect key="frame" x="0.0" y="533.5" width="375" height="133.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Machine queries, effects &quot;UI&quot;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WNQ-Zz-C9b">
                                         <rect key="frame" x="16" y="10" width="224" height="21"/>
@@ -355,7 +355,7 @@ is the same as designing UI
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="URL" textAlignment="center" lineBreakMode="headTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="28y-4j-T7a" userLabel="QueryValue">
-                                        <rect key="frame" x="38" y="90" width="300" height="20.5"/>
+                                        <rect key="frame" x="38" y="23" width="300" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -370,7 +370,7 @@ is the same as designing UI
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jhm-c9-UiC">
-                                <rect key="frame" x="0.0" y="64" width="375" height="203"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="469.5"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" text="" placeholder="Repository search" id="hEg-NF-yxe">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -405,7 +405,7 @@ is the same as designing UI
                                 </prototypes>
                             </tableView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WV3-jm-EUY">
-                                <rect key="frame" x="0.0" y="246" width="375" height="21"/>
+                                <rect key="frame" x="0.0" y="512.5" width="375" height="21"/>
                                 <color key="backgroundColor" red="1" green="0.46508563887856491" blue="0.44850658912317964" alpha="0.6803105828220859" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -417,7 +417,7 @@ is the same as designing UI
                             <constraint firstItem="jhm-c9-UiC" firstAttribute="top" secondItem="AeN-Hx-hoj" secondAttribute="bottom" id="08r-Gx-PlY"/>
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="top" secondItem="WV3-jm-EUY" secondAttribute="bottom" id="IYJ-9x-eB4"/>
                             <constraint firstItem="WV3-jm-EUY" firstAttribute="centerX" secondItem="jmj-wE-374" secondAttribute="centerX" id="JIE-Vm-nJ6"/>
-                            <constraint firstItem="tXW-8s-FwT" firstAttribute="height" secondItem="jmj-wE-374" secondAttribute="height" multiplier="0.6" id="Oo9-cQ-uHO"/>
+                            <constraint firstItem="tXW-8s-FwT" firstAttribute="height" secondItem="jmj-wE-374" secondAttribute="height" multiplier="0.2" id="Oo9-cQ-uHO"/>
                             <constraint firstItem="oxg-lB-LWw" firstAttribute="top" secondItem="tXW-8s-FwT" secondAttribute="bottom" id="U67-zv-EXS"/>
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="leading" secondItem="jmj-wE-374" secondAttribute="leading" id="VfC-uS-zXH"/>
                             <constraint firstItem="WV3-jm-EUY" firstAttribute="width" secondItem="jmj-wE-374" secondAttribute="width" id="Xqg-ff-1gb"/>
