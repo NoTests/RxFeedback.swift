@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "52D6D9EF1BEFFFBE002C0205"
+               BlueprintIdentifier = "52D6D97B1BEFF229002C0205"
                BuildableName = "RxFeedback.framework"
-               BlueprintName = "RxFeedback-tvOS"
+               BlueprintName = "RxFeedback"
                ReferencedContainer = "container:RxFeedback.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,6 +26,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES"
       codeCoverageEnabled = "YES">
       <Testables>
@@ -33,9 +34,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DD75028C1C690C7A006590AF"
-               BuildableName = "RxFeedback-tvOS Tests.xctest"
-               BlueprintName = "RxFeedback-tvOS Tests"
+               BlueprintIdentifier = "52D6D9851BEFF229002C0205"
+               BuildableName = "RxFeedbackTests.xctest"
+               BlueprintName = "RxFeedbackTests"
                ReferencedContainer = "container:RxFeedback.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -43,9 +44,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "52D6D9EF1BEFFFBE002C0205"
+            BlueprintIdentifier = "52D6D97B1BEFF229002C0205"
             BuildableName = "RxFeedback.framework"
-            BlueprintName = "RxFeedback-tvOS"
+            BlueprintName = "RxFeedback"
             ReferencedContainer = "container:RxFeedback.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,6 +57,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -65,9 +67,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "52D6D9EF1BEFFFBE002C0205"
+            BlueprintIdentifier = "52D6D97B1BEFF229002C0205"
             BuildableName = "RxFeedback.framework"
-            BlueprintName = "RxFeedback-tvOS"
+            BlueprintName = "RxFeedback"
             ReferencedContainer = "container:RxFeedback.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -83,9 +85,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "52D6D9EF1BEFFFBE002C0205"
+            BlueprintIdentifier = "52D6D97B1BEFF229002C0205"
             BuildableName = "RxFeedback.framework"
-            BlueprintName = "RxFeedback-tvOS"
+            BlueprintName = "RxFeedback"
             ReferencedContainer = "container:RxFeedback.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
