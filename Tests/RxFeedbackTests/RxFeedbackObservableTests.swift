@@ -16,6 +16,29 @@ class RxFeedbackObservableTests: XCTestCase {
 }
 
 extension RxFeedbackObservableTests {
+    func testEventsAreArrivingOnCorrectScheduler() {
+        let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
+        let system = Observable.system(
+            initialState: "initial",
+            reduce: { oldState, append in
+                return oldState + "_" + append
+            },
+            scheduler: scheduler,
+            scheduledFeedback: { _ in .just("a") })
+
+        let results = try! system
+            .take(2)
+            .do(onNext: { _ in
+                XCTAssertTrue(DispatchQueue.isUserInitiated)
+            }, onCompleted: {
+                XCTAssertTrue(DispatchQueue.isUserInitiated)
+            })
+            .toBlocking()
+            .toArray()
+
+        XCTAssertEqual(results, ["initial", "initial_a"])
+    }
+    
     func testInitial() {
         let system = Observable.system(
             initialState: "initial",
@@ -223,3 +246,14 @@ extension RxFeedbackObservableTests {
     }
 }
 
+extension DispatchQueue {
+    private static var token: DispatchSpecificKey<()> = {
+        let key = DispatchSpecificKey<()>()
+        DispatchQueue.global(qos: .userInitiated).setSpecific(key: key, value: ())
+        return key
+    }()
+
+    static var isUserInitiated: Bool {
+        return DispatchQueue.getSpecific(key: token) != nil
+    }
+}
