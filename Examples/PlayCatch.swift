@@ -32,7 +32,7 @@ class PlayCatchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let bindUI: (Observable<State>) -> Observable<Event> = UI.bind(self) { me, state in
+        let bindUI: (ObservableSchedulerContext<State>) -> Observable<Event> = UI.bind(self) { me, state in
             let subscriptions = [
                 state.map { $0.myStateOfMind }.bind(to: me.myLabel!.rx.text),
                 state.map { $0.machineStateOfMind }.bind(to: me.machinesLabel!.rx.text),
@@ -48,14 +48,14 @@ class PlayCatchViewController: UIViewController {
             initialState: State.humanHasIt,
             reduce: { (state: State, event: Event) -> State in
                 switch event {
-                    case .throwToMachine:
-                        return .machineHasIt
-                    case .throwToHuman:
-                        return .humanHasIt
-                    }
-                },
+                case .throwToMachine:
+                    return .machineHasIt
+                case .throwToHuman:
+                    return .humanHasIt
+                }
+        },
             scheduler: MainScheduler.instance,
-            feedback:
+            scheduledFeedback:
                 // UI is human feedback
                 bindUI,
                 // NoUI, machine feedback

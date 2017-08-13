@@ -30,15 +30,15 @@ class CounterViewController: UIViewController {
         Observable.system(
             initialState: 0,
             reduce: { (state, event) -> State in
-                    switch event {
-                    case .increment:
-                        return state + 1
-                    case .decrement:
-                        return state - 1
-                    }
-                },
+                switch event {
+                case .increment:
+                    return state + 1
+                case .decrement:
+                    return state - 1
+                }
+        },
             scheduler: MainScheduler.instance,
-            feedback:
+            scheduledFeedback:
                 // UI is user feedback
                 UI.bind(self) { me, state -> UI.Bindings<Event> in
                     let subscriptions = [

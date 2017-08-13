@@ -52,13 +52,15 @@ extension UI {
     /**
      Bi-directional binding of a system State to UI and UI into Events.
      */
-    public static func bind<State, Event>(_ bindings: @escaping (Observable<State>) -> (Bindings<Event>)) -> (Observable<State>) -> Observable<Event> {
+    public static func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Event>)) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
 
-        return { (state: Observable<State>) -> Observable<Event> in
+        return { (state: ObservableSchedulerContext<State>) -> Observable<Event> in
             return Observable<Event>.using({ () -> Bindings<Event> in
                 return bindings(state)
             }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
                 return Observable<Event>.merge(bindings.events)
+                    .observeOn(state.scheduler)
+                    .subscribeOn(state.scheduler)
             })
         }
     }
@@ -67,8 +69,8 @@ extension UI {
      Bi-directional binding of a system State to UI and UI into Events,
      Strongify owner.
      */
-    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Observable<State>) -> (Bindings<Event>))
-        -> (Observable<State>) -> Observable<Event> where WeakOwner: AnyObject {
+    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Event>))
+        -> (ObservableSchedulerContext<State>) -> Observable<Event> where WeakOwner: AnyObject {
             return bind(bindingsStrongify(owner, bindings))
     }
 

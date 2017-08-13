@@ -110,3 +110,33 @@ extension ObservableType where E == Any {
     }
 }
 
+extension UI {
+    /**
+     Bi-directional binding of a system State to UI and UI into Events.
+     */
+    @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "bind()")
+    public static func bind<State, Event>(_ bindings: @escaping (Observable<State>) -> (Bindings<Event>)) -> (Observable<State>) -> Observable<Event> {
+        return { state in
+            let scheduler = CurrentThreadScheduler.instance
+            let context = ObservableSchedulerContext(source: state, scheduler: scheduler)
+            return bind { bindings($0.source) }(context)
+        }
+    }
+
+    /**
+     Bi-directional binding of a system State to UI and UI into Events,
+     Strongify owner.
+     */
+    @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "bind()")
+    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Observable<State>) -> (Bindings<Event>))
+        -> (Observable<State>) -> Observable<Event> where WeakOwner: AnyObject {
+            weak var weakOwner = owner
+        return { state in
+            guard let owner = weakOwner else { return .empty() }
+            let scheduler = CurrentThreadScheduler.instance
+            let context = ObservableSchedulerContext(source: state, scheduler: scheduler)
+
+            return (self.bind(owner) { bindings($0, $1.source) })(context)
+        }
+    }
+}

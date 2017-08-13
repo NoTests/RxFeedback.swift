@@ -1,5 +1,8 @@
 ## Master
 
+## [0.3.1](https://github.com/kzaher/RxFeedback/releases/tag/0.3.1)
+
+* Adapts UI extensions.
 
 ## [0.3.0](https://github.com/kzaher/RxFeedback/releases/tag/0.3.0)
 
