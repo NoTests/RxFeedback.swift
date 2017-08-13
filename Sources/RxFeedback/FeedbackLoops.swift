@@ -14,9 +14,9 @@ import RxCocoa
 
  * State: State type of the system.
  * Control: Subset of state used to control the feedback loop.
- 
+
  When query result exists (not `nil`), feedback loop is active and it performs events.
- 
+
  When query result is `nil`, feedback loops doesn't perform any effect.
 
  - parameter query: State type of the system
@@ -24,9 +24,9 @@ import RxCocoa
  - returns: Feedback loop performing the effects.
  */
 public func react<State, Control: Equatable, Event>(
-    query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Observable<Event>
-) -> (Observable<State>) -> Observable<Event> {
+        query: @escaping (State) -> Control?,
+        effects: @escaping (Control) -> Observable<Event>
+    ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
@@ -36,7 +36,8 @@ public func react<State, Control: Equatable, Event>(
                 }
 
                 return effects(results)
-            }
+                    .enqueue(state.scheduler)
+        }
     }
 }
 
@@ -54,6 +55,7 @@ public func react<State, Control: Equatable, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
+var i = 0;
 public func react<State, Control: Equatable, Event>(
     query: @escaping (State) -> Control?,
     effects: @escaping (Control) -> Driver<Event>
@@ -66,7 +68,9 @@ public func react<State, Control: Equatable, Event>(
                     return Driver<Event>.empty()
                 }
 
+                i += 1
                 return effects(results)
+                    .enqueue()
         }
     }
 }
@@ -88,7 +92,7 @@ public func react<State, Control: Equatable, Event>(
 public func react<State, Control, Event>(
     query: @escaping (State) -> Control?,
     effects: @escaping (Control) -> Observable<Event>
-) -> (Observable<State>) -> Observable<Event> {
+) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
@@ -98,6 +102,7 @@ public func react<State, Control, Event>(
                 }
 
                 return effects(results)
+                    .enqueue(state.scheduler)
         }
     }
 }
@@ -129,6 +134,41 @@ public func react<State, Control, Event>(
                 }
 
                 return effects(results)
+                    .enqueue()
+        }
+    }
+}
+
+/**
+ Control feedback loop that tries to immediatelly perform the latest required effect.
+
+ * State: State type of the system.
+ * Control: Subset of state used to control the feedback loop.
+
+ When query result exists (not `nil`), feedback loop is active and it performs events.
+
+ When query result is `nil`, feedback loops doesn't perform any effect.
+
+ - parameter query: State type of the system
+ - parameter effects: Control state which is subset of state.
+ - returns: Feedback loop performing the effects.
+ */
+public func react<State, Control: Hashable, Event>(
+    query: @escaping (State) -> Set<Control>,
+    effects: @escaping (Control) -> Observable<Event>
+    ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+    return { state in
+        let query = state.map(query)
+
+        let newQueries = Observable.zip(query, query.startWith(Set())) { $0.subtracting($1) }
+
+        return newQueries.flatMap { controls in
+            return Observable.merge(controls.map { control -> Observable<Event> in
+                return query.filter { !$0.contains(control) }
+                    .map { _ in Observable<Event>.empty() }
+                    .startWith(effects(control).enqueue(state.scheduler))
+                    .switchLatest()
+            })
         }
     }
 }
@@ -158,11 +198,36 @@ public func react<State, Control: Hashable, Event>(
 
         return newQueries.flatMap { controls in
             return Driver.merge(controls.map { control -> Driver<Event> in
+                i += 1
                 return query.filter { !$0.contains(control) }
                     .map { _ in Driver<Event>.empty() }
-                    .startWith(effects(control))
+                    .startWith(effects(control).enqueue())
                     .switchLatest()
             })
         }
+    }
+}
+
+
+extension Observable {
+    func enqueue(_ scheduler: ImmediateSchedulerType) -> Observable<Element> {
+        return self
+            // observe on is here because results should be cancelable
+            .observeOn(scheduler)
+            // subscribe on is here because side-effects also need to be cancelable
+            // (smooths out any glitches caused by start-cancel immediatelly)
+            .subscribeOn(scheduler)
+    }
+}
+
+extension SharedSequence {
+    func enqueue() -> SharedSequence<S, Element> {
+        return self.asObservable()
+            // observe on is here because results should be cancelable
+            .observeOn(S.scheduler.async)
+            // subscribe on is here because side-effects also need to be cancelable
+            // (smooths out any glitches caused by start-cancel immediatelly)
+            .subscribeOn(S.scheduler.async)
+            .asSharedSequence(onErrorDriveWith: .empty())
     }
 }

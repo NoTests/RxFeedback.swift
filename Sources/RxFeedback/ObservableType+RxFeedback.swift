@@ -9,6 +9,31 @@
 import RxSwift
 import RxCocoa
 
+/// Tuple of observable sequence and corresponding scheduler context on which that observable
+/// sequence receives elements.
+public struct ObservableSchedulerContext<Element>: ObservableType {
+    public typealias E = Element
+
+    /// Source observable sequence
+    public let source: Observable<Element>
+
+    /// Scheduler on which observable sequence receives elements
+    public let scheduler: ImmediateSchedulerType
+
+    /// Initializes self with source observable sequence and scheduler
+    ///
+    /// - parameter source: Source observable sequence.
+    /// - parameter scheduler: Scheduler on which source observable sequence receives elements.
+    public init(source: Observable<Element>, scheduler: ImmediateSchedulerType) {
+        self.source = source
+        self.scheduler = scheduler
+    }
+
+    public func subscribe<O: ObserverType>(_ observer: O) -> Disposable where O.E == E {
+        return self.source.subscribe(observer)
+    }
+}
+
 extension ObservableType where E == Any {
     /**
      Simulation of a discrete system (finite-state machine) with feedback loops.
@@ -31,30 +56,45 @@ extension ObservableType where E == Any {
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
-            scheduler: SchedulerType,
-            feedback: [(Observable<State>) -> Observable<Event>]
+            scheduler: ImmediateSchedulerType,
+            scheduledFeedback: [(ObservableSchedulerContext<State>) -> Observable<Event>]
         ) -> Observable<State> {
         return Observable<State>.deferred {
             let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
 
-            let events: Observable<Event> = Observable.merge(feedback.map { $0(replaySubject.asObservable()) })
-                .observeOn(scheduler)
+            let asyncScheduler = scheduler.async
+            
+            let events: Observable<Event> = Observable.merge(scheduledFeedback.map { feedback in
+                let state = ObservableSchedulerContext(source: replaySubject.asObservable(), scheduler: asyncScheduler)
+                let events = feedback(state)
+                #if DEBUG
+                    return events
+                #else
+                    return events
+                        // This is protection from accidental ignoring of scheduler so
+                        // reentracy errors can be avoided
+                        .observeOn(CurrentThreadScheduler.instance)
+                #endif
+            })
 
             return events.scan(initialState, accumulator: reduce)
-                .startWith(initialState)
                 .do(onNext: { output in
                     replaySubject.onNext(output)
+                }, onSubscribed: {
+                    replaySubject.onNext(initialState)
                 })
+                .subscribeOn(asyncScheduler)
+                .startWith(initialState)
         }
     }
 
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
-            scheduler: SchedulerType,
-            feedback: (Observable<State>) -> Observable<Event>...
+            scheduler: ImmediateSchedulerType,
+            scheduledFeedback: (ObservableSchedulerContext<State>) -> Observable<Event>...
         ) -> Observable<State> {
-        return system(initialState: initialState, reduce: reduce, scheduler: scheduler, feedback: feedback)
+        return system(initialState: initialState, reduce: reduce, scheduler: scheduler, scheduledFeedback: scheduledFeedback)
     }
 }
 
@@ -82,28 +122,21 @@ extension SharedSequenceConvertibleType where E == Any {
             reduce: @escaping (State, Event) -> State,
             feedback: [(SharedSequence<SharingStrategy, State>) -> SharedSequence<SharingStrategy, Event>]
         ) -> SharedSequence<SharingStrategy, State> {
-        return SharedSequence<SharingStrategy, State>.deferred {
-            let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
 
-            let outputDriver = replaySubject.asSharedSequence(onErrorDriveWith: SharedSequence<SharingStrategy, State>.empty())
-
-            // This is a hack because of reentrancy. We need to make sure events are being sent async.
-            // In case MainScheduler is being used MainScheduler.asyncInstance is used to make sure state is modified async.
-            // If there is some unknown scheduler instance (like TestScheduler), just use it.
-            let originalScheduler = SharedSequence<SharingStrategy, State>.SharingStrategy.scheduler
-            let scheduler = (originalScheduler as? MainScheduler).map { _ in MainScheduler.asyncInstance } ?? originalScheduler
-
-            let events = SharedSequence.merge(feedback.map { $0(outputDriver) })
-                .asObservable()
-                .observeOn(scheduler)
-                .asSharedSequence(onErrorDriveWith: SharedSequence<SharingStrategy, Event>.empty())
-            
-            return events.scan(initialState, accumulator: reduce)
-                .startWith(initialState)
-                .do(onNext: { output in
-                    replaySubject.onNext(output)
-                })
+        let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Event>] = feedback.map { feedback in
+            return { sharedSequence in
+                return feedback(sharedSequence.source.asSharedSequence(onErrorDriveWith: .empty()))
+                    .asObservable()
+            }
         }
+        
+        return Observable<Any>.system(
+                initialState: initialState,
+                reduce: reduce,
+                scheduler: SharingStrategy.scheduler,
+                scheduledFeedback: observableFeedbacks
+            )
+            .asSharedSequence(onErrorDriveWith: .empty())
     }
 
     public static func system<State, Event>(
@@ -112,5 +145,14 @@ extension SharedSequenceConvertibleType where E == Any {
             feedback: (SharedSequence<SharingStrategy, State>) -> SharedSequence<SharingStrategy, Event>...
         ) -> SharedSequence<SharingStrategy, State> {
         return system(initialState: initialState, reduce: reduce, feedback: feedback)
+    }
+}
+
+extension ImmediateSchedulerType {
+    var async: ImmediateSchedulerType {
+        // This is a hack because of reentrancy. We need to make sure events are being sent async.
+        // In case MainScheduler is being used MainScheduler.asyncInstance is used to make sure state is modified async.
+        // If there is some unknown scheduler instance (like TestScheduler), just use it.
+        return (self as? MainScheduler).map { _ in MainScheduler.asyncInstance } ?? self
     }
 }
