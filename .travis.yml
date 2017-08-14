@@ -7,12 +7,13 @@ sudo: required
 dist: trusty
 osx_image: xcode8.3
 env:
+  - BUILD="./dependencies.sh && xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test"
   - BUILD="pod lib lint RxFeedback.podspec --verbose"
   - BUILD="swift build"
   - BUILD="carthage build --no-skip-current --platform iOS"
   - BUILD="carthage build --no-skip-current --platform tvOS"
 
-script: $BUILD
+script: eval "${BUILD}"
 
 notifications:
   slack: rxswift:3ykt2Z61f8GkdvhCZTYPduOL
