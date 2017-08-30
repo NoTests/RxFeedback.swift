@@ -7,24 +7,6 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/RxFeedback.png" width="502px" />
 
 ```swift
-/**
-     Simulation of a discrete system (finite-state machine) with feedback loops.
-     Interpretations:
-     - [system with feedback loops](https://en.wikipedia.org/wiki/Control_theory)
-     - [fixpoint solver](https://en.wikipedia.org/wiki/Fixed_point)
-     - [local equilibrium point calculator](https://en.wikipedia.org/wiki/Mechanical_equilibrium)
-     - ....
-
-     System simulation will be started upon subscription and stopped after subscription is disposed.
-
-     System state is represented as a `State` parameter.
-     Events are represented by `Event` parameter.
-
-     - parameter initialState: Initial state of the system.
-     - parameter accumulator: Calculates new system state from existing state and a transition event (system integrator, reducer).
-     - parameter feedback: Feedback loops that produce events depending on current system state.
-     - returns: Current state of the system.
-     */
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
@@ -34,11 +16,6 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 
 # Why
 
-* Simple
-    * If the system doesn't have state -> congrats, you have either a pure function or an observable sequence
-    * It the system does have state, here we are :)
-    * Interaction with that state is by definition a feedback loop.
-    * =>  It's just state + CQRS
 * Straightforward
     * if it's state -> State
     * if it's a way to modify state -> Event/Command
