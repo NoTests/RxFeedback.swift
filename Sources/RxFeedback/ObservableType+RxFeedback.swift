@@ -67,14 +67,10 @@ extension ObservableType where E == Any {
             let events: Observable<Event> = Observable.merge(scheduledFeedback.map { feedback in
                 let state = ObservableSchedulerContext(source: replaySubject.asObservable(), scheduler: asyncScheduler)
                 let events = feedback(state)
-                #if DEBUG
-                    return events
-                #else
-                    return events
-                        // This is protection from accidental ignoring of scheduler so
-                        // reentracy errors can be avoided
-                        .observeOn(CurrentThreadScheduler.instance)
-                #endif
+                return events
+                    // This is protection from accidental ignoring of scheduler so
+                    // reentracy errors can be avoided
+                    .observeOn(CurrentThreadScheduler.instance)
             })
 
             return events.scan(initialState, accumulator: reduce)
