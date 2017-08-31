@@ -1,5 +1,9 @@
 ## Master
 
+## [0.3.2](https://github.com/kzaher/RxFeedback/releases/tag/0.3.2)
+
+* Includes additional reentrancy checks to DEBUG builds.
+
 ## [0.3.1](https://github.com/kzaher/RxFeedback/releases/tag/0.3.1)
 
 * Adapts UI extensions.
