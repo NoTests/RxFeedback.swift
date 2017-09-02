@@ -30,12 +30,12 @@ public func react<State, Control: Equatable, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (results: Control?) -> Observable<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Observable<Event> in
+                guard let control = control else {
                     return Observable<Event>.empty()
                 }
 
-                return effects(results)
+                return effects(control)
                     .enqueue(state.scheduler)
         }
     }
@@ -62,12 +62,12 @@ public func react<State, Control: Equatable, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (results: Control?) -> Driver<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Driver<Event> in
+                guard let control = control else {
                     return Driver<Event>.empty()
                 }
 
-                return effects(results)
+                return effects(control)
                     .enqueue()
         }
     }
@@ -94,12 +94,12 @@ public func react<State, Control, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (results: Control?) -> Observable<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Observable<Event> in
+                guard let control = control else {
                     return Observable<Event>.empty()
                 }
 
-                return effects(results)
+                return effects(control)
                     .enqueue(state.scheduler)
         }
     }
@@ -126,12 +126,12 @@ public func react<State, Control, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (results: Control?) -> Driver<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Driver<Event> in
+                guard let control = control else {
                     return Driver<Event>.empty()
                 }
 
-                return effects(results)
+                return effects(control)
                     .enqueue()
         }
     }
