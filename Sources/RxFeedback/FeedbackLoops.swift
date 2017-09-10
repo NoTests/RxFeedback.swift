@@ -30,12 +30,12 @@ public func react<State, Control: Equatable, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (results: Control?) -> Observable<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Observable<Event> in
+                guard let control = control else {
                     return Observable<Event>.empty()
                 }
 
-                return effects(results)
+                return effects(control)
                     .enqueue(state.scheduler)
         }
     }
@@ -55,7 +55,6 @@ public func react<State, Control: Equatable, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-var i = 0;
 public func react<State, Control: Equatable, Event>(
     query: @escaping (State) -> Control?,
     effects: @escaping (Control) -> Driver<Event>
@@ -63,13 +62,12 @@ public func react<State, Control: Equatable, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (results: Control?) -> Driver<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Driver<Event> in
+                guard let control = control else {
                     return Driver<Event>.empty()
                 }
 
-                i += 1
-                return effects(results)
+                return effects(control)
                     .enqueue()
         }
     }
@@ -96,12 +94,12 @@ public func react<State, Control, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (results: Control?) -> Observable<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Observable<Event> in
+                guard let control = control else {
                     return Observable<Event>.empty()
                 }
 
-                return effects(results)
+                return effects(control)
                     .enqueue(state.scheduler)
         }
     }
@@ -128,12 +126,12 @@ public func react<State, Control, Event>(
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (results: Control?) -> Driver<Event> in
-                guard let results = results else {
+            .flatMapLatest { (control: Control?) -> Driver<Event> in
+                guard let control = control else {
                     return Driver<Event>.empty()
                 }
 
-                return effects(results)
+                return effects(control)
                     .enqueue()
         }
     }
@@ -198,7 +196,6 @@ public func react<State, Control: Hashable, Event>(
 
         return newQueries.flatMap { controls in
             return Driver.merge(controls.map { control -> Driver<Event> in
-                i += 1
                 return query.filter { !$0.contains(control) }
                     .map { _ in Driver<Event>.empty() }
                     .startWith(effects(control).enqueue())

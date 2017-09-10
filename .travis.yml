@@ -7,11 +7,13 @@ sudo: required
 dist: trusty
 osx_image: xcode8.3
 env:
-  - BUILD="./dependencies.sh && xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test"
+  - BUILD="pod update                     && set -o pipefail && (xcodebuild -workspace RxFeedback.xcworkspace -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test && xcodebuild -workspace RxFeedback.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build) | xcpretty"
+  - BUILD="./dependencies.sh              && set -o pipefail && (xcodebuild -project   RxFeedback.xcodeproj   -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test && xcodebuild -project   RxFeedback.xcodeproj   -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build) | xcpretty"
+  - BUILD="carthage update --platform ios && set -o pipefail && (xcodebuild -project   RxFeedback.xcodeproj   -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test && xcodebuild -project   RxFeedback.xcodeproj   -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build) | xcpretty"
   - BUILD="pod lib lint RxFeedback.podspec --verbose"
   - BUILD="swift build"
-  - BUILD="carthage build --no-skip-current --platform iOS"
-  - BUILD="carthage build --no-skip-current --platform tvOS"
+  - BUILD="carthage update --platform ios && carthage build --no-skip-current --platform iOS"
+  - BUILD="carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS"
 
 script: eval "${BUILD}"
 
