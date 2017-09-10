@@ -59,8 +59,7 @@ extension UI {
                 return bindings(state)
             }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
                 return Observable<Event>.merge(bindings.events)
-                    .observeOn(state.scheduler)
-                    .subscribeOn(state.scheduler)
+                    .enqueue(state.scheduler)
             })
         }
     }
@@ -85,6 +84,7 @@ extension UI {
             }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
                 return Observable<Event>.merge(bindings.events)
             }).asDriver(onErrorDriveWith: Driver.empty())
+                .enqueue()
         }
     }
     

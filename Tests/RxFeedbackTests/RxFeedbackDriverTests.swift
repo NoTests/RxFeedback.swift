@@ -21,7 +21,7 @@ extension RxFeedbackDriverTests {
             initialState: "initial",
             reduce: { _, newState in
                 return newState
-        },
+            },
             feedback: [])
 
         var state = ""
@@ -37,11 +37,11 @@ extension RxFeedbackDriverTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             feedback: { state in
                 return state.flatMapLatest { state -> Driver<String> in
                     if state == "initial" {
-                        return Driver.just("_a")
+                        return Driver.just("_a").delay(0.01)
                     }
                     else if state == "initial_a" {
                         return Driver.just("_b")
@@ -94,7 +94,7 @@ extension RxFeedbackDriverTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
@@ -128,7 +128,7 @@ extension RxFeedbackDriverTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
@@ -156,7 +156,7 @@ extension RxFeedbackDriverTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
@@ -184,7 +184,7 @@ extension RxFeedbackDriverTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
@@ -214,6 +214,92 @@ extension RxFeedbackDriverTests {
             "initial_x_x_c",
             "initial_x_x_c_c",
             "initial_x_x_c_c_c",
+            ])
+    }
+}
+
+extension RxFeedbackDriverTests {
+    func testUIBindFeedbackLoopReentrancy() {
+        let system = Driver.system(
+            initialState: "initial",
+            reduce: { oldState, append in
+                return  oldState + append
+            },
+            feedback: UI.bind { (stateAndScheduler) in
+                let results = stateAndScheduler.flatMap { state -> Driver<String> in
+                    if state == "initial" {
+                        return Driver.just("_a").delay(0.01)
+                    }
+                    else if state == "initial_a" {
+                        return Driver.just("_b")
+                    }
+                    else if state == "initial_a_b" {
+                        return Driver.just("_c")
+                    }
+                    else {
+                        return Driver.never()
+                    }
+                }
+                return UI.Bindings(subscriptions: [], events: [results])
+        })
+
+        let result = (try?
+            system
+                .asObservable()
+                .take(4)
+                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .toBlocking(timeout: 3.0)
+                .toArray()
+            ) ?? []
+
+        XCTAssertEqual(result, [
+            "initial",
+            "initial_a",
+            "initial_a_b",
+            "initial_a_b_c"
+            ])
+    }
+
+    func testUIBindFeedbackWithOwnerLoopReentrancy() {
+        let owner = NSObject()
+
+        let system = Driver.system(
+            initialState: "initial",
+            reduce: { oldState, append in
+                return  oldState + append
+            },
+            feedback: UI.bind(owner) { (_, stateAndScheduler) in
+                let results = stateAndScheduler.flatMap { state -> Driver<String> in
+                    if state == "initial" {
+                        return Driver.just("_a").delay(0.01)
+                    }
+                    else if state == "initial_a" {
+                        return Driver.just("_b")
+                    }
+                    else if state == "initial_a_b" {
+                        return Driver.just("_c")
+                    }
+                    else {
+                        return Driver.never()
+                    }
+                }
+                return UI.Bindings(subscriptions: [], events: [results])
+            })
+
+        let result = (try?
+            system
+                .asObservable()
+                .take(4)
+                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .toBlocking(timeout: 3.0)
+                .toArray()
+            ) ?? []
+
+        XCTAssertEqual(result, [
+            "initial",
+            "initial_a",
+            "initial_a_b",
+            "initial_a_b_c"
             ])
     }
 }
