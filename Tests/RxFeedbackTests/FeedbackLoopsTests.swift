@@ -22,7 +22,9 @@ extension FeedbackLoopsTests {
     func testIntialNilQueryDoNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Void? = { _ in return nil }
+        let query: (String) -> Void? = { _ in
+            return nil
+        }
         let effects: () -> Observable<String> = { .just("_a") }
         let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
         let system = Observable.system(
