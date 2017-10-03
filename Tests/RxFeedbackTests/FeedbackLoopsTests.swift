@@ -164,7 +164,7 @@ extension FeedbackLoopsTests {
     func testFeedbacksCancelation() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let notImediateEffect = PublishSubject<String>()
+        let notImmediateEffect = PublishSubject<String>()
         let query1: (String) -> Void? = { state in
             if state == "initial" {
                 return ()
@@ -179,8 +179,10 @@ extension FeedbackLoopsTests {
                 return nil
             }
         }
+        var isEffects1Called = false
         let effects1: () -> Observable<String> = {
-            return notImediateEffect.asObservable()
+            isEffects1Called = true
+            return notImmediateEffect.asObservable()
         }
         let effects2: () -> Observable<String> = {
             return .just("_b")
@@ -203,10 +205,11 @@ extension FeedbackLoopsTests {
             ])
 
         // Run
-        scheduler.scheduleAt(210) { notImediateEffect.onNext("_a") }
+        scheduler.scheduleAt(210) { notImmediateEffect.onNext("_a") }
         let results = scheduler.start { system }
 
         // Test
         XCTAssertEqual(results.events, expected.recordedEvents)
+        XCTAssertTrue(isEffects1Called)
     }
 }
