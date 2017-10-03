@@ -79,16 +79,10 @@ extension FeedbackLoopsTests {
         XCTAssertEqual(results.events, expected.recordedEvents)
     }
 
-    func testIntialNotNil() {
+    func testSecondConsecutiveNotNilQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Void? = { state in
-            if state == "initial" {
-                return ()
-            } else {
-                return nil
-            }
-        }
+        let query: (String) -> Void? = { _ in return () }
         let effects: () -> Observable<String> = {
             return .just("_a")
         }
