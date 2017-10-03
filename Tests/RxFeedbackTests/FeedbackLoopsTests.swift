@@ -19,7 +19,7 @@ class FeedbackLoopsTests: XCTestCase {
 // Tests on the react function with not an equatable or hashable Control.
 extension FeedbackLoopsTests {
 
-    func testIntialNil() {
+    func testIntialNilQueryDoNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let query: (String) -> Void? = { _ in return nil }
@@ -44,7 +44,7 @@ extension FeedbackLoopsTests {
         XCTAssertEqual(results.events, expected.recordedEvents)
     }
 
-    func testNotNilAfterIntialNil() {
+    func testNotNilAfterIntialNilDoesProdeuceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let query: (String) -> Void? = { state in
@@ -113,7 +113,7 @@ extension FeedbackLoopsTests {
         XCTAssertEqual(results.events, expected.recordedEvents)
     }
 
-    func testFeedbacksOrder() {
+    func testImmediateEffectsHaveTheSameOrderAsTheyArePassedToSystem() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let query1: (String) -> Void? = { state in
