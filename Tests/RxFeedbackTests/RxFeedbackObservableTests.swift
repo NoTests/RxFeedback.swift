@@ -44,7 +44,7 @@ extension RxFeedbackObservableTests {
             initialState: "initial",
             reduce: { _, newState in
                 return newState
-        },
+            },
             scheduler: MainScheduler.instance,
             scheduledFeedback: [])
 
@@ -66,7 +66,7 @@ extension RxFeedbackObservableTests {
             scheduledFeedback: { stateAndScheduler in
                 return stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
-                        return Observable.just("_a")
+                        return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
                     }
                     else if state == "initial_a" {
                         return Observable.just("_b")
@@ -242,6 +242,92 @@ extension RxFeedbackObservableTests {
             "initial_x_x_c",
             "initial_x_x_c_c",
             "initial_x_x_c_c_c",
+            ])
+    }
+}
+
+extension RxFeedbackObservableTests {
+    func testUIBindFeedbackLoopReentrancy() {
+        let system = Observable.system(
+            initialState: "initial",
+            reduce: { oldState, append in
+                return  oldState + append
+            },
+            scheduler: MainScheduler.instance,
+            scheduledFeedback: UI.bind { (stateAndScheduler) in
+                let results = stateAndScheduler.flatMap { state -> Observable<String> in
+                    if state == "initial" {
+                        return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
+                    }
+                    else if state == "initial_a" {
+                        return Observable.just("_b")
+                    }
+                    else if state == "initial_a_b" {
+                        return Observable.just("_c")
+                    }
+                    else {
+                        return Observable.never()
+                    }
+                }
+                return UI.Bindings(subscriptions: [], events: [results])
+        })
+
+        let result = (try?
+            system
+                .take(4)
+                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .toBlocking(timeout: 3.0)
+                .toArray()
+            ) ?? []
+
+        XCTAssertEqual(result, [
+            "initial",
+            "initial_a",
+            "initial_a_b",
+            "initial_a_b_c"
+            ])
+    }
+
+    func testUIBindFeedbackWithOwnerLoopReentrancy() {
+        let owner = NSObject()
+
+        let system = Observable.system(
+            initialState: "initial",
+            reduce: { oldState, append in
+                return  oldState + append
+            },
+            scheduler: MainScheduler.instance,
+            scheduledFeedback: UI.bind(owner) { (_, stateAndScheduler) in
+                let results = stateAndScheduler.flatMap { state -> Observable<String> in
+                    if state == "initial" {
+                        return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
+                    }
+                    else if state == "initial_a" {
+                        return Observable.just("_b")
+                    }
+                    else if state == "initial_a_b" {
+                        return Observable.just("_c")
+                    }
+                    else {
+                        return Observable.never()
+                    }
+                }
+                return UI.Bindings(subscriptions: [], events: [results])
+        })
+
+        let result = (try?
+            system
+                .take(4)
+                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .toBlocking(timeout: 3.0)
+                .toArray()
+            ) ?? []
+
+        XCTAssertEqual(result, [
+            "initial",
+            "initial_a",
+            "initial_a_b",
+            "initial_a_b_c"
             ])
     }
 }

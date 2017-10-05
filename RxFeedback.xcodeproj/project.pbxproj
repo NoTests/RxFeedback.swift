@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		52D6D9871BEFF229002C0205 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
-		C8047ABC1F41099F0089721B /* CHANGELOG.md in Sources */ = {isa = PBXBuildFile; fileRef = C8047ABB1F41099F0089721B /* CHANGELOG.md */; };
 		C80987441EC4882E00EE2C23 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987431EC4882E00EE2C23 /* Todo.swift */; };
 		C80987621EC4A28300EE2C23 /* Todo+Plumbing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */; };
 		C80987631EC4A28E00EE2C23 /* Todo+Lenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */; };
@@ -888,7 +887,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C89B96251EB6964200BDAB24 /* FeedbackLoops.swift in Sources */,
-				C8047ABC1F41099F0089721B /* CHANGELOG.md in Sources */,
 				C834A8CB1EB67BAD00E6B15E /* UIView+Extensions.swift in Sources */,
 				C8996C7A1F40C5B6004E5D83 /* Deprecations.swift in Sources */,
 				C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */,
