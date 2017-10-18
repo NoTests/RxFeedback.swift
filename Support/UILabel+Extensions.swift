@@ -11,8 +11,8 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: UILabel {
-    var textOrHide: UIBindingObserver<UILabel, String?> {
-        return UIBindingObserver(UIElement: base) { label, value in
+    var textOrHide: Binder<String?> {
+        return Binder(base) { label, value in
             guard let value = value else {
                 label.isHidden = true
                 return

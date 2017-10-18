@@ -103,10 +103,10 @@ class GithubPaginatedSearchViewController: UIViewController {
         
         searchResults.register(UITableViewCell.self, forCellReuseIdentifier: "repo")
         
-        let triggerLoadNextPage: (Driver<State>) -> Driver<Event> = { state in
-            return state.flatMapLatest { state -> Driver<Event> in
+        let triggerLoadNextPage: (Driver<State>) -> Signal<Event> = { state in
+            return state.flatMapLatest { state -> Signal<Event> in
                 if state.shouldLoadNextPage {
-                    return Driver.empty()
+                    return Signal.empty()
                 }
                 
                 return searchResults.rx.nearBottom.map { _ in Event.startLoadingNextPage }
@@ -118,7 +118,7 @@ class GithubPaginatedSearchViewController: UIViewController {
             cell.detailTextLabel?.text = repo.url.description
         }
         
-        let bindUI: (Driver<State>) -> Driver<Event> = UI.bind(self) { me, state in
+        let bindUI: (Driver<State>) -> Signal<Event> = UI.bind(self) { me, state in
             let subscriptions = [
                 state.map { $0.search }.drive(me.searchText!.rx.text),
                 state.map { $0.lastError?.displayMessage }.drive(me.status!.rx.textOrHide),
@@ -126,8 +126,8 @@ class GithubPaginatedSearchViewController: UIViewController {
                 
                 state.map { $0.loadNextPage?.description }.drive(me.loadNextPage!.rx.textOrHide),
                 ]
-            let events = [
-                me.searchText!.rx.text.orEmpty.changed.asDriver().map(Event.searchChanged),
+            let events: [Signal<Event>] = [
+                me.searchText!.rx.text.orEmpty.changed.asSignal().map(Event.searchChanged),
                 triggerLoadNextPage(state)
             ]
             return UI.Bindings(subscriptions: subscriptions, events: events)
@@ -142,7 +142,7 @@ class GithubPaginatedSearchViewController: UIViewController {
             // NoUI, automatic feedback
             react(query: { $0.loadNextPage }, effects: { resource in
                 return URLSession.shared.loadRepositories(resource: resource)
-                    .asDriver(onErrorJustReturn: .failure(.offline))
+                    .asSignal(onErrorJustReturn: .failure(.offline))
                     .map(Event.response)
             })
             )
@@ -189,7 +189,7 @@ fileprivate typealias SearchRepositoriesResponse = Result<(repositories: [Reposi
 
 extension Reactive where Base: UITableView {
     
-    var nearBottom: Driver<()> {
+    var nearBottom: Signal<()> {
         func isNearBottomEdge(tableView: UITableView, edgeOffset: CGFloat = 20.0) -> Bool {
             return tableView.contentOffset.y + tableView.frame.size.height + edgeOffset > tableView.contentSize.height
         }
@@ -197,8 +197,8 @@ extension Reactive where Base: UITableView {
         return self.contentOffset.asDriver()
             .flatMap { _ in
                 return isNearBottomEdge(tableView: self.base, edgeOffset: 20.0)
-                    ? Driver.just(())
-                    : Driver.empty()
+                    ? Signal.just(())
+                    : Signal.empty()
         }
     }
 }
@@ -215,7 +215,7 @@ extension URLSession {
             .retry(3)
             .map(Repository.parse)
             .retryWhen { errorTrigger in
-                return errorTrigger.flatMapWithIndex { (error, attempt) -> Observable<Int> in
+                return errorTrigger.enumerated().flatMap { (attempt, error) -> Observable<Int> in
                     if attempt >= maxAttempts - 1 {
                         return Observable.error(error)
                     }

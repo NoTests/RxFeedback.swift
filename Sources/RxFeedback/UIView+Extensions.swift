@@ -37,7 +37,7 @@ extension UI {
             - subscriptions: mappings of a system state to UI presentation.
             - events: mappings of events from UI to events of a given system
          */
-        public init(subscriptions: [Disposable], events: [Driver<Event>]) {
+        public init(subscriptions: [Disposable], events: [Signal<Event>]) {
             self.subscriptions = subscriptions
             self.events = events.map { $0.asObservable() }
         }
@@ -76,14 +76,14 @@ extension UI {
     /**
      Bi-directional binding of a system State to UI and UI into Events.
      */
-    public static func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Driver<Event> {
+    public static func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Signal<Event> {
 
-        return { (state: Driver<State>) -> Driver<Event> in
+        return { (state: Driver<State>) -> Signal<Event> in
             return Observable<Event>.using({ () -> Bindings<Event> in
                 return bindings(state)
             }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
                 return Observable<Event>.merge(bindings.events)
-            }).asDriver(onErrorDriveWith: Driver.empty())
+            }).asSignal(onErrorSignalWith: .empty())
                 .enqueue()
         }
     }
@@ -93,8 +93,8 @@ extension UI {
      Strongify owner.
      */
     public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
-        -> (Driver<State>) -> Driver<Event> where WeakOwner: AnyObject {
-            return bind(bindingsStrongify(owner, bindings))
+        -> (Driver<State>) -> Signal<Event> where WeakOwner: AnyObject {
+        return bind(bindingsStrongify(owner, bindings))
     }
     
     private static func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Event>))

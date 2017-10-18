@@ -66,9 +66,9 @@ extension ObservableType where E == Any {
     }
 }
 
-extension SharedSequenceConvertibleType where E == Any {
+extension SharedSequenceConvertibleType where E == Any, SharingStrategy == DriverSharingStrategy {
     /// Feedback loop
-    public typealias FeedbackLoop<State, Event> = (SharedSequence<SharingStrategy, State>) -> SharedSequence<SharingStrategy, Event>
+    public typealias FeedbackLoop<State, Event> = (Driver<State>) -> Signal<Event>
 
     /**
      System simulation will be started upon subscription and stopped after subscription is disposed.
@@ -85,11 +85,11 @@ extension SharedSequenceConvertibleType where E == Any {
             initialState: State,
             reduce: @escaping (State, Event) -> State,
             feedback: [FeedbackLoop<State, Event>]
-        ) -> SharedSequence<SharingStrategy, State> {
+        ) -> Driver<State> {
 
         let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Event>] = feedback.map { feedback in
             return { sharedSequence in
-                return feedback(sharedSequence.source.asSharedSequence(onErrorDriveWith: .empty()))
+                return feedback(sharedSequence.source.asDriver(onErrorDriveWith: Driver<State>.empty()))
                     .asObservable()
             }
         }
@@ -100,7 +100,7 @@ extension SharedSequenceConvertibleType where E == Any {
                 scheduler: SharingStrategy.scheduler,
                 scheduledFeedback: observableFeedbacks
             )
-            .asSharedSequence(onErrorDriveWith: .empty())
+            .asDriver(onErrorDriveWith: .empty())
     }
 
     public static func system<State, Event>(

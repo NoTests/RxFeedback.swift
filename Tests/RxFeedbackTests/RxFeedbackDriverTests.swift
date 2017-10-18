@@ -39,18 +39,18 @@ extension RxFeedbackDriverTests {
                 return  oldState + append
             },
             feedback: { state in
-                return state.flatMapLatest { state -> Driver<String> in
+                return state.flatMapLatest { state -> Signal<String> in
                     if state == "initial" {
-                        return Driver.just("_a").delay(0.01)
+                        return Signal.just("_a").delay(0.01)
                     }
                     else if state == "initial_a" {
-                        return Driver.just("_b")
+                        return Signal.just("_b")
                     }
                     else if state == "initial_a_b" {
-                        return Driver.just("_c")
+                        return Signal.just("_c")
                     }
                     else {
-                        return Driver.never()
+                        return Signal.never()
                     }
                 }
         })
@@ -73,19 +73,19 @@ extension RxFeedbackDriverTests {
     }
 
     func testImmediateFeedbackLoopParallel() {
-        let feedbackLoop: (Driver<String>) -> Driver<String> = { state in
-            return state.flatMapLatest { state -> Driver<String> in
+        let feedbackLoop: (Driver<String>) -> Signal<String> = { state in
+            return state.flatMapLatest { state -> Signal<String> in
                 if state == "initial" {
-                    return Driver.just("_a")
+                    return Signal.just("_a")
                 }
                 else if state == "initial_a" {
-                    return Driver.just("_b")
+                    return Signal.just("_b")
                 }
                 else if state == "initial_a_b" {
-                    return Driver.just("_c")
+                    return Signal.just("_c")
                 }
                 else {
-                    return Driver.never()
+                    return Signal.never()
                 }
             }
         }
@@ -120,8 +120,8 @@ extension RxFeedbackDriverTests {
 // Feedback loops
 extension RxFeedbackDriverTests {
     func testImmediateFeedbackLoopParallel_react_non_equatable() {
-        let feedbackLoop: (Driver<String>) -> Driver<String> = react(query: { $0.needsToAppendDot }) { (_: ()) -> Driver<String> in
-            return Driver.just("_.")
+        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppendDot }) { (_: ()) -> Signal<String> in
+            return Signal.just("_.")
         }
 
         let system = Driver.system(
@@ -148,8 +148,8 @@ extension RxFeedbackDriverTests {
     }
 
     func testImmediateFeedbackLoopParallel_react_equatable() {
-        let feedbackLoop: (Driver<String>) -> Driver<String> = react(query: { $0.needsToAppend }) { (value) in
-            return Driver.just(value)
+        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppend }) { (value) in
+            return Signal.just(value)
         }
 
         let system = Driver.system(
@@ -176,8 +176,8 @@ extension RxFeedbackDriverTests {
     }
 
     func testImmediateFeedbackLoopParallel_react_set() {
-        let feedbackLoop: (Driver<String>) -> Driver<String> = react(query: { $0.needsToAppendParallel }) { value in
-            return Driver.just(value)
+        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppendParallel }) { value in
+            return Signal.just(value)
         }
 
         let system = Driver.system(
@@ -226,18 +226,18 @@ extension RxFeedbackDriverTests {
                 return  oldState + append
             },
             feedback: UI.bind { (stateAndScheduler) in
-                let results = stateAndScheduler.flatMap { state -> Driver<String> in
+                let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
-                        return Driver.just("_a").delay(0.01)
+                        return Signal.just("_a").delay(0.01)
                     }
                     else if state == "initial_a" {
-                        return Driver.just("_b")
+                        return Signal.just("_b")
                     }
                     else if state == "initial_a_b" {
-                        return Driver.just("_c")
+                        return Signal.just("_c")
                     }
                     else {
-                        return Driver.never()
+                        return Signal.never()
                     }
                 }
                 return UI.Bindings(subscriptions: [], events: [results])
@@ -269,18 +269,18 @@ extension RxFeedbackDriverTests {
                 return  oldState + append
             },
             feedback: UI.bind(owner) { (_, stateAndScheduler) in
-                let results = stateAndScheduler.flatMap { state -> Driver<String> in
+                let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
-                        return Driver.just("_a").delay(0.01)
+                        return Signal.just("_a").delay(0.01)
                     }
                     else if state == "initial_a" {
-                        return Driver.just("_b")
+                        return Signal.just("_b")
                     }
                     else if state == "initial_a_b" {
-                        return Driver.just("_c")
+                        return Signal.just("_c")
                     }
                     else {
-                        return Driver.never()
+                        return Signal.never()
                     }
                 }
                 return UI.Bindings(subscriptions: [], events: [results])

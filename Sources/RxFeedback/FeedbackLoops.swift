@@ -57,14 +57,14 @@ public func react<State, Control: Equatable, Event>(
  */
 public func react<State, Control: Equatable, Event>(
     query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Driver<Event>
-) -> (Driver<State>) -> Driver<Event> {
+    effects: @escaping (Control) -> Signal<Event>
+) -> (Driver<State>) -> Signal<Event> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (control: Control?) -> Driver<Event> in
+            .flatMapLatest { (control: Control?) -> Signal<Event> in
                 guard let control = control else {
-                    return Driver<Event>.empty()
+                    return Signal<Event>.empty()
                 }
 
                 return effects(control)
@@ -121,14 +121,14 @@ public func react<State, Control, Event>(
  */
 public func react<State, Control, Event>(
     query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Driver<Event>
-) -> (Driver<State>) -> Driver<Event> {
+    effects: @escaping (Control) -> Signal<Event>
+) -> (Driver<State>) -> Signal<Event> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (control: Control?) -> Driver<Event> in
+            .flatMapLatest { (control: Control?) -> Signal<Event> in
                 guard let control = control else {
-                    return Driver<Event>.empty()
+                    return Signal<Event>.empty()
                 }
 
                 return effects(control)
@@ -151,7 +151,7 @@ public func react<State, Control, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control: Hashable, Event>(
+public func react<State, Control, Event>(
     query: @escaping (State) -> Set<Control>,
     effects: @escaping (Control) -> Observable<Event>
     ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
@@ -185,19 +185,19 @@ public func react<State, Control: Hashable, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control: Hashable, Event>(
+public func react<State, Control, Event>(
     query: @escaping (State) -> Set<Control>,
-    effects: @escaping (Control) -> Driver<Event>
-    ) -> (Driver<State>) -> Driver<Event> {
+    effects: @escaping (Control) -> Signal<Event>
+    ) -> (Driver<State>) -> Signal<Event> {
     return { state in
         let query = state.map(query)
 
         let newQueries = Driver.zip(query, query.startWith(Set())) { $0.subtracting($1) }
 
         return newQueries.flatMap { controls in
-            return Driver.merge(controls.map { control -> Driver<Event> in
+            return Signal.merge(controls.map { control -> Signal<Event> in
                 return query.filter { !$0.contains(control) }
-                    .map { _ in Driver<Event>.empty() }
+                    .map { _ in Signal<Event>.empty() }
                     .startWith(effects(control).enqueue())
                     .switchLatest()
             })
@@ -217,14 +217,14 @@ extension Observable {
     }
 }
 
-extension SharedSequence {
-    func enqueue() -> SharedSequence<S, Element> {
+extension SharedSequence where SharingStrategy == SignalSharingStrategy {
+    func enqueue() -> Signal<Element> {
         return self.asObservable()
             // observe on is here because results should be cancelable
             .observeOn(S.scheduler.async)
             // subscribe on is here because side-effects also need to be cancelable
             // (smooths out any glitches caused by start-cancel immediatelly)
             .subscribeOn(S.scheduler.async)
-            .asSharedSequence(onErrorDriveWith: .empty())
+            .asSignal(onErrorSignalWith: Signal.empty())
     }
 }

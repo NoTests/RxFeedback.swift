@@ -26,6 +26,7 @@
 		C846457B1EB76DD60008AD87 /* GithubPaginatedSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C846457A1EB76DD60008AD87 /* GithubPaginatedSearch.swift */; };
 		C84645911EB775AF0008AD87 /* SystemError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84645901EB775AF0008AD87 /* SystemError.swift */; };
 		C84645931EB78D320008AD87 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84645921EB78D320008AD87 /* UILabel+Extensions.swift */; };
+		C88BFC121F9782C100157318 /* ControlEvent+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88BFC111F9782C100157318 /* ControlEvent+Signal.swift */; };
 		C8996C6B1F40A7A0004E5D83 /* RxFeedbackDriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */; };
 		C8996C6D1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */; };
 		C8996C7A1F40C5B6004E5D83 /* Deprecations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C791F40C5B6004E5D83 /* Deprecations.swift */; };
@@ -289,6 +290,8 @@
 		C84645921EB78D320008AD87 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		C84645941EB794BC0008AD87 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		C84645951EB794BC0008AD87 /* RxFeedback.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = RxFeedback.podspec; sourceTree = "<group>"; };
+		C88BFC111F9782C100157318 /* ControlEvent+Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlEvent+Signal.swift"; sourceTree = "<group>"; };
+		C88BFC131F97881A00157318 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		C8996C671F40A7A0004E5D83 /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxFeedbackDriverTests.swift; sourceTree = "<group>"; };
 		C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxFeedbackObservableTests.swift; sourceTree = "<group>"; };
@@ -372,6 +375,7 @@
 		C8047ACF1F4109A30089721B /* Packaging */ = {
 			isa = PBXGroup;
 			children = (
+				C88BFC131F97881A00157318 /* Cartfile */,
 				C8047ABB1F41099F0089721B /* CHANGELOG.md */,
 				C83B7C2B1EB7B794003055E0 /* dependencies.sh */,
 				C84645941EB794BC0008AD87 /* Package.swift */,
@@ -519,6 +523,7 @@
 				C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */,
 				C80987601EC4A1BF00EE2C23 /* Todo+Storage.swift */,
 				C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */,
+				C88BFC111F9782C100157318 /* ControlEvent+Signal.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -923,6 +928,7 @@
 				C80987621EC4A28300EE2C23 /* Todo+Plumbing.swift in Sources */,
 				C89B96391EB697BF00BDAB24 /* AppDelegate.swift in Sources */,
 				C80987631EC4A28E00EE2C23 /* Todo+Lenses.swift in Sources */,
+				C88BFC121F9782C100157318 /* ControlEvent+Signal.swift in Sources */,
 				C89B965F1EB69B2100BDAB24 /* PlayCatch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1027,7 +1033,7 @@
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,4";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1072,7 +1078,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,4";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
