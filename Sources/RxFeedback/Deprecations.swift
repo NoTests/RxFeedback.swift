@@ -15,7 +15,7 @@ import RxCocoa
  * State: State type of the system.
  * Control: Subset of state used to control the feedback loop.
  
- When query result exists (not `nil`), feedback loop is active and it performs events.
+ When query result exists (not `nil`), feedback loop is active and it performs effects.
  
  When query result is `nil`, feedback loops doesn't perform any effect.
 
@@ -40,7 +40,7 @@ public func react<State, Control: Equatable, Event>(
  * State: State type of the system.
  * Control: Subset of state used to control the feedback loop.
 
- When query result exists (not `nil`), feedback loop is active and it performs events.
+ When query result exists (not `nil`), feedback loop is active and it performs effects.
 
  When query result is `nil`, feedback loops doesn't perform any effect.
 
