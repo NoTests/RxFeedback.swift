@@ -134,17 +134,17 @@ class GithubPaginatedSearchViewController: UIViewController {
         }
         
         Driver.system(
-            initialState: State.empty,
-            reduce: State.reduce,
-            feedback:
-            // UI, user feedback
-            bindUI,
-            // NoUI, automatic feedback
-            react(query: { $0.loadNextPage }, effects: { resource in
-                return URLSession.shared.loadRepositories(resource: resource)
-                    .asSignal(onErrorJustReturn: .failure(.offline))
-                    .map(Event.response)
-            })
+                initialState: State.empty,
+                reduce: State.reduce,
+                feedback:
+                // UI, user feedback
+                bindUI,
+                // NoUI, automatic feedback
+                react(query: { $0.loadNextPage }, effects: { resource in
+                    return URLSession.shared.loadRepositories(resource: resource)
+                        .asSignal(onErrorJustReturn: .failure(.offline))
+                        .map(Event.response)
+                })
             )
             .drive()
             .disposed(by: disposeBag)
@@ -243,7 +243,7 @@ extension Repository {
         
         let nextURL = try Repository.parseNextURL(httpResponse)
         
-        return .success(repositories: repositories, nextURL: nextURL)
+        return .success((repositories: repositories, nextURL: nextURL))
     }
     
     private static let parseLinksPattern = "\\s*,?\\s*<([^\\>]*)>\\s*;\\s*rel=\"([^\"]*)\""
@@ -274,11 +274,10 @@ extension Repository {
         
         for m in matches {
             let matches = (1 ..< m.numberOfRanges).map { rangeIndex -> String in
-                let range = m.rangeAt(rangeIndex)
+                let range = m.range(at: rangeIndex)
                 let startIndex = links.characters.index(links.startIndex, offsetBy: range.location)
                 let endIndex = links.characters.index(links.startIndex, offsetBy: range.location + range.length)
-                let stringRange = startIndex ..< endIndex
-                return links.substring(with: stringRange)
+                return String(links[startIndex ..< endIndex])
             }
             
             if matches.count != 2 {

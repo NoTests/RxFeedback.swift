@@ -50,11 +50,11 @@ extension Todo {
         case .created(let task):
             return state.map(task: task, transform: Version.mutate { _ in })
         case .toggleCompleted(let task):
-            return state.map(task: task, transform: Version.mutate { $0.isCompleted = !$0.isCompleted })
+            return state.map(task: task, transform: Version<Task>.mutate { $0.isCompleted = !$0.isCompleted })
         case .archive(let task):
-            return state.map(task: task, transform: Version.mutate { $0.isArchived = true })
+            return state.map(task: task, transform: Version<Task>.mutate { $0.isArchived = true })
         case .synchronizationChanged(let task, let synchronizationState):
-            return state.map(task: task, transform: Version.mutate { $0.state = synchronizationState })
+            return state.map(task: task, transform: Version<Task>.mutate { $0.state = synchronizationState })
         case .toggleEditingMode:
             return state.map { $0.isEditing = !$0.isEditing }
         }
