@@ -5,7 +5,7 @@ os:
 language: generic
 sudo: required
 dist: trusty
-osx_image: xcode8.3
+osx_image: xcode9
 env:
   - BUILD="pod update                     && set -o pipefail && (xcodebuild -workspace RxFeedback.xcworkspace -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test && xcodebuild -workspace RxFeedback.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build) | xcpretty"
   - BUILD="./dependencies.sh              && set -o pipefail && (xcodebuild -project   RxFeedback.xcodeproj   -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test && xcodebuild -project   RxFeedback.xcodeproj   -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build) | xcpretty"
