@@ -48,7 +48,7 @@ extension Todo {
     static func reduce(state: Todo, event: Event) -> Todo {
         switch event {
         case .created(let task):
-            return state.map(task: task, transform: Version.mutate { _ in })
+            return state.map(task: task, transform: Version<Task>.mutate { _ in })
         case .toggleCompleted(let task):
             return state.map(task: task, transform: Version<Task>.mutate { $0.isCompleted = !$0.isCompleted })
         case .archive(let task):
