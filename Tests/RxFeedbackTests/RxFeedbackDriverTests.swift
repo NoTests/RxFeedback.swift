@@ -225,7 +225,7 @@ extension RxFeedbackDriverTests {
             reduce: { oldState, append in
                 return  oldState + append
             },
-            feedback: bind { (stateAndScheduler) in
+            feedback: RxFeedback.bind { (stateAndScheduler) in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
                         return Signal.just("_a").delay(0.01)
@@ -268,7 +268,7 @@ extension RxFeedbackDriverTests {
             reduce: { oldState, append in
                 return  oldState + append
             },
-            feedback: bind(owner) { (_, stateAndScheduler) in
+            feedback: RxFeedback.bind(owner) { (_, stateAndScheduler) in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
                         return Signal.just("_a").delay(0.01)

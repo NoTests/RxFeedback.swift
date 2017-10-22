@@ -14,6 +14,7 @@ env:
   - BUILD="swift build"
   - BUILD="carthage update --platform ios && carthage build --no-skip-current --platform iOS"
   - BUILD="carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS"
+  - BUILD="swift test"
 
 script: eval "${BUILD}"
 
