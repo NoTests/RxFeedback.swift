@@ -1,5 +1,11 @@
 ## Master
 
+## [1.0.0](https://github.com/kzaher/RxFeedback/releases/tag/1.0.0)
+
+* Deprecates `UI.*` in favor of free methods.
+* Deprecates feedback loops of the form `Driver<State> -> Driver<Event>` in favor of `Driver<State> -> Signal<Event>`.
+* Adaptations for RxSwift 4.0.0.
+
 ## [0.3.3](https://github.com/kzaher/RxFeedback/releases/tag/0.3.3)
 
 * Adds reentrancy guards to UI.bind feedback loop (Driver version).
