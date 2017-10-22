@@ -32,7 +32,7 @@ class PlayCatchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let bindUI: (ObservableSchedulerContext<State>) -> Observable<Event> = UI.bind(self) { me, state in
+        let bindUI: (ObservableSchedulerContext<State>) -> Observable<Event> = bind(self) { me, state in
             let subscriptions = [
                 state.map { $0.myStateOfMind }.bind(to: me.myLabel!.rx.text),
                 state.map { $0.machineStateOfMind }.bind(to: me.machinesLabel!.rx.text),
@@ -41,7 +41,7 @@ class PlayCatchViewController: UIViewController {
             let events = [
                 me.throwTheBallButton!.rx.tap.map { Event.throwToMachine }
             ]
-            return UI.Bindings(subscriptions: subscriptions, events: events)
+            return Bindings(subscriptions: subscriptions, events: events)
         }
 
         Observable.system(

@@ -118,7 +118,7 @@ class GithubPaginatedSearchViewController: UIViewController {
             cell.detailTextLabel?.text = repo.url.description
         }
 
-        let bindUI: (Driver<State>) -> Signal<Event> = UI.bind(self) { me, state in
+        let bindUI: (Driver<State>) -> Signal<Event> = bind(self) { me, state in
             let subscriptions = [
                 state.map { $0.search }.drive(me.searchText!.rx.text),
                 state.map { $0.lastError?.displayMessage }.drive(me.status!.rx.textOrHide),
@@ -130,7 +130,7 @@ class GithubPaginatedSearchViewController: UIViewController {
                 me.searchText!.rx.text.orEmpty.changed.asSignal().map(Event.searchChanged),
                 triggerLoadNextPage(state)
             ]
-            return UI.Bindings(subscriptions: subscriptions, events: events)
+            return Bindings(subscriptions: subscriptions, events: events)
         }
 
         Driver.system(

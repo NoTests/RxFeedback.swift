@@ -110,37 +110,6 @@ extension ObservableType where E == Any {
     }
 }
 
-extension UI {
-    /**
-     Bi-directional binding of a system State to UI and UI into Events.
-     */
-    @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "bind()")
-    public static func bind<State, Event>(_ bindings: @escaping (Observable<State>) -> (Bindings<Event>)) -> (Observable<State>) -> Observable<Event> {
-        return { state in
-            let scheduler = CurrentThreadScheduler.instance
-            let context = ObservableSchedulerContext(source: state, scheduler: scheduler)
-            return bind { bindings($0.source) }(context)
-        }
-    }
-
-    /**
-     Bi-directional binding of a system State to UI and UI into Events,
-     Strongify owner.
-     */
-    @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "bind()")
-    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Observable<State>) -> (Bindings<Event>))
-        -> (Observable<State>) -> Observable<Event> where WeakOwner: AnyObject {
-            weak var weakOwner = owner
-        return { state in
-            guard let owner = weakOwner else { return .empty() }
-            let scheduler = CurrentThreadScheduler.instance
-            let context = ObservableSchedulerContext(source: state, scheduler: scheduler)
-
-            return (self.bind(owner) { bindings($0, $1.source) })(context)
-        }
-    }
-}
-
 /**
  Control feedback loop that tries to immediatelly perform the latest required effect.
 
@@ -155,7 +124,7 @@ extension UI {
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-@available(*, deprecated, message: "Pleae use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
+@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
 public func react<State, Control: Equatable, Event>(
     query: @escaping (State) -> Control?,
     effects: @escaping (Control) -> Driver<Event>
@@ -188,7 +157,7 @@ public func react<State, Control: Equatable, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-@available(*, deprecated, message: "Pleae use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
+@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
 public func react<State, Control, Event>(
     query: @escaping (State) -> Control?,
     effects: @escaping (Control) -> Driver<Event>
@@ -221,7 +190,7 @@ public func react<State, Control, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-@available(*, deprecated, message: "Pleae use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
+@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
 public func react<State, Control, Event>(
     query: @escaping (State) -> Set<Control>,
     effects: @escaping (Control) -> Driver<Event>
@@ -257,7 +226,7 @@ extension SharedSequence where SharingStrategy == DriverSharingStrategy {
 
 extension SharedSequenceConvertibleType where E == Any, SharingStrategy == DriverSharingStrategy {
     /// Feedback loop
-    @available(*, deprecated, message: "Pleae use Feedback")
+    @available(*, deprecated, message: "Please use Feedback")
     public typealias FeedbackLoop<State, Event> = (Driver<State>) -> Driver<Event>
 
     /**
@@ -271,7 +240,7 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
      - parameter feedback: Feedback loops that produce events depending on current system state.
      - returns: Current state of the system.
      */
-    @available(*, deprecated, message: "Pleae use version that uses feedbacks with this signature `Driver<State> -> Signal<Event>`")
+    @available(*, deprecated, message: "Please use version that uses feedbacks with this signature `Driver<State> -> Signal<Event>`")
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
@@ -293,7 +262,7 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
             .asDriver(onErrorDriveWith: .empty())
     }
 
-    @available(*, deprecated, message: "Pleae use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
+    @available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
@@ -303,28 +272,56 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
     }
 }
 
-extension UI.Bindings {
+@available(*, deprecated, message: "Please use free members from RxFeedback module (`RxFeedback.Bindings`, `RxFeedback.bind`, ...).")
+public struct UI {
     /**
-     - parameters:
-     - subscriptions: mappings of a system state to UI presentation.
-     - events: mappings of events from UI to events of a given system
-     */
-    @available(*, deprecated, message: "Pleae use version that uses `Signal`s for events.")
-    public convenience init(subscriptions: [Disposable], events: [Driver<Event>]) {
-        self.init(subscriptions: subscriptions, events: events.map { $0.asObservable() })
+     Contains subscriptions and events.
+     - `subscriptions` map a system state to UI presentation.
+     - `events` map events from UI to events of a given system.
+    */
+    public class Bindings<Event>: Disposable {
+        fileprivate let subscriptions: [Disposable]
+        fileprivate let events: [Observable<Event>]
+
+        /**
+         - parameters:
+            - subscriptions: mappings of a system state to UI presentation.
+            - events: mappings of events from UI to events of a given system
+         */
+        public init(subscriptions: [Disposable], events: [Observable<Event>]) {
+            self.subscriptions = subscriptions
+            self.events = events
+        }
+
+        /**
+         - parameters:
+            - subscriptions: mappings of a system state to UI presentation.
+            - events: mappings of events from UI to events of a given system
+         */
+        public init(subscriptions: [Disposable], events: [Driver<Event>]) {
+            self.subscriptions = subscriptions
+            self.events = events.map { $0.asObservable() }
+        }
+
+        public func dispose() {
+            for subscription in subscriptions {
+                subscription.dispose()
+            }
+        }
     }
-}
 
-
-extension UI {
     /**
      Bi-directional binding of a system State to UI and UI into Events.
      */
-    @available(*, deprecated, message: "Pleae use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
-    public static func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Driver<Event> {
-        return { state in
-            let signal: Signal<Event> = bind(bindings)(state)
-            return signal.asDriver(onErrorDriveWith: .empty())
+    public static func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Event>)) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+
+        return { (state: ObservableSchedulerContext<State>) -> Observable<Event> in
+            return Observable<Event>.using({ () -> Bindings<Event> in
+                return bindings(state)
+            }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
+                return Observable<Event>.merge(bindings.events)
+                    .enqueue(state.scheduler)
+            })
         }
     }
 
@@ -332,12 +329,54 @@ extension UI {
      Bi-directional binding of a system State to UI and UI into Events,
      Strongify owner.
      */
-    @available(*, deprecated, message: "Pleae use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
+    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Event>))
+        -> (ObservableSchedulerContext<State>) -> Observable<Event> where WeakOwner: AnyObject {
+            return bind(bindingsStrongify(owner, bindings))
+    }
+
+    /**
+     Bi-directional binding of a system State to UI and UI into Events.
+     */
+    public static func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Driver<Event> {
+
+        return { (state: Driver<State>) -> Driver<Event> in
+            return Observable<Event>.using({ () -> Bindings<Event> in
+                return bindings(state)
+            }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
+                return Observable<Event>.merge(bindings.events)
+            }).asDriver(onErrorDriveWith: Driver.empty())
+                .enqueue()
+        }
+    }
+
+    /**
+     Bi-directional binding of a system State to UI and UI into Events,
+     Strongify owner.
+     */
     public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
         -> (Driver<State>) -> Driver<Event> where WeakOwner: AnyObject {
-        return { state in
-            let signal: Signal<Event> = bind(owner, bindings)(state)
-            return signal.asDriver(onErrorDriveWith: .empty())
-        }
+            return bind(bindingsStrongify(owner, bindings))
+    }
+
+    private static func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Event>))
+        -> (O) -> (Bindings<Event>) where WeakOwner: AnyObject {
+            return { [weak owner] state -> Bindings<Event> in
+                guard let strongOwner = owner else {
+                    return Bindings(subscriptions: [], events: [Observable<Event>]())
+                }
+                return bindings(strongOwner, state)
+            }
+    }
+
+}
+
+extension Observable {
+    fileprivate func enqueue(_ scheduler: ImmediateSchedulerType) -> Observable<Element> {
+        return self
+            // observe on is here because results should be cancelable
+            .observeOn(scheduler)
+            // subscribe on is here because side-effects also need to be cancelable
+            // (smooths out any glitches caused by start-cancel immediatelly)
+            .subscribeOn(scheduler)
     }
 }

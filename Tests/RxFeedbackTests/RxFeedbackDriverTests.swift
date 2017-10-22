@@ -22,7 +22,7 @@ extension RxFeedbackDriverTests {
             reduce: { _, newState in
                 return newState
             },
-            feedback: [])
+            feedback: [] as [Driver<Any>.Feedback<String, String>])
 
         var state = ""
         _ = system.drive(onNext: { nextState in
@@ -225,7 +225,7 @@ extension RxFeedbackDriverTests {
             reduce: { oldState, append in
                 return  oldState + append
             },
-            feedback: UI.bind { (stateAndScheduler) in
+            feedback: bind { (stateAndScheduler) in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
                         return Signal.just("_a").delay(0.01)
@@ -240,7 +240,7 @@ extension RxFeedbackDriverTests {
                         return Signal.never()
                     }
                 }
-                return UI.Bindings(subscriptions: [], events: [results])
+                return Bindings(subscriptions: [], events: [results])
         })
 
         let result = (try?
@@ -268,7 +268,7 @@ extension RxFeedbackDriverTests {
             reduce: { oldState, append in
                 return  oldState + append
             },
-            feedback: UI.bind(owner) { (_, stateAndScheduler) in
+            feedback: bind(owner) { (_, stateAndScheduler) in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
                         return Signal.just("_a").delay(0.01)
@@ -283,7 +283,7 @@ extension RxFeedbackDriverTests {
                         return Signal.never()
                     }
                 }
-                return UI.Bindings(subscriptions: [], events: [results])
+                return Bindings(subscriptions: [], events: [results])
             })
 
         let result = (try?

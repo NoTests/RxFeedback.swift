@@ -229,100 +229,94 @@ extension SharedSequence where SharingStrategy == SignalSharingStrategy {
     }
 }
 
-public enum UI {}
-
-extension UI {
+/**
+ Contains subscriptions and events.
+ - `subscriptions` map a system state to UI presentation.
+ - `events` map events from UI to events of a given system.
+*/
+public class Bindings<Event>: Disposable {
+    fileprivate let subscriptions: [Disposable]
+    fileprivate let events: [Observable<Event>]
 
     /**
-     Contains subscriptions and events.
-     - `subscriptions` map a system state to UI presentation.
-     - `events` map events from UI to events of a given system.
-    */
-    public class Bindings<Event>: Disposable {
-        fileprivate let subscriptions: [Disposable]
-        fileprivate let events: [Observable<Event>]
-
-        /**
-         - parameters:
-            - subscriptions: mappings of a system state to UI presentation.
-            - events: mappings of events from UI to events of a given system
-         */
-        public init(subscriptions: [Disposable], events: [Observable<Event>]) {
-            self.subscriptions = subscriptions
-            self.events = events
-        }
-
-        /**
-         - parameters:
-            - subscriptions: mappings of a system state to UI presentation.
-            - events: mappings of events from UI to events of a given system
-         */
-        public init(subscriptions: [Disposable], events: [Signal<Event>]) {
-            self.subscriptions = subscriptions
-            self.events = events.map { $0.asObservable() }
-        }
-
-        public func dispose() {
-            for subscription in subscriptions {
-                subscription.dispose()
-            }
-        }
+     - parameters:
+        - subscriptions: mappings of a system state to UI presentation.
+        - events: mappings of events from UI to events of a given system
+     */
+    public init(subscriptions: [Disposable], events: [Observable<Event>]) {
+        self.subscriptions = subscriptions
+        self.events = events
     }
 
     /**
-     Bi-directional binding of a system State to UI and UI into Events.
+     - parameters:
+        - subscriptions: mappings of a system state to UI presentation.
+        - events: mappings of events from UI to events of a given system
      */
-    public static func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Event>)) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
-        return { (state: ObservableSchedulerContext<State>) -> Observable<Event> in
-            return Observable<Event>.using({ () -> Bindings<Event> in
-                return bindings(state)
-            }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-                return Observable<Event>.merge(bindings.events)
-                    .enqueue(state.scheduler)
-            })
+    public init(subscriptions: [Disposable], events: [Signal<Event>]) {
+        self.subscriptions = subscriptions
+        self.events = events.map { $0.asObservable() }
+    }
+
+    public func dispose() {
+        for subscription in subscriptions {
+            subscription.dispose()
         }
     }
+}
 
-    /**
-     Bi-directional binding of a system State to UI and UI into Events,
-     Strongify owner.
-     */
-    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Event>))
-        -> (ObservableSchedulerContext<State>) -> Observable<Event> where WeakOwner: AnyObject {
-            return bind(bindingsStrongify(owner, bindings))
+/**
+ Bi-directional binding of a system State to UI and UI into Events.
+ */
+public func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Event>)) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+    return { (state: ObservableSchedulerContext<State>) -> Observable<Event> in
+        return Observable<Event>.using({ () -> Bindings<Event> in
+            return bindings(state)
+        }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
+            return Observable<Event>.merge(bindings.events)
+                .enqueue(state.scheduler)
+        })
     }
+}
 
-    /**
-     Bi-directional binding of a system State to UI and UI into Events.
-     */
-    public static func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Signal<Event> {
-        return { (state: Driver<State>) -> Signal<Event> in
-            return Observable<Event>.using({ () -> Bindings<Event> in
-                return bindings(state)
-            }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-                return Observable<Event>.merge(bindings.events)
-            }).asSignal(onErrorSignalWith: .empty())
-                .enqueue()
-        }
-    }
-
-    /**
-     Bi-directional binding of a system State to UI and UI into Events,
-     Strongify owner.
-     */
-    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
-        -> (Driver<State>) -> Signal<Event> where WeakOwner: AnyObject {
+/**
+ Bi-directional binding of a system State to UI and UI into Events,
+ Strongify owner.
+ */
+public func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Event>))
+    -> (ObservableSchedulerContext<State>) -> Observable<Event> where WeakOwner: AnyObject {
         return bind(bindingsStrongify(owner, bindings))
-    }
+}
 
-    private static func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Event>))
-        -> (O) -> (Bindings<Event>) where WeakOwner: AnyObject {
-        return { [weak owner] state -> Bindings<Event> in
-            guard let strongOwner = owner else {
-                return Bindings(subscriptions: [], events: [Observable<Event>]())
-            }
-            return bindings(strongOwner, state)
+/**
+ Bi-directional binding of a system State to UI and UI into Events.
+ */
+public func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Signal<Event> {
+    return { (state: Driver<State>) -> Signal<Event> in
+        return Observable<Event>.using({ () -> Bindings<Event> in
+            return bindings(state)
+        }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
+            return Observable<Event>.merge(bindings.events)
+        }).asSignal(onErrorSignalWith: .empty())
+            .enqueue()
+    }
+}
+
+/**
+ Bi-directional binding of a system State to UI and UI into Events,
+ Strongify owner.
+ */
+public func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
+    -> (Driver<State>) -> Signal<Event> where WeakOwner: AnyObject {
+    return bind(bindingsStrongify(owner, bindings))
+}
+
+private func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Event>))
+    -> (O) -> (Bindings<Event>) where WeakOwner: AnyObject {
+    return { [weak owner] state -> Bindings<Event> in
+        guard let strongOwner = owner else {
+            return Bindings(subscriptions: [], events: [Observable<Event>]())
         }
+        return bindings(strongOwner, state)
     }
-
 }

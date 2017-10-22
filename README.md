@@ -58,7 +58,7 @@ Observable.system(
     scheduler: MainScheduler.instance,
     feedback:
         // UI is user feedback
-        UI.bind { state in
+        bind { state in
             ([
                 state.map(String.init).bind(to: label.rx.text)
             ], [

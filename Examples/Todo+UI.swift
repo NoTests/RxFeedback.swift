@@ -74,7 +74,7 @@ extension TodoViewController {
         let tableView = self.tableView!
         let editDone = self.editDone!
 
-        return UI.bind { state in
+        return bind { state in
             let tasks = state.map { [Row.new] + ($0.unfinishedTasks + $0.completedTasks).map(Row.task) }
             let editing = state.map { $0.isEditing }
             let editButtonTitle = editing.map { $0 ? "Done" : "Edit" }
@@ -97,7 +97,7 @@ extension TodoViewController {
                         }
 
                 ]
-            return UI.Bindings(subscriptions: subscriptions, events: events)
+            return Bindings(subscriptions: subscriptions, events: events)
         }
     }
 }
