@@ -23,7 +23,7 @@ extension Todo {
                 .map { Todo.Event.synchronizationChanged(task, $0) }
                 .asSignal(onErrorRecover: { error in Signal.just(.synchronizationChanged(task, .failed(error))) })
         }
-        
+
         return Driver<Any>.system(initialState: initialState,
                                   reduce: Todo.reduce,
                                   feedback: ui, synchronizeFeedback)

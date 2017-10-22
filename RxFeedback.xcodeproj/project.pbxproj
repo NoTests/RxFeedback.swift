@@ -20,7 +20,6 @@
 		C80F72261EC63CC1006091FC /* Float+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80F72251EC63CC1006091FC /* Float+Extensions.swift */; };
 		C81CFE741EC4E48600D19DC3 /* UIAlertController+Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */; };
 		C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
-		C834A8CB1EB67BAD00E6B15E /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8CA1EB67BAD00E6B15E /* UIView+Extensions.swift */; };
 		C83B7C941EB7BA14003055E0 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */; };
 		C83B7C981EB7BA14003055E0 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */; };
 		C846457B1EB76DD60008AD87 /* GithubPaginatedSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C846457A1EB76DD60008AD87 /* GithubPaginatedSearch.swift */; };
@@ -37,7 +36,7 @@
 		C89B961F1EB6942400BDAB24 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C834A8A91EB67A8B00E6B15E /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C89B96221EB6942900BDAB24 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
 		C89B96231EB6942900BDAB24 /* RxFeedback.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C89B96251EB6964200BDAB24 /* FeedbackLoops.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96241EB6964200BDAB24 /* FeedbackLoops.swift */; };
+		C89B96251EB6964200BDAB24 /* Feedbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96241EB6964200BDAB24 /* Feedbacks.swift */; };
 		C89B96391EB697BF00BDAB24 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96321EB697BF00BDAB24 /* AppDelegate.swift */; };
 		C89B963A1EB697BF00BDAB24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C89B96331EB697BF00BDAB24 /* Assets.xcassets */; };
 		C89B963B1EB697BF00BDAB24 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C89B96341EB697BF00BDAB24 /* LaunchScreen.storyboard */; };
@@ -275,7 +274,6 @@
 		C834A86D1EB6796D00E6B15E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C834A8761EB679FB00E6B15E /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Rx.xcodeproj; path = RxSwift/Rx.xcodeproj; sourceTree = "<group>"; };
-		C834A8CA1EB67BAD00E6B15E /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		C83B7C2B1EB7B794003055E0 /* dependencies.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dependencies.sh; sourceTree = "<group>"; };
 		C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
 		C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
@@ -297,7 +295,7 @@
 		C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxFeedbackObservableTests.swift; sourceTree = "<group>"; };
 		C8996C791F40C5B6004E5D83 /* Deprecations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deprecations.swift; sourceTree = "<group>"; };
 		C8996C7B1F40D82A004E5D83 /* String+Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Test.swift"; sourceTree = "<group>"; };
-		C89B96241EB6964200BDAB24 /* FeedbackLoops.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackLoops.swift; sourceTree = "<group>"; };
+		C89B96241EB6964200BDAB24 /* Feedbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedbacks.swift; sourceTree = "<group>"; };
 		C89B96321EB697BF00BDAB24 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C89B96331EB697BF00BDAB24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C89B96351EB697BF00BDAB24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -389,8 +387,7 @@
 			isa = PBXGroup;
 			children = (
 				C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */,
-				C834A8CA1EB67BAD00E6B15E /* UIView+Extensions.swift */,
-				C89B96241EB6964200BDAB24 /* FeedbackLoops.swift */,
+				C89B96241EB6964200BDAB24 /* Feedbacks.swift */,
 				C8996C791F40C5B6004E5D83 /* Deprecations.swift */,
 			);
 			name = RxFeedback;
@@ -891,8 +888,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C89B96251EB6964200BDAB24 /* FeedbackLoops.swift in Sources */,
-				C834A8CB1EB67BAD00E6B15E /* UIView+Extensions.swift in Sources */,
+				C89B96251EB6964200BDAB24 /* Feedbacks.swift in Sources */,
 				C8996C7A1F40C5B6004E5D83 /* Deprecations.swift in Sources */,
 				C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */,
 			);

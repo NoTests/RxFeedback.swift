@@ -11,7 +11,8 @@ import RxCocoa
 
 extension ObservableType where E == Any {
     /// Feedback loop
-    public typealias FeedbackLoop<State, Event> = (ObservableSchedulerContext<State>) -> Observable<Event>
+    public typealias Feedback<State, Event> = (ObservableSchedulerContext<State>) -> Observable<Event>
+    public typealias FeedbackLoop = Feedback
 
     /**
      System simulation will be started upon subscription and stopped after subscription is disposed.
@@ -28,7 +29,7 @@ extension ObservableType where E == Any {
             initialState: State,
             reduce: @escaping (State, Event) -> State,
             scheduler: ImmediateSchedulerType,
-            scheduledFeedback: [FeedbackLoop<State, Event>]
+            scheduledFeedback: [Feedback<State, Event>]
         ) -> Observable<State> {
         return Observable<State>.deferred {
             let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
@@ -60,7 +61,7 @@ extension ObservableType where E == Any {
             initialState: State,
             reduce: @escaping (State, Event) -> State,
             scheduler: ImmediateSchedulerType,
-            scheduledFeedback: FeedbackLoop<State, Event>...
+            scheduledFeedback: Feedback<State, Event>...
         ) -> Observable<State> {
         return system(initialState: initialState, reduce: reduce, scheduler: scheduler, scheduledFeedback: scheduledFeedback)
     }
@@ -68,7 +69,7 @@ extension ObservableType where E == Any {
 
 extension SharedSequenceConvertibleType where E == Any, SharingStrategy == DriverSharingStrategy {
     /// Feedback loop
-    public typealias FeedbackLoop<State, Event> = (Driver<State>) -> Signal<Event>
+    public typealias Feedback<State, Event> = (Driver<State>) -> Signal<Event>
 
     /**
      System simulation will be started upon subscription and stopped after subscription is disposed.
@@ -84,9 +85,8 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
-            feedback: [FeedbackLoop<State, Event>]
+            feedback: [Feedback<State, Event>]
         ) -> Driver<State> {
-
         let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Event>] = feedback.map { feedback in
             return { sharedSequence in
                 return feedback(sharedSequence.source.asDriver(onErrorDriveWith: Driver<State>.empty()))
@@ -106,8 +106,8 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
-            feedback: FeedbackLoop<State, Event>...
-        ) -> SharedSequence<SharingStrategy, State> {
+            feedback: Feedback<State, Event>...
+        ) -> Driver<State> {
         return system(initialState: initialState, reduce: reduce, feedback: feedback)
     }
 }

@@ -7,12 +7,12 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/RxFeedback.png" width="502px" />
 
 ```swift
-    typealias FeedbackLoop<State, Event> = (Observable<State>) -> Observable<Event>
+    typealias Feedback<State, Event> = (Observable<State>) -> Observable<Event>
 
     public static func system<State, Event>(
             initialState: State,
             reduce: @escaping (State, Event) -> State,
-            feedback: FeedbackLoop<State, Event>...
+            feedback: Feedback<State, Event>...
         ) -> Observable<State>
 ```
 
