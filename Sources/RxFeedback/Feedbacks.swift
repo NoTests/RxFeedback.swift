@@ -157,6 +157,7 @@ public func react<State, Control, Event>(
     ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
     return { state in
         let query = state.map(query)
+            .share(replay: 1)
 
         let newQueries = Observable.zip(query, query.startWith(Set())) { $0.subtracting($1) }
 
