@@ -19,7 +19,7 @@ class FeedbackLoopsTests: XCTestCase {
 // Tests on the react function with not an equatable or hashable Control.
 extension FeedbackLoopsTests {
 
-    func testIntialNilQueryDoNotProduceEffects() {
+    func testIntialNilQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let query: (String) -> Void? = { _ in
@@ -46,7 +46,7 @@ extension FeedbackLoopsTests {
         XCTAssertEqual(results.events, expected.recordedEvents)
     }
 
-    func testNotNilAfterIntialNilDoesProdeuceEffects() {
+    func testNotNilAfterIntialNilDoesProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let query: (String) -> Void? = { state in
@@ -195,17 +195,16 @@ extension FeedbackLoopsTests {
             scheduler: scheduler,
             scheduledFeedback: feedback1, feedback2
         )
-        let expected = scheduler.createHotObservable([
-            next(201, "initial"),
-            next(204, "initial_b")
-            ])
-
+        
         // Run
         scheduler.scheduleAt(210) { notImmediateEffect.onNext("_a") }
         let results = scheduler.start { system }
 
         // Test
-        XCTAssertEqual(results.events, expected.recordedEvents)
+        XCTAssertEqual(results.events, [
+            next(201, "initial"),
+            next(204, "initial_b")
+            ])
         XCTAssertTrue(isEffects1Called)
     }
 }
