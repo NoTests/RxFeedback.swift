@@ -1290,6 +1290,7 @@
 				INFOPLIST_FILE = Sources/RxFeedback/RxFeedback.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-macOS";
 				PRODUCT_MODULE_NAME = RxFeedback;
 				PRODUCT_NAME = RxFeedback;
@@ -1320,6 +1321,7 @@
 				INFOPLIST_FILE = Sources/RxFeedback/RxFeedback.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-macOS";
 				PRODUCT_MODULE_NAME = RxFeedback;
 				PRODUCT_NAME = RxFeedback;
