@@ -43,6 +43,7 @@
 		C89B963C1EB697BF00BDAB24 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C89B96361EB697BF00BDAB24 /* Main.storyboard */; };
 		C89B96401EB697D200BDAB24 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B963F1EB697D200BDAB24 /* Counter.swift */; };
 		C89B965F1EB69B2100BDAB24 /* PlayCatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */; };
+		E11E0E1E1F766F370031D189 /* FeedbackLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11E0E0A1F766C750031D189 /* FeedbackLoopsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -235,6 +236,13 @@
 			remoteGlobalIDString = C80938F51B8A71760088E94D;
 			remoteInfo = "RxCocoa-iOS";
 		};
+		E11E0E1F1F7674530031D189 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C88FA4FD1C25C44800CCFEA4;
+			remoteInfo = "RxTest-iOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -303,6 +311,7 @@
 		C89B96381EB697BF00BDAB24 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C89B963F1EB697D200BDAB24 /* Counter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayCatch.swift; sourceTree = "<group>"; };
+		E11E0E0A1F766C750031D189 /* FeedbackLoopsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackLoopsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -485,6 +494,7 @@
 				C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */,
 				C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */,
 				C8996C7B1F40D82A004E5D83 /* String+Test.swift */,
+				E11E0E0A1F766C750031D189 /* FeedbackLoopsTests.swift */,
 			);
 			path = RxFeedbackTests;
 			sourceTree = "<group>";
@@ -601,6 +611,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				E11E0E201F7674530031D189 /* PBXTargetDependency */,
 				C8996C761F40AD55004E5D83 /* PBXTargetDependency */,
 				C8996C711F40AA49004E5D83 /* PBXTargetDependency */,
 			);
@@ -898,6 +909,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E11E0E1E1F766F370031D189 /* FeedbackLoopsTests.swift in Sources */,
 				C8996C6B1F40A7A0004E5D83 /* RxFeedbackDriverTests.swift in Sources */,
 				C8996C6D1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift in Sources */,
 				C8996C7C1F40D82A004E5D83 /* String+Test.swift in Sources */,
@@ -961,6 +973,11 @@
 			isa = PBXTargetDependency;
 			name = "RxCocoa-iOS";
 			targetProxy = C89B96201EB6942400BDAB24 /* PBXContainerItemProxy */;
+		};
+		E11E0E201F7674530031D189 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "RxTest-iOS";
+			targetProxy = E11E0E1F1F7674530031D189 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
