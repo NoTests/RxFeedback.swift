@@ -267,7 +267,7 @@ public class Bindings<Event>: Disposable {
 }
 
 /**
- Bi-directional binding of a system State to UI and UI into Events.
+ Bi-directional binding of a system State to external state machine and events from it.
  */
 public func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Event>)) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
     return { (state: ObservableSchedulerContext<State>) -> Observable<Event> in
@@ -281,7 +281,7 @@ public func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext
 }
 
 /**
- Bi-directional binding of a system State to UI and UI into Events,
+ Bi-directional binding of a system State to external state machine and events from it.
  Strongify owner.
  */
 public func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Event>))
@@ -290,7 +290,7 @@ public func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escap
 }
 
 /**
- Bi-directional binding of a system State to UI and UI into Events.
+ Bi-directional binding of a system State to external state machine and events from it.
  */
 public func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Signal<Event> {
     return { (state: Driver<State>) -> Signal<Event> in
@@ -304,7 +304,7 @@ public func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Binding
 }
 
 /**
- Bi-directional binding of a system State to UI and UI into Events,
+ Bi-directional binding of a system State to external state machine and events from it.
  Strongify owner.
  */
 public func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
