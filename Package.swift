@@ -11,6 +11,6 @@ let package = Package(
   ],
   targets: [
     .target(name: "RxFeedback", dependencies: ["RxSwift", "RxCocoa"]),
-    .testTarget(name: "RxFeedbackTests", dependencies: ["RxFeedback", "RxSwift", "RxCocoa", "RxBlocking"]),
+    .testTarget(name: "RxFeedbackTests", dependencies: ["RxFeedback", "RxSwift", "RxCocoa", "RxBlocking", "RxTest"]),
   ]
 )
