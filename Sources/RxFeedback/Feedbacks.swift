@@ -60,16 +60,12 @@ public func react<State, Control: Equatable, Event>(
     effects: @escaping (Control) -> Signal<Event>
 ) -> (Driver<State>) -> Signal<Event> {
     return { state in
-        return state.map(query)
-            .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (control: Control?) -> Signal<Event> in
-                guard let control = control else {
-                    return Signal<Event>.empty()
-                }
-
-                return effects(control)
-                    .enqueue()
-        }
+        let observableSchedulerContext = ObservableSchedulerContext<State>(
+            source: state.asObservable(),
+            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+        )
+        return react(query: query, effects: { effects($0).asObservable() })(observableSchedulerContext)
+            .asSignal(onErrorSignalWith: .empty())
     }
 }
 
@@ -124,16 +120,12 @@ public func react<State, Control, Event>(
     effects: @escaping (Control) -> Signal<Event>
 ) -> (Driver<State>) -> Signal<Event> {
     return { state in
-        return state.map(query)
-            .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (control: Control?) -> Signal<Event> in
-                guard let control = control else {
-                    return Signal<Event>.empty()
-                }
-
-                return effects(control)
-                    .enqueue()
-        }
+        let observableSchedulerContext = ObservableSchedulerContext<State>(
+            source: state.asObservable(),
+            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+        )
+        return react(query: query, effects: { effects($0).asObservable() })(observableSchedulerContext)
+            .asSignal(onErrorSignalWith: .empty())
     }
 }
 
@@ -160,15 +152,30 @@ public func react<State, Control, Event>(
             .share(replay: 1)
 
         let newQueries = Observable.zip(query, query.startWith(Set())) { $0.subtracting($1) }
+        let asyncScheduler = state.scheduler.async
 
         return newQueries.flatMap { controls in
-            return Observable.merge(controls.map { control -> Observable<Event> in
-                return query.filter { !$0.contains(control) }
-                    .map { _ in Observable<Event>.empty() }
-                    .startWith(effects(control).enqueue(state.scheduler))
-                    .switchLatest()
+            return Observable<Event>.merge(controls.map { control -> Observable<Event> in
+                return effects(control)
+                    .enqueue(state.scheduler)
+                    .takeUntilWithCompletedAsync(query.filter { !$0.contains(control) }, scheduler: asyncScheduler)
             })
         }
+    }
+}
+
+extension ObservableType {
+    // This is important to avoid reentrancy issues. Completed event is only used for cleanup
+    fileprivate func takeUntilWithCompletedAsync<O>(_ other: Observable<O>, scheduler: ImmediateSchedulerType) -> Observable<E> {
+            // this little piggy will delay completed event
+            let completeAsSoonAsPossible = Observable<E>.empty().observeOn(scheduler)
+            return other
+                .take(1)
+                .map { _ in completeAsSoonAsPossible }
+                // this little piggy will ensure self is being run first
+                .startWith(self.asObservable())
+                // this little piggy will ensure that new events are being blocked immediatelly
+                .switchLatest()
     }
 }
 
@@ -190,19 +197,13 @@ public func react<State, Control, Event>(
     query: @escaping (State) -> Set<Control>,
     effects: @escaping (Control) -> Signal<Event>
     ) -> (Driver<State>) -> Signal<Event> {
-    return { state in
-        let query = state.map(query)
-
-        let newQueries = Driver.zip(query, query.startWith(Set())) { $0.subtracting($1) }
-
-        return newQueries.flatMap { controls in
-            return Signal.merge(controls.map { control -> Signal<Event> in
-                return query.filter { !$0.contains(control) }
-                    .map { _ in Signal<Event>.empty() }
-                    .startWith(effects(control).enqueue())
-                    .switchLatest()
-            })
-        }
+    return { (state: Driver<State>) -> Signal<Event> in
+        let observableSchedulerContext = ObservableSchedulerContext<State>(
+            source: state.asObservable(),
+            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+        )
+        return react(query: query, effects: { effects($0).asObservable() })(observableSchedulerContext)
+            .asSignal(onErrorSignalWith: .empty())
     }
 }
 
@@ -211,22 +212,10 @@ extension Observable {
     fileprivate func enqueue(_ scheduler: ImmediateSchedulerType) -> Observable<Element> {
         return self
             // observe on is here because results should be cancelable
-            .observeOn(scheduler)
+            .observeOn(scheduler.async)
             // subscribe on is here because side-effects also need to be cancelable
             // (smooths out any glitches caused by start-cancel immediatelly)
-            .subscribeOn(scheduler)
-    }
-}
-
-extension SharedSequence where SharingStrategy == SignalSharingStrategy {
-    fileprivate func enqueue() -> Signal<Element> {
-        return self.asObservable()
-            // observe on is here because results should be cancelable
-            .observeOn(S.scheduler.async)
-            // subscribe on is here because side-effects also need to be cancelable
-            // (smooths out any glitches caused by start-cancel immediatelly)
-            .subscribeOn(S.scheduler.async)
-            .asSignal(onErrorSignalWith: Signal.empty())
+            .subscribeOn(scheduler.async)
     }
 }
 
@@ -298,8 +287,10 @@ public func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Binding
             return bindings(state)
         }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
             return Observable<Event>.merge(bindings.events)
-        }).asSignal(onErrorSignalWith: .empty())
-            .enqueue()
+        })
+            .enqueue(Signal<Event>.SharingStrategy.scheduler)
+            .asSignal(onErrorSignalWith: .empty())
+
     }
 }
 
