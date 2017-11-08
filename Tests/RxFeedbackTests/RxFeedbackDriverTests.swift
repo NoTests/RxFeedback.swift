@@ -1,4 +1,4 @@
-//
+    //
 //  RxFeedbackDriverTests.swift
 //  RxFeedbackTests
 //
@@ -12,7 +12,7 @@ import RxFeedback
 import RxSwift
 import RxCocoa
 
-class RxFeedbackDriverTests: XCTestCase {
+class RxFeedbackDriverTests: RxTest {
 }
 
 extension RxFeedbackDriverTests {

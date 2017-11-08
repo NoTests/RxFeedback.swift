@@ -1,8 +1,8 @@
 //
-//  FeedbackLoopsTests.swift
-//  RxFeedback
+//  ReactEquatableLoopsTests.swift
+//  RxFeedbackTests
 //
-//  Created by Alexander Sokol on 23/09/2017.
+//  Created by Krunoslav Zaher on 11/7/17.
 //  Copyright © 2017 Krunoslav Zaher. All rights reserved.
 //
 
@@ -12,80 +12,77 @@ import RxFeedback
 import RxSwift
 import RxTest
 
-class FeedbackLoopsTests: XCTestCase {
-    let bag = DisposeBag()
+class ReactEquatableLoopsTests: RxTest {
 }
 
 // Tests on the react function with not an equatable or hashable Control.
-extension FeedbackLoopsTests {
+extension ReactEquatableLoopsTests {
 
     func testIntialNilQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Void? = { _ in
+        let query: (String) -> String? = { _ in
             return nil
         }
-        let effects: () -> Observable<String> = { .just("_a") }
+        let effects: (String) -> Observable<String> = { .just($0 + "_a") }
         let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-            },
+        },
             scheduler: scheduler,
             scheduledFeedback: feedback
         )
-        let expected = scheduler.createHotObservable([
-            next(201, "initial")
-            ])
 
         // Run
         let results = scheduler.start { system }
 
         // Test
-        XCTAssertEqual(results.events, expected.recordedEvents)
+        XCTAssertEqual(results.events, [
+            next(201, "initial")
+            ])
     }
 
     func testNotNilAfterIntialNilDoesProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Void? = { state in
+        let query: (String) -> String? = { state in
             if state == "initial+" {
-                return ()
+                return "I"
             } else {
                 return nil
             }
         }
-        let effects: () -> Observable<String> = { .just("_a") }
+        let effects: (String) -> Observable<String> = { .just($0 + "_a") }
         let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
         let events = PublishSubject<String>()
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-            },
+        },
             scheduler: scheduler,
             scheduledFeedback: feedback, { _ in events.asObservable() }
         )
-        let expected = scheduler.createHotObservable([
-            next(201, "initial"),
-            next(211, "initial+"),
-            next(213, "initial+_a"),
-            ])
 
         // Run
         scheduler.scheduleAt(210) { events.onNext("+") }
         let results = scheduler.start { system }
 
         // Test
-        XCTAssertEqual(results.events, expected.recordedEvents)
+        XCTAssertEqual(results.events, [
+            next(201, "initial"),
+            next(211, "initial+"),
+            next(213, "initial+I_a"),
+            ])
     }
 
-    func testSecondConsecutiveNotNilQueryDoesNotProduceEffects() {
+    func testSecondConsecutiveEqualQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Void? = { _ in return () }
-        let effects: () -> Observable<String> = {
+        let query: (String) -> String? = { _ in return "Same" }
+        let effects: (String) -> Observable<String> = { _ in
             return .just("_a")
         }
         let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
@@ -93,95 +90,43 @@ extension FeedbackLoopsTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-            },
+        },
             scheduler: scheduler,
             scheduledFeedback: feedback
         )
-        let expected = scheduler.createHotObservable([
-            next(201, "initial"),
-            next(204, "initial_a")
-            ])
 
         // Run
         let results = scheduler.start { system }
 
         // Test
-        XCTAssertEqual(results.events, expected.recordedEvents)
+        XCTAssertEqual(results.events, [
+            next(201, "initial"),
+            next(204, "initial_a")
+            ])
     }
 
     func testImmediateEffectsHaveTheSameOrderAsTheyArePassedToSystem() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query1: (String) -> Void? = { state in
+        let query1: (String) -> String? = { state in
             if state == "initial" {
-                return ()
+                return "_I"
             } else {
                 return nil
             }
         }
-        let query2: (String) -> Void? = { state in
-            if state == "initial_a" {
-                return ()
+        let query2: (String) -> String? = { state in
+            if state == "initial_I_a" {
+                return "_IA"
             } else {
                 return nil
             }
         }
-        let effects1: () -> Observable<String> = {
-            return .just("_a")
+        let effects1: (String) -> Observable<String> = {
+            return .just($0 + "_a")
         }
-        let effects2: () -> Observable<String> = {
-            return .just("_b")
-        }
-        let feedback1: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback1 = react(query: query1, effects: effects1)
-        let feedback2: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback2 = react(query: query2, effects: effects2)
-        let system = Observable.system(
-            initialState: "initial",
-            reduce: { oldState, append in
-                return  oldState + append
-            },
-            scheduler: scheduler,
-            scheduledFeedback: feedback1, feedback2
-        )
-        let expected = scheduler.createHotObservable([
-            next(201, "initial"),
-            next(204, "initial_a"),
-            next(206, "initial_a_b")
-            ])
-
-        // Run
-        let results = scheduler.start { system }
-
-        // Test
-        XCTAssertEqual(results.events, expected.recordedEvents)
-    }
-
-    func testFeedbacksCancelation() {
-        // Prepare
-        let scheduler = TestScheduler(initialClock: 0)
-        let notImmediateEffect = PublishSubject<String>()
-        let query1: (String) -> Void? = { state in
-            if state == "initial" {
-                return ()
-            } else {
-                return nil
-            }
-        }
-        let query2: (String) -> Void? = { state in
-            if state == "initial" {
-                return ()
-            } else {
-                return nil
-            }
-        }
-        var isEffects1Called = false
-        let effects1: () -> Observable<String> = {
-            isEffects1Called = true
-            return notImmediateEffect.asObservable()
-        }
-        let effects2: () -> Observable<String> = {
-            return .just("_b")
+        let effects2: (String) -> Observable<String> = {
+            return .just($0 + "_b")
         }
         let feedback1: (ObservableSchedulerContext<String>) -> Observable<String>
         feedback1 = react(query: query1, effects: effects1)
@@ -195,7 +140,57 @@ extension FeedbackLoopsTests {
             scheduler: scheduler,
             scheduledFeedback: feedback1, feedback2
         )
-        
+
+        // Run
+        let results = scheduler.start { system }
+
+        // Test
+        XCTAssertEqual(results.events, [
+            next(201, "initial"),
+            next(204, "initial_I_a"),
+            next(206, "initial_I_a_IA_b")
+            ])
+    }
+
+    func testFeedbacksCancelation() {
+        // Prepare
+        let scheduler = TestScheduler(initialClock: 0)
+        let notImmediateEffect = PublishSubject<String>()
+        let query1: (String) -> String? = { state in
+            if state == "initial" {
+                return "_I"
+            } else {
+                return nil
+            }
+        }
+        let query2: (String) -> String? = { state in
+            if state == "initial" {
+                return "_I"
+            } else {
+                return nil
+            }
+        }
+        var isEffects1Called = false
+        let effects1: (String) -> Observable<String> = { _ in
+            isEffects1Called = true
+            return notImmediateEffect.asObservable()
+        }
+        let effects2: (String) -> Observable<String> = {
+            return .just($0 + "_b")
+        }
+        let feedback1: (ObservableSchedulerContext<String>) -> Observable<String>
+        feedback1 = react(query: query1, effects: effects1)
+        let feedback2: (ObservableSchedulerContext<String>) -> Observable<String>
+        feedback2 = react(query: query2, effects: effects2)
+        let system = Observable.system(
+            initialState: "initial",
+            reduce: { oldState, append in
+                return  oldState + append
+        },
+            scheduler: scheduler,
+            scheduledFeedback: feedback1, feedback2
+        )
+
         // Run
         scheduler.scheduleAt(210) { notImmediateEffect.onNext("_a") }
         let results = scheduler.start { system }
@@ -203,8 +198,9 @@ extension FeedbackLoopsTests {
         // Test
         XCTAssertEqual(results.events, [
             next(201, "initial"),
-            next(204, "initial_b")
+            next(204, "initial_I_b")
             ])
         XCTAssertTrue(isEffects1Called)
     }
 }
+

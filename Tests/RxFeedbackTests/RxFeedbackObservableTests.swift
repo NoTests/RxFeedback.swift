@@ -12,7 +12,7 @@ import RxFeedback
 import RxSwift
 import RxBlocking
 
-class RxFeedbackObservableTests: XCTestCase {
+class RxFeedbackObservableTests: RxTest {
 }
 
 extension RxFeedbackObservableTests {

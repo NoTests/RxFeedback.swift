@@ -20,6 +20,9 @@
 		C80F72261EC63CC1006091FC /* Float+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80F72251EC63CC1006091FC /* Float+Extensions.swift */; };
 		C81CFE741EC4E48600D19DC3 /* UIAlertController+Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */; };
 		C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
+		C83596441FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */; };
+		C83596461FB2312D00DC7B8F /* ReactHashableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */; };
+		C83596481FB24CAF00DC7B8F /* RxTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596471FB24CAF00DC7B8F /* RxTest.swift */; };
 		C83B7C941EB7BA14003055E0 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */; };
 		C83B7C981EB7BA14003055E0 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */; };
 		C846457B1EB76DD60008AD87 /* GithubPaginatedSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C846457A1EB76DD60008AD87 /* GithubPaginatedSearch.swift */; };
@@ -43,7 +46,7 @@
 		C89B963C1EB697BF00BDAB24 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C89B96361EB697BF00BDAB24 /* Main.storyboard */; };
 		C89B96401EB697D200BDAB24 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B963F1EB697D200BDAB24 /* Counter.swift */; };
 		C89B965F1EB69B2100BDAB24 /* PlayCatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */; };
-		E11E0E1E1F766F370031D189 /* FeedbackLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11E0E0A1F766C750031D189 /* FeedbackLoopsTests.swift */; };
+		E11E0E1E1F766F370031D189 /* ReactNonEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -282,6 +285,9 @@
 		C834A86D1EB6796D00E6B15E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C834A8761EB679FB00E6B15E /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Rx.xcodeproj; path = RxSwift/Rx.xcodeproj; sourceTree = "<group>"; };
+		C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactEquatableLoopsTests.swift; sourceTree = "<group>"; };
+		C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactHashableLoopsTests.swift; sourceTree = "<group>"; };
+		C83596471FB24CAF00DC7B8F /* RxTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxTest.swift; sourceTree = "<group>"; };
 		C83B7C2B1EB7B794003055E0 /* dependencies.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dependencies.sh; sourceTree = "<group>"; };
 		C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
 		C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
@@ -311,7 +317,7 @@
 		C89B96381EB697BF00BDAB24 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C89B963F1EB697D200BDAB24 /* Counter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayCatch.swift; sourceTree = "<group>"; };
-		E11E0E0A1F766C750031D189 /* FeedbackLoopsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackLoopsTests.swift; sourceTree = "<group>"; };
+		E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactNonEquatableLoopsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -494,7 +500,10 @@
 				C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */,
 				C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */,
 				C8996C7B1F40D82A004E5D83 /* String+Test.swift */,
-				E11E0E0A1F766C750031D189 /* FeedbackLoopsTests.swift */,
+				E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */,
+				C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */,
+				C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */,
+				C83596471FB24CAF00DC7B8F /* RxTest.swift */,
 			);
 			path = RxFeedbackTests;
 			sourceTree = "<group>";
@@ -909,10 +918,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E11E0E1E1F766F370031D189 /* FeedbackLoopsTests.swift in Sources */,
+				E11E0E1E1F766F370031D189 /* ReactNonEquatableLoopsTests.swift in Sources */,
+				C83596441FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift in Sources */,
+				C83596481FB24CAF00DC7B8F /* RxTest.swift in Sources */,
 				C8996C6B1F40A7A0004E5D83 /* RxFeedbackDriverTests.swift in Sources */,
 				C8996C6D1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift in Sources */,
 				C8996C7C1F40D82A004E5D83 /* String+Test.swift in Sources */,
+				C83596461FB2312D00DC7B8F /* ReactHashableLoopsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
