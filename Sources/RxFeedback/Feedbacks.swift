@@ -10,27 +10,26 @@ import RxSwift
 import RxCocoa
 
 /**
- Control feedback loop that tries to immediatelly perform the latest required effect.
-
  * State: State type of the system.
- * Control: Subset of state used to control the feedback loop.
+ * Query: Subset of state used to control the feedback loop.
 
- When query result exists (not `nil`), feedback loop is active and it performs effects.
+ When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
- When query result is `nil`, feedback loops doesn't perform any effect.
+ When `query` returns `nil`, feedback loops doesn't perform any effect.
 
- - parameter query: State type of the system
- - parameter effects: Control state which is subset of state.
+ - parameter query: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control: Equatable, Event>(
-        query: @escaping (State) -> Control?,
-        effects: @escaping (Control) -> Observable<Event>
+public func react<State, Query: Equatable, Event>(
+        query: @escaping (State) -> Query?,
+        effects: @escaping (Query) -> Observable<Event>
     ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (control: Control?) -> Observable<Event> in
+            .flatMapLatest { (control: Query?) -> Observable<Event> in
                 guard let control = control else {
                     return Observable<Event>.empty()
                 }
@@ -42,22 +41,21 @@ public func react<State, Control: Equatable, Event>(
 }
 
 /**
- Control feedback loop that tries to immediatelly perform the latest required effect.
-
  * State: State type of the system.
- * Control: Subset of state used to control the feedback loop.
+ * Query: Subset of state used to control the feedback loop.
 
- When query result exists (not `nil`), feedback loop is active and it performs effects.
+ When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
- When query result is `nil`, feedback loops doesn't perform any effect.
+ When `query` returns `nil`, feedback loops doesn't perform any effect.
 
- - parameter query: State type of the system
- - parameter effects: Control state which is subset of state.
+ - parameter query: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control: Equatable, Event>(
-    query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Signal<Event>
+public func react<State, Query: Equatable, Event>(
+    query: @escaping (State) -> Query?,
+    effects: @escaping (Query) -> Signal<Event>
 ) -> (Driver<State>) -> Signal<Event> {
     return { state in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
@@ -70,27 +68,26 @@ public func react<State, Control: Equatable, Event>(
 }
 
 /**
- Control feedback loop that tries to immediatelly perform the latest required effect.
-
  * State: State type of the system.
- * Control: Subset of state used to control the feedback loop.
+ * Query: Subset of state used to control the feedback loop.
 
- When query result exists (not `nil`), feedback loop is active and it performs effects.
+ When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
- When query result is `nil`, feedback loops doesn't perform any effect.
+ When `query` returns `nil`, feedback loops doesn't perform any effect.
 
- - parameter query: State type of the system
- - parameter effects: Control state which is subset of state.
+ - parameter query: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control, Event>(
-    query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Observable<Event>
+public func react<State, Query, Event>(
+    query: @escaping (State) -> Query?,
+    effects: @escaping (Query) -> Observable<Event>
 ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (control: Control?) -> Observable<Event> in
+            .flatMapLatest { (control: Query?) -> Observable<Event> in
                 guard let control = control else {
                     return Observable<Event>.empty()
                 }
@@ -102,22 +99,21 @@ public func react<State, Control, Event>(
 }
 
 /**
- Control feedback loop that tries to immediatelly perform the latest required effect.
-
  * State: State type of the system.
- * Control: Subset of state used to control the feedback loop.
+ * Query: Subset of state used to control the feedback loop.
 
- When query result exists (not `nil`), feedback loop is active and it performs effects.
+ When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
- When query result is `nil`, feedback loops doesn't perform any effect.
+ When `query` returns `nil`, feedback loops doesn't perform any effect.
 
- - parameter query: State type of the system
- - parameter effects: Control state which is subset of state.
+ - parameter query: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control, Event>(
-    query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Signal<Event>
+public func react<State, Query, Event>(
+    query: @escaping (State) -> Query?,
+    effects: @escaping (Query) -> Signal<Event>
 ) -> (Driver<State>) -> Signal<Event> {
     return { state in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
@@ -130,22 +126,22 @@ public func react<State, Control, Event>(
 }
 
 /**
- Control feedback loop that tries to immediatelly perform the latest required effect.
-
  * State: State type of the system.
- * Control: Subset of state used to control the feedback loop.
+ * Query: Subset of state used to control the feedback loop.
 
- When query result exists (not `nil`), feedback loop is active and it performs effects.
+ When `query` returns some set of values, each value is being passed into `effects` lambda to decide which effects should be performed.
 
- When query result is `nil`, feedback loops doesn't perform any effect.
+ In case new `query` contains some elements of the previous one, those effects are not interrupted.
+ In case new `query` doesn't contain some elements of the previous one, effects for those elements are cancelled.
+ In case new `query` contains some new elements, they are being passed to the `effects` lambda and resulting effects are being performed.
 
- - parameter query: State type of the system
- - parameter effects: Control state which is subset of state.
+ - parameter query: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query element.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control, Event>(
-    query: @escaping (State) -> Set<Control>,
-    effects: @escaping (Control) -> Observable<Event>
+public func react<State, Query, Event>(
+    query: @escaping (State) -> Set<Query>,
+    effects: @escaping (Query) -> Observable<Event>
     ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
     return { state in
         let query = state.map(query)
@@ -180,22 +176,22 @@ extension ObservableType {
 }
 
 /**
- Control feedback loop that tries to immediatelly perform the latest required effect.
-
  * State: State type of the system.
- * Control: Subset of state used to control the feedback loop.
+ * Query: Subset of state used to control the feedback loop.
 
- When query result exists (not `nil`), feedback loop is active and it performs effects.
+ When `query` returns some set of values, each value is being passed into `effects` lambda to decide which effects should be performed.
 
- When query result is `nil`, feedback loops doesn't perform any effect.
+ In case new `query` contains some elements of the previous one, those effects are not interrupted.
+ In case new `query` doesn't contain some elements of the previous one, effects for those elements are cancelled.
+ In case new `query` contains some new elements, they are being passed to the `effects` lambda and resulting effects are being performed.
 
- - parameter query: State type of the system
- - parameter effects: Control state which is subset of state.
+ - parameter query: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query element.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Control, Event>(
-    query: @escaping (State) -> Set<Control>,
-    effects: @escaping (Control) -> Signal<Event>
+public func react<State, Query, Event>(
+    query: @escaping (State) -> Set<Query>,
+    effects: @escaping (Query) -> Signal<Event>
     ) -> (Driver<State>) -> Signal<Event> {
     return { (state: Driver<State>) -> Signal<Event> in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
