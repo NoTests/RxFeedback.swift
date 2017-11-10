@@ -1062,7 +1062,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,4";
@@ -1114,7 +1114,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,4";
@@ -1144,7 +1144,6 @@
 				);
 				INFOPLIST_FILE = Sources/RxFeedback/RxFeedback.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS";
 				PRODUCT_NAME = RxFeedback;
@@ -1173,7 +1172,6 @@
 				);
 				INFOPLIST_FILE = Sources/RxFeedback/RxFeedback.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS";
 				PRODUCT_NAME = RxFeedback;
