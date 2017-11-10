@@ -13,7 +13,47 @@ import RxCocoa
  * State: State type of the system.
  * Query: Subset of state used to control the feedback loop.
 
- When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ When `query` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
+
+ When `query` returns `nil`, feedback loops doesn't perform any effect.
+
+ - parameter query: Part of state that controls feedback loop.
+ - parameter areEqual: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query result.
+ - returns: Feedback loop performing the effects.
+ */
+public func react<State, Query, Event>(
+    query: @escaping (State) -> Query?,
+    areEqual: @escaping (Query, Query) -> Bool,
+    effects: @escaping (Query) -> Observable<Event>
+    ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+    return { state in
+        return state.map(query)
+            .distinctUntilChanged { lhs, rhs in
+                switch (lhs, rhs) {
+                case (.none, .none): return true
+                case (.none, .some): return false
+                case (.some, .none): return false
+                case (.some(let lhs), .some(let rhs)): return areEqual(lhs, rhs)
+                }
+            }
+            .flatMapLatest { (control: Query?) -> Observable<Event> in
+                guard let control = control else {
+                    return Observable<Event>.empty()
+                }
+
+                return effects(control)
+                    .enqueue(state.scheduler)
+            }
+    }
+}
+
+/**
+ * State: State type of the system.
+ * Query: Subset of state used to control the feedback loop.
+
+ When `query` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
  In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
  When `query` returns `nil`, feedback loops doesn't perform any effect.
@@ -26,17 +66,35 @@ public func react<State, Query: Equatable, Event>(
         query: @escaping (State) -> Query?,
         effects: @escaping (Query) -> Observable<Event>
     ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
-    return { state in
-        return state.map(query)
-            .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (control: Query?) -> Observable<Event> in
-                guard let control = control else {
-                    return Observable<Event>.empty()
-                }
+    return react(query: query, areEqual: { $0 == $1 }, effects: effects)
+}
 
-                return effects(control)
-                    .enqueue(state.scheduler)
-        }
+/**
+ * State: State type of the system.
+ * Query: Subset of state used to control the feedback loop.
+
+ When `query` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
+
+ When `query` returns `nil`, feedback loops doesn't perform any effect.
+
+ - parameter query: Part of state that controls feedback loop.
+ - parameter areEqual: Part of state that controls feedback loop.
+ - parameter effects: Chooses which effects to perform for certain query result.
+ - returns: Feedback loop performing the effects.
+ */
+public func react<State, Query, Event>(
+    query: @escaping (State) -> Query?,
+    areEqual: @escaping (Query, Query) -> Bool,
+    effects: @escaping (Query) -> Signal<Event>
+    ) -> (Driver<State>) -> Signal<Event> {
+    return { state in
+        let observableSchedulerContext = ObservableSchedulerContext<State>(
+            source: state.asObservable(),
+            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+        )
+        return react(query: query, areEqual: areEqual, effects: { effects($0).asObservable() })(observableSchedulerContext)
+            .asSignal(onErrorSignalWith: .empty())
     }
 }
 
@@ -44,7 +102,7 @@ public func react<State, Query: Equatable, Event>(
  * State: State type of the system.
  * Query: Subset of state used to control the feedback loop.
 
- When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ When `query` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
  In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
  When `query` returns `nil`, feedback loops doesn't perform any effect.
@@ -71,7 +129,7 @@ public func react<State, Query: Equatable, Event>(
  * State: State type of the system.
  * Query: Subset of state used to control the feedback loop.
 
- When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ When `query` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
  In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
  When `query` returns `nil`, feedback loops doesn't perform any effect.
@@ -102,7 +160,7 @@ public func react<State, Query, Event>(
  * State: State type of the system.
  * Query: Subset of state used to control the feedback loop.
 
- When `query` returns some value, that value is being passed into `effects` lambda to decide which effects should be performed.
+ When `query` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
  In case new `query` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
  When `query` returns `nil`, feedback loops doesn't perform any effect.
@@ -131,9 +189,9 @@ public func react<State, Query, Event>(
 
  When `query` returns some set of values, each value is being passed into `effects` lambda to decide which effects should be performed.
 
- In case new `query` contains some elements of the previous one, those effects are not interrupted.
- In case new `query` doesn't contain some elements of the previous one, effects for those elements are cancelled.
- In case new `query` contains some new elements, they are being passed to the `effects` lambda and resulting effects are being performed.
+ * Effects are not interrupted for elements in the new `query` that were present in the `old` query.
+ * Effects are cancelled for elements present in `old` query but not in `new` query.
+ * In case new elements are present in `new` query (and not in `old` query) they are being passed to the `effects` lambda and resulting effects are being performed.
 
  - parameter query: Part of state that controls feedback loop.
  - parameter effects: Chooses which effects to perform for certain query element.
@@ -181,9 +239,9 @@ extension ObservableType {
 
  When `query` returns some set of values, each value is being passed into `effects` lambda to decide which effects should be performed.
 
- In case new `query` contains some elements of the previous one, those effects are not interrupted.
- In case new `query` doesn't contain some elements of the previous one, effects for those elements are cancelled.
- In case new `query` contains some new elements, they are being passed to the `effects` lambda and resulting effects are being performed.
+ * Effects are not interrupted for elements in the new `query` that were present in the `old` query.
+ * Effects are cancelled for elements present in `old` query but not in `new` query.
+ * In case new elements are present in `new` query (and not in `old` query) they are being passed to the `effects` lambda and resulting effects are being performed.
 
  - parameter query: Part of state that controls feedback loop.
  - parameter effects: Chooses which effects to perform for certain query element.
