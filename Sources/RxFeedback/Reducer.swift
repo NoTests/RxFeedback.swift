@@ -19,20 +19,17 @@ public class Reducer<State: Equatable, Event> {
         identity = defaultState
     }
 
-    public func addEdge(input: State, output: State, event: Event) {
-        let transition: Transition = { [unowned self] event in
-            return StateMonad { s in
-                let s1: State = s == input ? output : self.identity
-                return s1
-            }
+    public func addEdge(event: Event, transform: @escaping (State) -> State) {
+        let transition: Transition = { event in
+            return StateMonad(f: transform)
         }
         graph.append(transition)
     }
 
-    private var transitionFunction: Transition {
-        return { [unowned self] e in
-            return self.graph
-                .map { $0(e) }
+    public var reduce: (State, Event) -> State {
+        return { [unowned self] state, event in
+            let monad: StateMonad<State> = self.graph
+                .map { $0(event) }
                 .reduce(self.identityMonad) { lhs, rhs in
                     return StateMonad { [unowned self] s in
                         if lhs.run(s: s) != self.identity { return lhs.run(s: s) }
@@ -40,12 +37,7 @@ public class Reducer<State: Equatable, Event> {
                         return self.identity
                     }
                 }
-        }
-    }
-
-    public var reduce: (State, Event) -> State {
-        return { [unowned self] state, event in
-            return self.transitionFunction(event).run(s: state)
+            return monad.run(s: state)
         }
     }
 
