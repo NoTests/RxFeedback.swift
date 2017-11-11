@@ -8,18 +8,18 @@
 
 import Foundation
 
-class Reducer<State: Equatable, Event> {
+public class Reducer<State: Equatable, Event> {
 
     typealias Transition = (Event) -> StateMonad<State>
     private var graph: [Transition] = []
     private let identity: State
     private let identityMonad: StateMonad<State> = StateMonad { s in return s }
     
-    init(defaultState: State) {
+    public init(defaultState: State) {
         identity = defaultState
     }
 
-    func addEdge(input: State, output: State, event: Event) {
+    public func addEdge(input: State, output: State, event: Event) {
         let transition: Transition = { [unowned self] event in
             return StateMonad { s in
                 let s1: State = s == input ? output : self.identity
@@ -29,7 +29,7 @@ class Reducer<State: Equatable, Event> {
         graph.append(transition)
     }
 
-    var reduce: Transition {
+    private var transitionFunction: Transition {
         return { [unowned self] e in
             return self.graph
                 .map { $0(e) }
@@ -40,6 +40,12 @@ class Reducer<State: Equatable, Event> {
                         return self.identity
                     }
                 }
+        }
+    }
+
+    public var reduce: (State, Event) -> State {
+        return { [unowned self] state, event in
+            return self.transitionFunction(event).run(s: state)
         }
     }
 
