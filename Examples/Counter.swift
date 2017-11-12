@@ -23,31 +23,32 @@ class CounterViewController: UIViewController {
         case increment
         case decrement
     }
-    private let reducer = Reducer<State, Event>()
+    private let reducer: Reducer<State, Event> = {
+        let reducer = Reducer<State, Event>()
+        reducer.accept(event: .increment) { $0 + 1 }
+        reducer.accept(event: .decrement) { $0 - 1 }
+        return reducer
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        reducer.accept(event: .increment) { $0 + 1 }
-        reducer.accept(event: .decrement) { $0 - 1 }
-
-        // UI is user feedback
-        let feedbackLoop: (ObservableSchedulerContext<State>) -> Observable<Event> = bind(self) { me, state -> Bindings<Event> in
-            let subscriptions = [
-                state.map(String.init).bind(to: me.label!.rx.text)
-            ]
-            let events = [
-                me.plus!.rx.tap.map { Event.increment },
-                me.minus!.rx.tap.map { Event.decrement }
-            ]
-            return Bindings(subscriptions: subscriptions, events: events)
-        }
-        
         Observable.system(
             initialState: 0,
             reducer: reducer,
             scheduler: MainScheduler.instance,
-            scheduledFeedback: [feedbackLoop]
+            scheduledFeedback:
+                // UI is user feedback
+                bind(self) { me, state -> Bindings<Event> in
+                    let subscriptions = [
+                        state.map(String.init).bind(to: me.label!.rx.text)
+                    ]
+                    let events = [
+                        me.plus!.rx.tap.map { Event.increment },
+                        me.minus!.rx.tap.map { Event.decrement }
+                    ]
+                    return Bindings(subscriptions: subscriptions, events: events)
+                }
             )
             .subscribe()
             .disposed(by: disposeBag)

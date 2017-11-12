@@ -57,10 +57,10 @@ extension ObservableType where E == Any {
     }
 
     public static func system<State, Event>(
-        initialState: State,
-        reducer: Reducer<State, Event>,
-        scheduler: ImmediateSchedulerType,
-        scheduledFeedback: [Feedback<State, Event>]
+            initialState: State,
+            reducer: Reducer<State, Event>,
+            scheduler: ImmediateSchedulerType,
+            scheduledFeedback: Feedback<State, Event>...
         ) -> Observable<State> {
         return system(initialState: initialState, reduce: reducer.reduce, scheduler: scheduler, scheduledFeedback: scheduledFeedback)
     }
