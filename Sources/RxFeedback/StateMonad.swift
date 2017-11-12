@@ -8,6 +8,10 @@
 
 import Foundation
 
+/**
+    This is simplest form of State Monad.
+    This struct is basically a wrapper for a state transform function (s) -> s
+ */
 struct StateMonad<S> {
     private let run: (S) -> (S)
 
