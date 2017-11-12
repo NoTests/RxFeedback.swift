@@ -17,39 +17,37 @@ class CounterViewController: UIViewController {
     @IBOutlet weak var plus: UIButton?
 
     private let disposeBag = DisposeBag()
+
+    typealias State = Int
+    enum Event {
+        case increment
+        case decrement
+    }
+    private let reducer = Reducer<State, Event>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        typealias State = Int
-        enum Event {
-            case increment
-            case decrement
-        }
+        reducer.addEdge(event: .increment) { $0 + 1 }
+        reducer.addEdge(event: .decrement) { $0 - 1 }
 
+        // UI is user feedback
+        let feedbackLoop: (ObservableSchedulerContext<State>) -> Observable<Event> = bind(self) { me, state -> Bindings<Event> in
+            let subscriptions = [
+                state.map(String.init).bind(to: me.label!.rx.text)
+            ]
+            let events = [
+                me.plus!.rx.tap.map { Event.increment },
+                me.minus!.rx.tap.map { Event.decrement }
+            ]
+            return Bindings(subscriptions: subscriptions, events: events)
+        }
+        
         Observable.system(
             initialState: 0,
-            reduce: { (state, event) -> State in
-                switch event {
-                case .increment:
-                    return state + 1
-                case .decrement:
-                    return state - 1
-                }
-        },
+            reducer: reducer,
             scheduler: MainScheduler.instance,
-            scheduledFeedback:
-                // UI is user feedback
-                bind(self) { me, state -> Bindings<Event> in
-                    let subscriptions = [
-                        state.map(String.init).bind(to: me.label!.rx.text)
-                    ]
-                    let events = [
-                        me.plus!.rx.tap.map { Event.increment },
-                        me.minus!.rx.tap.map { Event.decrement }
-                    ]
-                    return Bindings(subscriptions: subscriptions, events: events)
-                }
+            scheduledFeedback: [feedbackLoop]
             )
             .subscribe()
             .disposed(by: disposeBag)
