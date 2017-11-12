@@ -42,9 +42,9 @@ public class Reducer<State: Equatable, Event: Equatable> {
             .map { $0(event) }
             .reduce(self.identityMonad) { lhs, rhs in
                 return StateMonad { s in
-                    if lhs.run(s: s) != state { return lhs.run(s: s) }
-                    if rhs.run(s: s) != state { return rhs.run(s: s) }
-                    return state
+                    if lhs.run(s: s) != s { return lhs.run(s: s) }
+                    if rhs.run(s: s) != s { return rhs.run(s: s) }
+                    return s
                 }
             }
         return monad.run(s: state)
