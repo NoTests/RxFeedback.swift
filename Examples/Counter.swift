@@ -28,8 +28,8 @@ class CounterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        reducer.addEdge(event: .increment) { $0 + 1 }
-        reducer.addEdge(event: .decrement) { $0 - 1 }
+        reducer.accept(event: .increment) { $0 + 1 }
+        reducer.accept(event: .decrement) { $0 - 1 }
 
         // UI is user feedback
         let feedbackLoop: (ObservableSchedulerContext<State>) -> Observable<Event> = bind(self) { me, state -> Bindings<Event> in

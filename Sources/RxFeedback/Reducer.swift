@@ -16,7 +16,7 @@ public class Reducer<State: Equatable, Event: Equatable> {
 
     public init() {}
 
-    public func addEdge(event: Event, transform: @escaping (State) -> State) {
+    public func accept(event: Event, transform: @escaping (State) -> State) {
         let transition: Transition = { [unowned self] e in
             guard e == event else { return self.identityMonad }
             return StateMonad(f: transform)
