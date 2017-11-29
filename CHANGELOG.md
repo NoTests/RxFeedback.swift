@@ -1,5 +1,9 @@
 ## Master
 
+## [1.0.2](https://github.com/kzaher/RxFeedback/releases/tag/1.0.2)
+
+* Fixes duplicated plist inclusion.
+
 ## [1.0.1](https://github.com/kzaher/RxFeedback/releases/tag/1.0.1)
 
 * Fixes leak in `Hashable` overload of `react` feedback loop.
