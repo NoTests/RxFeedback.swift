@@ -1,5 +1,20 @@
 ## Master
 
+## [1.0.2](https://github.com/kzaher/RxFeedback/releases/tag/1.0.2)
+
+* Fixes duplicated plist inclusion.
+
+## [1.0.1](https://github.com/kzaher/RxFeedback/releases/tag/1.0.1)
+
+* Fixes leak in `Hashable` overload of `react` feedback loop.
+* Shares final guard against reentrancy (if feedback loops have implementation issue and are synchronous) between all feedback loops.
+
+## [1.0.0](https://github.com/kzaher/RxFeedback/releases/tag/1.0.0)
+
+* Deprecates `UI.*` in favor of free methods.
+* Deprecates feedback loops of the form `Driver<State> -> Driver<Event>` in favor of `Driver<State> -> Signal<Event>`.
+* Adaptations for RxSwift 4.0.0.
+
 ## [0.3.3](https://github.com/kzaher/RxFeedback/releases/tag/0.3.3)
 
 * Adds reentrancy guards to UI.bind feedback loop (Driver version).

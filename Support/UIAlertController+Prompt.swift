@@ -22,7 +22,7 @@ extension UIAlertController {
                     guard let controller = promptController else {
                         return
                     }
-                    observer.on(.next(controller, action))
+                    observer.on(.next((controller, action)))
                     observer.on(.completed)
                 })
                 promptController.addAction(action)

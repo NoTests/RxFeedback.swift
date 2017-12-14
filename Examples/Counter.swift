@@ -40,7 +40,7 @@ class CounterViewController: UIViewController {
             scheduler: MainScheduler.instance,
             scheduledFeedback:
                 // UI is user feedback
-                UI.bind(self) { me, state -> UI.Bindings<Event> in
+                bind(self) { me, state -> Bindings<Event> in
                     let subscriptions = [
                         state.map(String.init).bind(to: me.label!.rx.text)
                     ]
@@ -48,7 +48,7 @@ class CounterViewController: UIViewController {
                         me.plus!.rx.tap.map { Event.increment },
                         me.minus!.rx.tap.map { Event.decrement }
                     ]
-                    return UI.Bindings(subscriptions: subscriptions, events: events)
+                    return Bindings(subscriptions: subscriptions, events: events)
                 }
             )
             .subscribe()

@@ -74,7 +74,7 @@ extension TodoViewController {
         let tableView = self.tableView!
         let editDone = self.editDone!
 
-        return UI.bind { state in
+        return bind { state in
             let tasks = state.map { [Row.new] + ($0.unfinishedTasks + $0.completedTasks).map(Row.task) }
             let editing = state.map { $0.isEditing }
             let editButtonTitle = editing.map { $0 ? "Done" : "Edit" }
@@ -85,19 +85,19 @@ extension TodoViewController {
                     editButtonTitle.drive(editDone.rx.title)
                 ]
             let events = [
-                    editDone.rx.tap.asDriver().map { _ in Todo.Event.toggleEditingMode },
+                    editDone.rx.tap.asSignal().map { _ in Todo.Event.toggleEditingMode },
                     
-                    tableView.rx.modelSelected(Row.self).asDriver()
+                    tableView.rx.modelSelected(Row.self).asSignal()
                         .flatMapLatest { row in row.selectedEvent(prompt: promptForTask) },
-                    tableView.rx.itemDeleted.asDriver()
+                    tableView.rx.itemDeleted.asSignal()
                         .flatMapLatest { (try! tableView.rx.model(at: $0) as Row).deletedEvent },
-                    tableView.rx.itemInserted.asDriver()
+                    tableView.rx.itemInserted.asSignal()
                         .flatMapLatest { _ in
-                            return promptForTask.asDriver(onErrorDriveWith: Driver.empty())
+                            return promptForTask.asSignal(onErrorSignalWith: Signal.empty())
                         }
 
                 ]
-            return UI.Bindings(subscriptions: subscriptions, events: events)
+            return Bindings(subscriptions: subscriptions, events: events)
         }
     }
 }
@@ -150,18 +150,18 @@ extension Row {
         }
     }
 
-    func selectedEvent(prompt: Observable<Todo.Event>) -> Driver<Todo.Event> {
+    func selectedEvent(prompt: Observable<Todo.Event>) -> Signal<Todo.Event> {
         switch self {
-        case .new: return prompt.asDriver(onErrorDriveWith: Driver.empty())
-        case .task(let task): return Driver.just(Todo.Event.toggleCompleted(task))
+        case .new: return prompt.asSignal(onErrorSignalWith: Signal.empty())
+        case .task(let task): return Signal.just(Todo.Event.toggleCompleted(task))
         }
     }
 
-    var deletedEvent: Driver<Todo.Event> {
+    var deletedEvent: Signal<Todo.Event> {
         get {
             switch self {
-            case .new: return Driver.empty()
-            case .task(let task): return Driver.just(Todo.Event.archive(task))
+            case .new: return Signal.empty()
+            case .task(let task): return Signal.just(Todo.Event.archive(task))
             }
         }
     }

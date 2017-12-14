@@ -20,12 +20,15 @@
 		C80F72261EC63CC1006091FC /* Float+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80F72251EC63CC1006091FC /* Float+Extensions.swift */; };
 		C81CFE741EC4E48600D19DC3 /* UIAlertController+Prompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81CFE731EC4E48600D19DC3 /* UIAlertController+Prompt.swift */; };
 		C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
-		C834A8CB1EB67BAD00E6B15E /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8CA1EB67BAD00E6B15E /* UIView+Extensions.swift */; };
+		C83596441FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */; };
+		C83596461FB2312D00DC7B8F /* ReactHashableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */; };
+		C83596481FB24CAF00DC7B8F /* RxTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596471FB24CAF00DC7B8F /* RxTest.swift */; };
 		C83B7C941EB7BA14003055E0 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */; };
 		C83B7C981EB7BA14003055E0 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */; };
 		C846457B1EB76DD60008AD87 /* GithubPaginatedSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C846457A1EB76DD60008AD87 /* GithubPaginatedSearch.swift */; };
 		C84645911EB775AF0008AD87 /* SystemError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84645901EB775AF0008AD87 /* SystemError.swift */; };
 		C84645931EB78D320008AD87 /* UILabel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84645921EB78D320008AD87 /* UILabel+Extensions.swift */; };
+		C88BFC121F9782C100157318 /* ControlEvent+Signal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88BFC111F9782C100157318 /* ControlEvent+Signal.swift */; };
 		C8996C6B1F40A7A0004E5D83 /* RxFeedbackDriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */; };
 		C8996C6D1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */; };
 		C8996C7A1F40C5B6004E5D83 /* Deprecations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C791F40C5B6004E5D83 /* Deprecations.swift */; };
@@ -36,13 +39,14 @@
 		C89B961F1EB6942400BDAB24 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C834A8A91EB67A8B00E6B15E /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C89B96221EB6942900BDAB24 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
 		C89B96231EB6942900BDAB24 /* RxFeedback.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C89B96251EB6964200BDAB24 /* FeedbackLoops.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96241EB6964200BDAB24 /* FeedbackLoops.swift */; };
+		C89B96251EB6964200BDAB24 /* Feedbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96241EB6964200BDAB24 /* Feedbacks.swift */; };
 		C89B96391EB697BF00BDAB24 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96321EB697BF00BDAB24 /* AppDelegate.swift */; };
 		C89B963A1EB697BF00BDAB24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C89B96331EB697BF00BDAB24 /* Assets.xcassets */; };
 		C89B963B1EB697BF00BDAB24 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C89B96341EB697BF00BDAB24 /* LaunchScreen.storyboard */; };
 		C89B963C1EB697BF00BDAB24 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C89B96361EB697BF00BDAB24 /* Main.storyboard */; };
 		C89B96401EB697D200BDAB24 /* Counter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B963F1EB697D200BDAB24 /* Counter.swift */; };
 		C89B965F1EB69B2100BDAB24 /* PlayCatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */; };
+		E11E0E1E1F766F370031D189 /* ReactNonEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -235,6 +239,13 @@
 			remoteGlobalIDString = C80938F51B8A71760088E94D;
 			remoteInfo = "RxCocoa-iOS";
 		};
+		E11E0E1F1F7674530031D189 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C88FA4FD1C25C44800CCFEA4;
+			remoteInfo = "RxTest-iOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -274,7 +285,9 @@
 		C834A86D1EB6796D00E6B15E /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C834A8761EB679FB00E6B15E /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Rx.xcodeproj; path = RxSwift/Rx.xcodeproj; sourceTree = "<group>"; };
-		C834A8CA1EB67BAD00E6B15E /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactEquatableLoopsTests.swift; sourceTree = "<group>"; };
+		C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactHashableLoopsTests.swift; sourceTree = "<group>"; };
+		C83596471FB24CAF00DC7B8F /* RxTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxTest.swift; sourceTree = "<group>"; };
 		C83B7C2B1EB7B794003055E0 /* dependencies.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = dependencies.sh; sourceTree = "<group>"; };
 		C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
 		C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
@@ -289,12 +302,14 @@
 		C84645921EB78D320008AD87 /* UILabel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UILabel+Extensions.swift"; sourceTree = "<group>"; };
 		C84645941EB794BC0008AD87 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		C84645951EB794BC0008AD87 /* RxFeedback.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = RxFeedback.podspec; sourceTree = "<group>"; };
+		C88BFC111F9782C100157318 /* ControlEvent+Signal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ControlEvent+Signal.swift"; sourceTree = "<group>"; };
+		C88BFC131F97881A00157318 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		C8996C671F40A7A0004E5D83 /* LinuxMain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxFeedbackDriverTests.swift; sourceTree = "<group>"; };
 		C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxFeedbackObservableTests.swift; sourceTree = "<group>"; };
 		C8996C791F40C5B6004E5D83 /* Deprecations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deprecations.swift; sourceTree = "<group>"; };
 		C8996C7B1F40D82A004E5D83 /* String+Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Test.swift"; sourceTree = "<group>"; };
-		C89B96241EB6964200BDAB24 /* FeedbackLoops.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackLoops.swift; sourceTree = "<group>"; };
+		C89B96241EB6964200BDAB24 /* Feedbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedbacks.swift; sourceTree = "<group>"; };
 		C89B96321EB697BF00BDAB24 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C89B96331EB697BF00BDAB24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C89B96351EB697BF00BDAB24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -302,6 +317,7 @@
 		C89B96381EB697BF00BDAB24 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C89B963F1EB697D200BDAB24 /* Counter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Counter.swift; sourceTree = "<group>"; };
 		C89B965E1EB69B2100BDAB24 /* PlayCatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayCatch.swift; sourceTree = "<group>"; };
+		E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactNonEquatableLoopsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -372,6 +388,7 @@
 		C8047ACF1F4109A30089721B /* Packaging */ = {
 			isa = PBXGroup;
 			children = (
+				C88BFC131F97881A00157318 /* Cartfile */,
 				C8047ABB1F41099F0089721B /* CHANGELOG.md */,
 				C83B7C2B1EB7B794003055E0 /* dependencies.sh */,
 				C84645941EB794BC0008AD87 /* Package.swift */,
@@ -385,8 +402,7 @@
 			isa = PBXGroup;
 			children = (
 				C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */,
-				C834A8CA1EB67BAD00E6B15E /* UIView+Extensions.swift */,
-				C89B96241EB6964200BDAB24 /* FeedbackLoops.swift */,
+				C89B96241EB6964200BDAB24 /* Feedbacks.swift */,
 				C8996C791F40C5B6004E5D83 /* Deprecations.swift */,
 			);
 			name = RxFeedback;
@@ -484,6 +500,10 @@
 				C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */,
 				C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */,
 				C8996C7B1F40D82A004E5D83 /* String+Test.swift */,
+				E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */,
+				C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */,
+				C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */,
+				C83596471FB24CAF00DC7B8F /* RxTest.swift */,
 			);
 			path = RxFeedbackTests;
 			sourceTree = "<group>";
@@ -519,6 +539,7 @@
 				C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */,
 				C80987601EC4A1BF00EE2C23 /* Todo+Storage.swift */,
 				C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */,
+				C88BFC111F9782C100157318 /* ControlEvent+Signal.swift */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -599,6 +620,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				E11E0E201F7674530031D189 /* PBXTargetDependency */,
 				C8996C761F40AD55004E5D83 /* PBXTargetDependency */,
 				C8996C711F40AA49004E5D83 /* PBXTargetDependency */,
 			);
@@ -635,7 +657,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Krunoslav Zaher";
 				TargetAttributes = {
 					52D6D97B1BEFF229002C0205 = {
@@ -886,8 +908,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C89B96251EB6964200BDAB24 /* FeedbackLoops.swift in Sources */,
-				C834A8CB1EB67BAD00E6B15E /* UIView+Extensions.swift in Sources */,
+				C89B96251EB6964200BDAB24 /* Feedbacks.swift in Sources */,
 				C8996C7A1F40C5B6004E5D83 /* Deprecations.swift in Sources */,
 				C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */,
 			);
@@ -897,9 +918,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E11E0E1E1F766F370031D189 /* ReactNonEquatableLoopsTests.swift in Sources */,
+				C83596441FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift in Sources */,
+				C83596481FB24CAF00DC7B8F /* RxTest.swift in Sources */,
 				C8996C6B1F40A7A0004E5D83 /* RxFeedbackDriverTests.swift in Sources */,
 				C8996C6D1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift in Sources */,
 				C8996C7C1F40D82A004E5D83 /* String+Test.swift in Sources */,
+				C83596461FB2312D00DC7B8F /* ReactHashableLoopsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -923,6 +948,7 @@
 				C80987621EC4A28300EE2C23 /* Todo+Plumbing.swift in Sources */,
 				C89B96391EB697BF00BDAB24 /* AppDelegate.swift in Sources */,
 				C80987631EC4A28E00EE2C23 /* Todo+Lenses.swift in Sources */,
+				C88BFC121F9782C100157318 /* ControlEvent+Signal.swift in Sources */,
 				C89B965F1EB69B2100BDAB24 /* PlayCatch.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -960,6 +986,11 @@
 			name = "RxCocoa-iOS";
 			targetProxy = C89B96201EB6942400BDAB24 /* PBXContainerItemProxy */;
 		};
+		E11E0E201F7674530031D189 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "RxTest-iOS";
+			targetProxy = E11E0E1F1F7674530031D189 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -990,14 +1021,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1025,9 +1062,9 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,4";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1042,14 +1079,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1071,8 +1114,9 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_VERSION = 3.0;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,4";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1100,7 +1144,6 @@
 				);
 				INFOPLIST_FILE = Sources/RxFeedback/RxFeedback.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS";
 				PRODUCT_NAME = RxFeedback;
@@ -1129,7 +1172,6 @@
 				);
 				INFOPLIST_FILE = Sources/RxFeedback/RxFeedback.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS";
 				PRODUCT_NAME = RxFeedback;
@@ -1179,7 +1221,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1198,7 +1239,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

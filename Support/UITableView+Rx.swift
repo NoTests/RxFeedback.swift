@@ -11,8 +11,8 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: UITableView {
-    var isEditing: UIBindingObserver<UITableView, Bool> {
-        return UIBindingObserver(UIElement: base) { (tableView, isEditing) in
+    var isEditing: Binder<Bool> {
+        return Binder(base) { (tableView, isEditing) in
             tableView.isEditing = isEditing
         }
     }
