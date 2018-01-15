@@ -95,7 +95,7 @@ extension ObservableType where E == Any {
                 initialState: initialState,
                 reduce: reduce,
                 scheduler: scheduler,
-                scheduledFeedback: observableFeedbacks
+                feedback: observableFeedbacks
             )
     }
 
@@ -257,7 +257,7 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
                 initialState: initialState,
                 reduce: reduce,
                 scheduler: SharingStrategy.scheduler,
-                scheduledFeedback: observableFeedbacks
+                feedback: observableFeedbacks
             )
             .asDriver(onErrorDriveWith: .empty())
     }
