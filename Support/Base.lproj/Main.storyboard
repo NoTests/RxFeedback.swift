@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="N4i-Me-ig3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="N4i-Me-ig3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -418,7 +418,7 @@ is the same as designing UI
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="top" secondItem="WV3-jm-EUY" secondAttribute="bottom" id="IYJ-9x-eB4"/>
                             <constraint firstItem="WV3-jm-EUY" firstAttribute="centerX" secondItem="jmj-wE-374" secondAttribute="centerX" id="JIE-Vm-nJ6"/>
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="height" secondItem="jmj-wE-374" secondAttribute="height" multiplier="0.2" id="Oo9-cQ-uHO"/>
-                            <constraint firstItem="oxg-lB-LWw" firstAttribute="top" secondItem="tXW-8s-FwT" secondAttribute="bottom" id="U67-zv-EXS"/>
+                            <constraint firstAttribute="bottom" secondItem="tXW-8s-FwT" secondAttribute="bottom" id="U67-zv-EXS"/>
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="leading" secondItem="jmj-wE-374" secondAttribute="leading" id="VfC-uS-zXH"/>
                             <constraint firstItem="WV3-jm-EUY" firstAttribute="width" secondItem="jmj-wE-374" secondAttribute="width" id="Xqg-ff-1gb"/>
                             <constraint firstItem="WNQ-Zz-C9b" firstAttribute="leading" secondItem="jmj-wE-374" secondAttribute="leadingMargin" id="Y2M-Kq-EXd"/>
