@@ -100,8 +100,16 @@ class GithubPaginatedSearchViewController: UIViewController {
         super.viewDidLoad()
         
         let searchResults = self.searchResults!
-        
-        searchResults.register(UITableViewCell.self, forCellReuseIdentifier: "repo")
+        let configureCell = {  (tableView: UITableView, row: Int, repository: Repository) -> UITableViewCell in
+            var cell = tableView.dequeueReusableCell(withIdentifier: "RepositoryCell")
+            if cell == nil {
+                cell = UITableViewCell(style: .subtitle, reuseIdentifier: "RepositoryCell")
+            }
+
+            cell?.textLabel?.text = repository.name
+            cell?.detailTextLabel?.text = repository.url.description
+            return cell!
+        }
 
         let triggerLoadNextPage: (Driver<State>) -> Signal<Event> = { state in
             return state.flatMapLatest { state -> Signal<Event> in
@@ -112,17 +120,12 @@ class GithubPaginatedSearchViewController: UIViewController {
                 return searchResults.rx.nearBottom.map { _ in Event.startLoadingNextPage }
             }
         }
-        
-        func configureRepository(_: Int, repo: Repository, cell: UITableViewCell) {
-            cell.textLabel?.text = repo.name
-            cell.detailTextLabel?.text = repo.url.description
-        }
 
         let bindUI: (Driver<State>) -> Signal<Event> = bind(self) { me, state in
             let subscriptions = [
                 state.map { $0.search }.drive(me.searchText!.rx.text),
                 state.map { $0.lastError?.displayMessage }.drive(me.status!.rx.textOrHide),
-                state.map { $0.results }.drive(searchResults.rx.items(cellIdentifier: "repo"))(configureRepository),
+                state.map { $0.results }.drive(searchResults.rx.items)(configureCell),
 
                 state.map { $0.loadNextPage?.description }.drive(me.loadNextPage!.rx.textOrHide),
                 ]
