@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "RxDataSources",
+  name: "RxFeedback",
   products: [
     .library(name: "RxFeedback", targets: ["RxFeedback"])
   ],
