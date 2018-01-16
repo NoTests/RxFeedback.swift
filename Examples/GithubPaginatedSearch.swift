@@ -100,6 +100,7 @@ class GithubPaginatedSearchViewController: UIViewController {
         super.viewDidLoad()
         
         let searchResults = self.searchResults!
+
         let configureCell = {  (tableView: UITableView, row: Int, repository: Repository) -> UITableViewCell in
             var cell = tableView.dequeueReusableCell(withIdentifier: "RepositoryCell")
             if cell == nil {
@@ -278,8 +279,8 @@ extension Repository {
         for m in matches {
             let matches = (1 ..< m.numberOfRanges).map { rangeIndex -> String in
                 let range = m.range(at: rangeIndex)
-                let startIndex = links.characters.index(links.startIndex, offsetBy: range.location)
-                let endIndex = links.characters.index(links.startIndex, offsetBy: range.location + range.length)
+                let startIndex = links.index(links.startIndex, offsetBy: range.location)
+                let endIndex = links.index(links.startIndex, offsetBy: range.location + range.length)
                 return String(links[startIndex ..< endIndex])
             }
             
