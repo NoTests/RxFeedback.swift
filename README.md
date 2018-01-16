@@ -129,5 +129,45 @@ Run `RxFeedback.xcodeproj` > `Example` to find out more.
 * Elm - pretty close, feedback loops for effects instead of `Cmd`, which effects to perform are encoded into state and querried by feedback loops
 * Redux - kind of like this, but feedback loops instead of middleware
 * Redux-Observable - observables observe state vs. being inside middleware between view and state
-* Cycle.js - no simple explanation :), ask @andrestaltz
+* Cycle.js - no simple explanation :), ask [@andrestaltz](https://twitter.com/andrestaltz)
 * MVVM - separates state from effects and doesn't require a view
+
+# Installation
+
+### CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects. You can install it with the following command:
+
+```bash
+$ gem install cocoapods
+```
+
+To integrate RxFeedback into your Xcode project using CocoaPods, specify it in your `Podfile`:
+
+```ruby
+pod 'RxFeedback', '~> 1.0.2'
+```
+
+Then, run the following command:
+
+```bash
+$ pod install
+```
+### Carthage
+
+[Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that builds your dependencies and provides you with binary frameworks.
+
+You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
+
+```bash
+$ brew update
+$ brew install carthage
+```
+
+To integrate RxFeedback into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
+github "NoTests/RxFeedback" ~> 1.0.2
+```
+
+Run `carthage update` to build the framework and drag the built `RxFeedback.framework` into your Xcode project. As `RxFeedback` depends on `RxSwift` and `RxCocoa` you need to drag the `RxSwift.framework` and `RxCocoa.framework` into your Xcode project as well.
