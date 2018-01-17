@@ -32,7 +32,7 @@ extension ReactEquatableLoopsTests {
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: feedback
+            feedback: feedback
         )
 
         // Run
@@ -63,7 +63,7 @@ extension ReactEquatableLoopsTests {
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: feedback, { _ in events.asObservable() }
+            feedback: feedback, { _ in events.asObservable() }
         )
 
         // Run
@@ -92,7 +92,7 @@ extension ReactEquatableLoopsTests {
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: feedback
+            feedback: feedback
         )
 
         // Run
@@ -138,7 +138,7 @@ extension ReactEquatableLoopsTests {
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: feedback1, feedback2
+            feedback: feedback1, feedback2
         )
 
         // Run
@@ -188,7 +188,7 @@ extension ReactEquatableLoopsTests {
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: feedback1, feedback2
+            feedback: feedback1, feedback2
         )
 
         // Run
