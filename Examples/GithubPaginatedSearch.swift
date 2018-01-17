@@ -101,15 +101,12 @@ class GithubPaginatedSearchViewController: UIViewController {
 
         let searchResults = self.searchResults!
 
-        let configureCell = {  (tableView: UITableView, row: Int, repository: Repository) -> UITableViewCell in
-            var cell = tableView.dequeueReusableCell(withIdentifier: "RepositoryCell")
-            if cell == nil {
-                cell = UITableViewCell(style: .subtitle, reuseIdentifier: "RepositoryCell")
-            }
+        let configureCell = { (tableView: UITableView, row: Int, repository: Repository) -> UITableViewCell in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "RepositoryCell") ?? UITableViewCell(style: .subtitle, reuseIdentifier: "RepositoryCell")
 
-            cell?.textLabel?.text = repository.name
-            cell?.detailTextLabel?.text = repository.url.description
-            return cell!
+            cell.textLabel?.text = repository.name
+            cell.detailTextLabel?.text = repository.url.description
+            return cell
         }
 
         let triggerLoadNextPage: (Driver<State>) -> Signal<Event> = { state in
@@ -138,20 +135,20 @@ class GithubPaginatedSearchViewController: UIViewController {
         }
 
         Driver.system(
-            initialState: State.empty,
-            reduce: State.reduce,
-            feedback:
-            // UI, user feedback
-            bindUI,
-            // NoUI, automatic feedback
-            react(query: { $0.loadNextPage }, effects: { resource in
-                return URLSession.shared.loadRepositories(resource: resource)
-                    .asSignal(onErrorJustReturn: .failure(.offline))
-                    .map(Event.response)
-            })
-            )
-            .drive()
-            .disposed(by: disposeBag)
+                initialState: State.empty,
+                reduce: State.reduce,
+                feedback:
+                    // UI, user feedback
+                    bindUI,
+                    // NoUI, automatic feedback
+                    react(query: { $0.loadNextPage }, effects: { resource in
+                        return URLSession.shared.loadRepositories(resource: resource)
+                            .asSignal(onErrorJustReturn: .failure(.offline))
+                            .map(Event.response)
+                    })
+                )
+                .drive()
+                .disposed(by: disposeBag)
     }
 }
 
