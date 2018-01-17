@@ -18,13 +18,16 @@ class RxFeedbackObservableTests: RxTest {
 extension RxFeedbackObservableTests {
     func testEventsAreArrivingOnCorrectScheduler() {
         let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
+        let feedbackLoop: (ObservableSchedulerContext<String>) -> Observable<String> = {
+            _ in .just("a")
+        }
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
                 return oldState + "_" + append
             },
             scheduler: scheduler,
-            scheduledFeedback: { _ in .just("a") })
+            feedback: feedbackLoop)
 
         let results = try! system
             .take(2)
@@ -40,13 +43,14 @@ extension RxFeedbackObservableTests {
     }
     
     func testInitial() {
+        let feedbackLoop: [(ObservableSchedulerContext<String>) -> Observable<String>] = []
         let system = Observable.system(
             initialState: "initial",
             reduce: { _, newState in
                 return newState
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: [])
+            feedback: feedbackLoop)
 
         var state = ""
         _ = system.subscribe(onNext: { nextState in
@@ -63,7 +67,7 @@ extension RxFeedbackObservableTests {
                 return  oldState + append
         },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: { stateAndScheduler in
+            feedback: { (stateAndScheduler: ObservableSchedulerContext<String>) in
                 return stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
                         return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
@@ -120,7 +124,7 @@ extension RxFeedbackObservableTests {
                 return  oldState + append
         },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
             system
@@ -155,7 +159,7 @@ extension RxFeedbackObservableTests {
                 return  oldState + append
         },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
             system
@@ -184,7 +188,7 @@ extension RxFeedbackObservableTests {
                 return  oldState + append
         },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
             system
@@ -213,7 +217,7 @@ extension RxFeedbackObservableTests {
                 return  oldState + append
         },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (try?
             system
@@ -254,7 +258,7 @@ extension RxFeedbackObservableTests {
                 return  oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: RxFeedback.bind { (stateAndScheduler) in
+            feedback: RxFeedback.bind { (stateAndScheduler) in
                 let results = stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
                         return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
@@ -297,7 +301,7 @@ extension RxFeedbackObservableTests {
                 return  oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: RxFeedback.bind(owner) { (_, stateAndScheduler) in
+            feedback: RxFeedback.bind(owner) { (_, stateAndScheduler) in
                 let results = stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
                         return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
