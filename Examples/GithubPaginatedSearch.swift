@@ -146,9 +146,9 @@ class GithubPaginatedSearchViewController: UIViewController {
                             .asSignal(onErrorJustReturn: .failure(.offline))
                             .map(Event.response)
                     })
-                )
-                .drive()
-                .disposed(by: disposeBag)
+            )
+            .drive()
+            .disposed(by: disposeBag)
     }
 }
 
