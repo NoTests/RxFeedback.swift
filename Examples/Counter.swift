@@ -38,7 +38,7 @@ class CounterViewController: UIViewController {
                 }
         },
             scheduler: MainScheduler.instance,
-            scheduledFeedback:
+            feedback:
                 // UI is user feedback
                 bind(self) { me, state -> Bindings<Event> in
                     let subscriptions = [

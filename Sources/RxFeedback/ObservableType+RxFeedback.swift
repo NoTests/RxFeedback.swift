@@ -29,14 +29,14 @@ extension ObservableType where E == Any {
             initialState: State,
             reduce: @escaping (State, Event) -> State,
             scheduler: ImmediateSchedulerType,
-            scheduledFeedback: [Feedback<State, Event>]
+            feedback: [Feedback<State, Event>]
         ) -> Observable<State> {
         return Observable<State>.deferred {
             let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
 
             let asyncScheduler = scheduler.async
             
-            let events: Observable<Event> = Observable.merge(scheduledFeedback.map { feedback in
+            let events: Observable<Event> = Observable.merge(feedback.map { feedback in
                 let state = ObservableSchedulerContext(source: replaySubject.asObservable(), scheduler: asyncScheduler)
                 return feedback(state)
             })
@@ -60,9 +60,9 @@ extension ObservableType where E == Any {
             initialState: State,
             reduce: @escaping (State, Event) -> State,
             scheduler: ImmediateSchedulerType,
-            scheduledFeedback: Feedback<State, Event>...
+            feedback: Feedback<State, Event>...
         ) -> Observable<State> {
-        return system(initialState: initialState, reduce: reduce, scheduler: scheduler, scheduledFeedback: scheduledFeedback)
+        return system(initialState: initialState, reduce: reduce, scheduler: scheduler, feedback: feedback)
     }
 }
 
@@ -97,7 +97,7 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
                 initialState: initialState,
                 reduce: reduce,
                 scheduler: SharingStrategy.scheduler,
-                scheduledFeedback: observableFeedbacks
+                feedback: observableFeedbacks
             )
             .asDriver(onErrorDriveWith: .empty())
     }
