@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="N4i-Me-ig3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="N4i-Me-ig3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -155,7 +155,7 @@
                         <constraints>
                             <constraint firstItem="4tH-Ju-5I9" firstAttribute="centerY" secondItem="kOt-ea-rLb" secondAttribute="centerY" id="33X-O4-evk"/>
                             <constraint firstItem="GGm-SN-4S4" firstAttribute="leading" secondItem="4tH-Ju-5I9" secondAttribute="trailing" constant="21" id="HVR-OF-DXY"/>
-                            <constraint firstItem="4tH-Ju-5I9" firstAttribute="leading" secondItem="UOx-Z6-ZTx" secondAttribute="trailing" constant="21" id="QKr-Pu-jNW"/>
+                            <constraint firstItem="4tH-Ju-5I9" firstAttribute="left" secondItem="UOx-Z6-ZTx" secondAttribute="right" constant="21" id="QKr-Pu-jNW"/>
                             <constraint firstItem="GGm-SN-4S4" firstAttribute="centerY" secondItem="4tH-Ju-5I9" secondAttribute="centerY" id="Wij-TB-vka"/>
                             <constraint firstItem="UOx-Z6-ZTx" firstAttribute="centerY" secondItem="4tH-Ju-5I9" secondAttribute="centerY" id="oQb-m6-arB"/>
                             <constraint firstItem="4tH-Ju-5I9" firstAttribute="centerX" secondItem="kOt-ea-rLb" secondAttribute="centerX" id="ypz-o4-wwg"/>
@@ -231,7 +231,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UI (User is producing Events)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ChK-IQ-BbV">
-                                <rect key="frame" x="16" y="80" width="223" height="21"/>
+                                <rect key="frame" x="16" y="80" width="343" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -240,7 +240,7 @@
                                 <rect key="frame" x="0.0" y="333" width="375" height="334"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device is producing Events" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fHd-6E-B0i">
-                                        <rect key="frame" x="16" y="67.5" width="206.5" height="21"/>
+                                        <rect key="frame" x="16" y="67.5" width="351" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -255,6 +255,7 @@
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="nNS-gf-NkG" firstAttribute="centerY" secondItem="lPp-0x-kgZ" secondAttribute="centerY" id="HME-37-hnx"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="fHd-6E-B0i" secondAttribute="trailing" id="Jci-aZ-5qT"/>
                                     <constraint firstItem="nNS-gf-NkG" firstAttribute="centerX" secondItem="lPp-0x-kgZ" secondAttribute="centerX" id="LqT-A9-LI0"/>
                                 </constraints>
                             </view>
@@ -296,6 +297,7 @@ is the same as designing UI
                             <constraint firstItem="5KA-KT-f48" firstAttribute="centerX" secondItem="whx-NF-gqu" secondAttribute="centerX" id="GYO-ls-vEu"/>
                             <constraint firstItem="fUl-LL-T0A" firstAttribute="width" secondItem="whx-NF-gqu" secondAttribute="width" id="KXT-x8-zfP"/>
                             <constraint firstItem="ChK-IQ-BbV" firstAttribute="top" secondItem="NMV-nH-fph" secondAttribute="bottom" constant="16" id="Mjp-el-fa1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ChK-IQ-BbV" secondAttribute="trailing" id="YcL-sr-2jX"/>
                             <constraint firstAttribute="trailing" secondItem="lPp-0x-kgZ" secondAttribute="trailing" id="dKf-Dz-JK1"/>
                             <constraint firstItem="fHd-6E-B0i" firstAttribute="leading" secondItem="whx-NF-gqu" secondAttribute="leadingMargin" id="eRa-j9-jqw"/>
                             <constraint firstItem="5KA-KT-f48" firstAttribute="top" secondItem="CbA-R0-XsW" secondAttribute="bottom" constant="16.5" id="gzA-gg-qrJ"/>
@@ -303,7 +305,7 @@ is the same as designing UI
                             <constraint firstItem="CbA-R0-XsW" firstAttribute="centerY" secondItem="whx-NF-gqu" secondAttribute="centerY" multiplier="0.5" id="lTz-xH-IYD"/>
                             <constraint firstItem="lPp-0x-kgZ" firstAttribute="height" secondItem="whx-NF-gqu" secondAttribute="height" multiplier="0.5" id="noG-Au-geR"/>
                             <constraint firstItem="fUl-LL-T0A" firstAttribute="centerX" secondItem="whx-NF-gqu" secondAttribute="centerX" id="uBe-dK-9kD"/>
-                            <constraint firstItem="tLU-xq-06l" firstAttribute="top" secondItem="lPp-0x-kgZ" secondAttribute="bottom" id="wXJ-x3-l5s"/>
+                            <constraint firstAttribute="bottom" secondItem="lPp-0x-kgZ" secondAttribute="bottom" id="wXJ-x3-l5s"/>
                             <constraint firstItem="lPp-0x-kgZ" firstAttribute="leading" secondItem="whx-NF-gqu" secondAttribute="leading" id="yg4-gG-c1o"/>
                         </constraints>
                     </view>
@@ -349,7 +351,7 @@ is the same as designing UI
                                 <rect key="frame" x="0.0" y="533.5" width="375" height="133.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Machine queries, effects &quot;UI&quot;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WNQ-Zz-C9b">
-                                        <rect key="frame" x="16" y="10" width="224" height="21"/>
+                                        <rect key="frame" x="16" y="10" width="351" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -365,6 +367,7 @@ is the same as designing UI
                                 <constraints>
                                     <constraint firstItem="28y-4j-T7a" firstAttribute="centerY" secondItem="tXW-8s-FwT" secondAttribute="centerY" multiplier="0.5" id="Y43-mf-Tg5"/>
                                     <constraint firstItem="28y-4j-T7a" firstAttribute="centerX" secondItem="tXW-8s-FwT" secondAttribute="centerX" id="Y5q-oN-pH1"/>
+                                    <constraint firstAttribute="trailingMargin" secondItem="WNQ-Zz-C9b" secondAttribute="trailing" id="ZNk-3A-dgm"/>
                                     <constraint firstItem="WNQ-Zz-C9b" firstAttribute="top" secondItem="tXW-8s-FwT" secondAttribute="top" constant="10" id="dll-0T-m1j"/>
                                     <constraint firstItem="28y-4j-T7a" firstAttribute="width" secondItem="tXW-8s-FwT" secondAttribute="width" multiplier="0.8" id="f3J-gA-KcB"/>
                                 </constraints>
@@ -418,10 +421,10 @@ is the same as designing UI
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="top" secondItem="WV3-jm-EUY" secondAttribute="bottom" id="IYJ-9x-eB4"/>
                             <constraint firstItem="WV3-jm-EUY" firstAttribute="centerX" secondItem="jmj-wE-374" secondAttribute="centerX" id="JIE-Vm-nJ6"/>
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="height" secondItem="jmj-wE-374" secondAttribute="height" multiplier="0.2" id="Oo9-cQ-uHO"/>
-                            <constraint firstItem="oxg-lB-LWw" firstAttribute="top" secondItem="tXW-8s-FwT" secondAttribute="bottom" id="U67-zv-EXS"/>
+                            <constraint firstAttribute="bottom" secondItem="tXW-8s-FwT" secondAttribute="bottom" id="U67-zv-EXS"/>
                             <constraint firstItem="tXW-8s-FwT" firstAttribute="leading" secondItem="jmj-wE-374" secondAttribute="leading" id="VfC-uS-zXH"/>
                             <constraint firstItem="WV3-jm-EUY" firstAttribute="width" secondItem="jmj-wE-374" secondAttribute="width" id="Xqg-ff-1gb"/>
-                            <constraint firstItem="WNQ-Zz-C9b" firstAttribute="leading" secondItem="jmj-wE-374" secondAttribute="leadingMargin" id="Y2M-Kq-EXd"/>
+                            <constraint firstItem="WNQ-Zz-C9b" firstAttribute="left" secondItem="jmj-wE-374" secondAttribute="leftMargin" id="Y2M-Kq-EXd"/>
                             <constraint firstAttribute="trailing" secondItem="jhm-c9-UiC" secondAttribute="trailing" id="b8G-3Q-6a0"/>
                             <constraint firstItem="jhm-c9-UiC" firstAttribute="leading" secondItem="jmj-wE-374" secondAttribute="leading" id="gut-Ou-Zlh"/>
                             <constraint firstAttribute="trailing" secondItem="tXW-8s-FwT" secondAttribute="trailing" id="lIh-hh-eOr"/>
