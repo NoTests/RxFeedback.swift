@@ -27,7 +27,7 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 * Declarative
     * System behavior is first declaratively specified and effects begin after subscribe is called => Compile time proof there are no "unhandled states"
 * Debugging is easier
-    * A lot of logic is just normal pure function that can be debugged using Xcode debugger, or just printing the commands.
+    * A lot of logic is just normal pure function that can be debugged using XCode debugger, or just printing the commands.
 
 * Can be applied on any level
     * [Entire system](https://kafka.apache.org/documentation/)
@@ -58,7 +58,7 @@ Observable.system(
             }
         },
     scheduler: MainScheduler.instance,
-    feedback:
+    scheduledFeedback:
         // UI is user feedback
         bind { state in
             ([
@@ -89,7 +89,7 @@ Observable.system(
             }
         },
     scheduler: MainScheduler.instance,
-    feedback:
+    scheduledFeedback:
         // UI is human feedback
         bindUI,
         // NoUI, machine feedback
@@ -126,7 +126,7 @@ Run `RxFeedback.xcodeproj` > `Example` to find out more.
 
 # Difference from other architectures
 
-* Elm - pretty close, feedback loops for effects instead of `Cmd`, which effects to perform are encoded into state and querried by feedback loops
+* Elm - pretty close, feedback loops for effects instead of `Cmd`, which effects to perform are encoded into state and queried by feedback loops
 * Redux - kind of like this, but feedback loops instead of middleware
 * Redux-Observable - observables observe state vs. being inside middleware between view and state
 * Cycle.js - no simple explanation :), ask [@andrestaltz](https://twitter.com/andrestaltz)
@@ -145,7 +145,7 @@ $ gem install cocoapods
 To integrate RxFeedback into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-pod 'RxFeedback', '~> 1.0.2'
+pod 'RxFeedback', '~> 1.0'
 ```
 
 Then, run the following command:
@@ -167,7 +167,7 @@ $ brew install carthage
 To integrate RxFeedback into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "NoTests/RxFeedback" ~> 1.0.2
+github "NoTests/RxFeedback" ~> 1.0
 ```
 
 Run `carthage update` to build the framework and drag the built `RxFeedback.framework` into your Xcode project. As `RxFeedback` depends on `RxSwift` and `RxCocoa` you need to drag the `RxSwift.framework` and `RxCocoa.framework` into your Xcode project as well.
