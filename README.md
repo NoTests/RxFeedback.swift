@@ -27,7 +27,7 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 * Declarative
     * System behavior is first declaratively specified and effects begin after subscribe is called => Compile time proof there are no "unhandled states"
 * Debugging is easier
-    * A lot of logic is just normal pure function that can be debugged using XCode debugger, or just printing the commands.
+    * A lot of logic is just normal pure function that can be debugged using Xcode debugger, or just printing the commands.
 
 * Can be applied on any level
     * [Entire system](https://kafka.apache.org/documentation/)
@@ -124,14 +124,6 @@ Driver.system(
 
 Run `RxFeedback.xcodeproj` > `Example` to find out more.
 
-# Difference from other architectures
-
-* Elm - pretty close, feedback loops for effects instead of `Cmd`, which effects to perform are encoded into state and queried by feedback loops
-* Redux - kind of like this, but feedback loops instead of middleware
-* Redux-Observable - observables observe state vs. being inside middleware between view and state
-* Cycle.js - no simple explanation :), ask [@andrestaltz](https://twitter.com/andrestaltz)
-* MVVM - separates state from effects and doesn't require a view
-
 # Installation
 
 ### CocoaPods
@@ -181,6 +173,14 @@ Once you have your Swift package set up, adding RxFeedback as a dependency is as
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/NoTests/RxFeedback.swift.git", from: "4.0.0")
+    .package(url: "https://github.com/NoTests/RxFeedback.swift.git", majorVersion: 1)
 ]
 ```
+
+# Difference from other architectures
+
+* Elm - pretty close, feedback loops for effects instead of `Cmd`, which effects to perform are encoded into state and queried by feedback loops
+* Redux - kind of like this, but feedback loops instead of middleware
+* Redux-Observable - observables observe state vs. being inside middleware between view and state
+* Cycle.js - no simple explanation :), ask [@andrestaltz](https://twitter.com/andrestaltz)
+* MVVM - separates state from effects and doesn't require a view
