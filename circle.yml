@@ -1,0 +1,38 @@
+machine:
+  xcode:
+    version: 9.2
+  environment:
+    LANG: en_US.UTF-8
+
+dependencies:
+  override:
+    - git submodule update --init --recursive --force
+    - pod repo update
+  cache_directories:
+    - "Carthage"
+    - ~/.cocoapods
+
+test:
+  pre:
+    - set -o pipefail
+  override:
+    # Git Submodules
+    - xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
+    - xcodebuild -project RxFeedback.xcodeproj -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+
+    # CocoaPods
+    - pod update
+    - xcodebuild -workspace RxFeedback.xcworkspace -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
+    - xcodebuild -workspace RxFeedback.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+    - pod lib lint --quick --verbose
+    - pod deintegrate
+
+    # Carthage
+    - carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS
+    - carthage update --platform ios && carthage build --no-skip-current --platform iOS
+    - xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
+    - xcodebuild -project RxFeedback.xcodeproj -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+
+    # Swift Package Manager
+    - swift build
+    - swift test
