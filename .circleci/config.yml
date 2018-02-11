@@ -1,0 +1,101 @@
+version: 2.0
+
+jobs:
+  "Git Submodules":
+    macos:
+      xcode: "9.2.0"
+
+    working_directory: ~/submodules
+    steps:
+      - checkout
+      - restore_cache:
+          key: submodule-cache
+      - run:
+          name: Update Submodules
+          command: git submodule update --init --recursive --force
+      - run:
+          name: Test
+          command: xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
+      - run:
+          name: Build
+          command: xcodebuild -project RxFeedback.xcodeproj -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+      - save_cache:
+          key: submodule-cache
+          paths:
+            - .git
+
+  "CocoaPods":
+    macos:
+      xcode: "9.2.0"
+
+    working_directory: ~/cocoapods
+    steps:
+      - checkout
+      - restore_cache:
+          key: cocoapods-cache
+      - run:
+          name: Install Pods
+          command: pod install
+      - run:
+          name: Test
+          command: xcodebuild -workspace RxFeedback.xcworkspace -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
+      - run:
+          name: Build
+          command: xcodebuild -workspace RxFeedback.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+      - run:
+          name: Lint Podspec
+          command: pob lib lint --quick --verbose
+      - save_cache:
+          key: cocoapods-cache
+          paths:
+            - ~/.cocoapods
+            - Pods
+
+  "Carthage":
+    macos:
+      xcode: "9.2.0"
+
+    working_directory: ~/carthage
+    steps:
+      - checkout
+      - restore_cache:
+          key: carthage-cache
+      - run:
+          name: Carthage Build tvOS
+          command: carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS
+      - run:
+          name: Carthage Build iOS
+          command: carthage update --platform ios && carthage build --no-skip-current --platform iOS
+      - run:
+          name: Test
+          command: xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
+      - run:
+          name: Build
+          command: xcodebuild -project RxFeedback.xcodeproj -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+      - save_cache:
+          key: carthage-cache
+          paths:
+            - Carthage
+
+  "Swift Package Manager":
+    macos:
+      xcode: "9.2.0"
+
+    working_directory: ~/spm
+    steps:
+      - checkout
+      - run:
+          name: Build
+          command: swift build
+      - run:
+          name: Test
+          command: swift test
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - "Git Submodules"
+      - "CocoaPods"
+      - "Carthage"
+      - "Swift Package Manager"
