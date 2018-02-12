@@ -7,23 +7,22 @@ jobs:
 
     steps:
       - checkout
-      - restore_cache:
-          key: carthage-cache
       - run:
           name: Install Homebrew Dependencies
           command: brew upgrade carthage
       - run:
           name: Carthage Build iOS
-          command: carthage update --platform ios && carthage build --no-skip-current --platform iOS --log-path "carthage-xcodebuild.log"
+          command: carthage update --platform iOS && carthage build --no-skip-current --platform iOS --log-path "carthage-xcodebuild.log"
+      - run:
+          name: Build
+          command: xcodebuild -project RxFeedback.xcodeproj -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
       - run:
           name: Carthage Build tvOS
           command: carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS --log-path "carthage-xcodebuild.log"
       - run:
           name: Test
           command: xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
-      - run:
-          name: Build
-          command: xcodebuild -project RxFeedback.xcodeproj -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+      
       - run:
           command: |
             mkdir -p /tmp/carthage-log
@@ -31,10 +30,6 @@ jobs:
           when: on_fail
       - store_artifacts:
           path: /tmp/carthage-log
-      - save_cache:
-          key: carthage-cache
-          paths:
-            - Carthage
 
 workflows:
   version: 2
