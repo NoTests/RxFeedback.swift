@@ -5,7 +5,6 @@ jobs:
     macos:
       xcode: "9.2.0"
 
-    working_directory: ~/carthage
     steps:
       - checkout
       - restore_cache:
@@ -15,7 +14,7 @@ jobs:
           command: brew upgrade carthage
       - run:
           name: Carthage Build tvOS
-          command: carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS
+          command: carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS --log-path "carthage-xcodebuild.log"
       - run:
           name: Carthage Build iOS
           command: carthage update --platform ios && carthage build --no-skip-current --platform iOS
@@ -25,6 +24,13 @@ jobs:
       - run:
           name: Build
           command: xcodebuild -project RxFeedback.xcodeproj -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build | xcpretty
+      - run:
+          command: |
+            mkdir -p /tmp/carthage-log
+            cp carthage-xcodebuild.log /tmp/carthage-log
+          when: on_fail
+      - store_artifacts:
+          path: /tmp/carthage-log
       - save_cache:
           key: carthage-cache
           paths:
