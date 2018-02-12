@@ -13,11 +13,11 @@ jobs:
           name: Install Homebrew Dependencies
           command: brew upgrade carthage
       - run:
+          name: Carthage Build iOS
+          command: carthage update --platform ios && carthage build --no-skip-current --platform iOS --log-path "carthage-xcodebuild.log"
+      - run:
           name: Carthage Build tvOS
           command: carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS --log-path "carthage-xcodebuild.log"
-      - run:
-          name: Carthage Build iOS
-          command: carthage update --platform ios && carthage build --no-skip-current --platform iOS
       - run:
           name: Test
           command: xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test | xcpretty
