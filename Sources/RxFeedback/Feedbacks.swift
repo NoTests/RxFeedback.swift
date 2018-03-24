@@ -317,7 +317,7 @@ public func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext
         return Observable<Event>.using({ () -> Bindings<Event> in
             return bindings(state)
         }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-            return Observable<Event>.merge(bindings.events)
+            return Observable<Event>.merge(bindings.events).concat(Observable.never())
                 .enqueue(state.scheduler)
         })
     }
@@ -340,7 +340,7 @@ public func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Binding
         return Observable<Event>.using({ () -> Bindings<Event> in
             return bindings(state)
         }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-            return Observable<Event>.merge(bindings.events)
+            return Observable<Event>.merge(bindings.events).concat(Observable.never())
         })
             .enqueue(Signal<Event>.SharingStrategy.scheduler)
             .asSignal(onErrorSignalWith: .empty())
