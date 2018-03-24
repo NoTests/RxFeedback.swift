@@ -302,4 +302,40 @@ extension RxFeedbackDriverTests {
             "initial_a_b_c"
             ])
     }
+    func testUIBindingsAreNotDisposedWhenNoEventsAreSpecified() {
+        typealias State = Int
+        typealias Event = Int
+        typealias Feedback = (Driver<State>) -> Signal<Event>
+
+        var subscriptionState: [Int] = []
+
+        let player: Feedback = react(query: { $0 }, effects: { state in
+            return Signal<Int>.timer(0.01, period: 0.05).map { _ in 1 }
+        })
+
+        let uiBindings: Feedback = bind { state in
+            let subscriptions: [Disposable] = [
+                state.drive(onNext:{ subscriptionState.append($0) })
+            ]
+            return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
+        }
+        let system = Driver.system(
+            initialState: 0,
+            reduce: { oldState, append in
+                return  min(oldState + append, 4)
+        },
+            feedback: uiBindings, player
+        )
+
+        let result =
+            (try? system
+                .asObservable()
+                .take(4)
+                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .toBlocking(timeout: 3.0)
+                .toArray()
+                ) ?? []
+
+        XCTAssertEqual(subscriptionState, result)
+    }
 }
