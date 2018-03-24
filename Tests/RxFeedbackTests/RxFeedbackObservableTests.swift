@@ -330,6 +330,43 @@ extension RxFeedbackObservableTests {
             "initial_a_b_c"
             ])
     }
+
+    func testUIBindingsAreNotDisposedWhenNoEventsAreSpecified() {
+        typealias State = Int
+        typealias Event = Int
+        typealias Feedback = (ObservableSchedulerContext<State>) -> Observable<Event>
+
+        var subscriptionState: [Int] = []
+
+        let player: Feedback = react(query: { $0 }, effects: { state in
+            return Observable<Int>.timer(0.05, scheduler: MainScheduler.instance).map { _ in 1 }
+        })
+
+        let uiBindings: Feedback = bind { state in
+            let subscriptions: [Disposable] = [
+                state.subscribe(onNext:{ subscriptionState.append($0) })
+            ]
+            return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
+        }
+        let system = Observable.system(
+            initialState: 0,
+            reduce: { oldState, append in
+                return  min(oldState + append, 4)
+            },
+            scheduler: MainScheduler.instance,
+            scheduledFeedback: uiBindings, player
+        )
+
+        let result =
+            (try? system
+                .take(4)
+                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .toBlocking(timeout: 3.0)
+                .toArray()
+            ) ?? []
+
+        XCTAssertEqual(subscriptionState, result)
+    }
 }
 
 extension DispatchQueue {
