@@ -11,6 +11,7 @@ import XCTest
 import RxFeedback
 import RxSwift
 import RxCocoa
+import RxTest
 
 class RxFeedbackDriverTests: RxTest {
 }
@@ -302,40 +303,54 @@ extension RxFeedbackDriverTests {
             "initial_a_b_c"
             ])
     }
-    func testUIBindingsAreNotDisposedWhenNoEventsAreSpecified() {
+    func testBindingsAreNotDisposedWhenNoEventsAreSpecifiedOnDriverSystem() {
         typealias State = Int
         typealias Event = Int
         typealias Feedback = (Driver<State>) -> Signal<Event>
 
+        let testScheduler = TestScheduler(initialClock: 0)
+        var testableObserver: TestableObserver<Int>!
         var subscriptionState: [Int] = []
+        let timer = testScheduler.createColdObservable([
+            next(50, 0),
+            completed(50)
+            ])
+            .asSignal(onErrorJustReturn: 0)
 
-        let player: Feedback = react(query: { $0 }, effects: { state in
-            return Signal<Int>.timer(0.01, period: 0.05).map { _ in 1 }
-        })
+        SharingScheduler.mock(scheduler: testScheduler) {
 
-        let uiBindings: Feedback = bind { state in
-            let subscriptions: [Disposable] = [
-                state.drive(onNext:{ subscriptionState.append($0) })
-            ]
-            return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
+            let player: Feedback = react(query: { $0 }, effects: { state in
+                return timer.map { _ in 1 }
+            })
+
+            let mockUIBindings: Feedback = bind { state in
+                let subscriptions: [Disposable] = [
+                    state.drive(onNext:{ subscriptionState.append($0) })
+                ]
+                return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
+            }
+            let system = Driver.system(
+                initialState: 0,
+                reduce: { oldState, event in
+                    return  oldState + event
+                },
+                feedback: mockUIBindings, player
+            )
+
+            testableObserver = testScheduler.createObserver(Int.self)
+            let _ = system.drive(testableObserver)
+            testScheduler.scheduleAt(200, action: {
+                testScheduler.stop()
+            })
+            testScheduler.start()
         }
-        let system = Driver.system(
-            initialState: 0,
-            reduce: { oldState, append in
-                return  min(oldState + append, 4)
-        },
-            feedback: uiBindings, player
-        )
 
-        let result =
-            (try? system
-                .asObservable()
-                .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
-                .toBlocking(timeout: 3.0)
-                .toArray()
-                ) ?? []
-
-        XCTAssertEqual(subscriptionState, result)
-    }
-}
+        let correct = [
+            next(2, 0),
+            next(57, 1),
+            next(111, 2),
+            next(165, 3),
+            ]
+        XCTAssertEqual(testableObserver.events, correct)
+        XCTAssertEqual(subscriptionState, [0,1,2,3])
+    }}
