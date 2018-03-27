@@ -11,6 +11,7 @@ import XCTest
 import RxFeedback
 import RxSwift
 import RxBlocking
+import RxTest
 
 class RxFeedbackObservableTests: RxTest {
 }
@@ -331,41 +332,55 @@ extension RxFeedbackObservableTests {
             ])
     }
 
-    func testUIBindingsAreNotDisposedWhenNoEventsAreSpecified() {
+    func testBindingsAreNotDisposedWhenNoEventsAreSpecifiedOnObservableSystem() {
         typealias State = Int
         typealias Event = Int
         typealias Feedback = (ObservableSchedulerContext<State>) -> Observable<Event>
 
-        var subscriptionState: [Int] = []
+        let testScheduler = TestScheduler(initialClock: 0)
+        let timer = testScheduler.createColdObservable([
+            next(50, 1),
+            completed(50)
+            ])
 
+        var subscriptionState: [Int] = []
+        var subscriptionIsDisposed = false
         let player: Feedback = react(query: { $0 }, effects: { state in
-            return Observable<Int>.timer(0.05, scheduler: MainScheduler.instance).map { _ in 1 }
+            return timer.map { _ in 1 }
         })
 
-        let uiBindings: Feedback = bind { state in
+        let mockUIBindings: Feedback = bind { state in
             let subscriptions: [Disposable] = [
-                state.subscribe(onNext:{ subscriptionState.append($0) })
+                state
+                    .do(onDispose: { subscriptionIsDisposed = true })
+                    .subscribe(onNext:{ subscriptionState.append($0) })
             ]
             return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
         }
         let system = Observable.system(
             initialState: 0,
-            reduce: { oldState, append in
-                return  min(oldState + append, 4)
+            reduce: { oldState, event in
+                return  oldState + event
             },
-            scheduler: MainScheduler.instance,
-            scheduledFeedback: uiBindings, player
+            scheduler: testScheduler,
+            scheduledFeedback: mockUIBindings, player
         )
 
-        let result =
-            (try? system
-                .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
-                .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
-
-        XCTAssertEqual(subscriptionState, result)
+        let observer = testScheduler.createObserver(Int.self)
+        let _ = system.subscribe(observer)
+        testScheduler.scheduleAt(200, action: {
+            testScheduler.stop()
+        })
+        testScheduler.start()
+        let correct = [
+            next(1, 0),
+            next(54, 1),
+            next(106, 2),
+            next(158, 3),
+        ]
+        XCTAssertEqual(observer.events, correct)
+        XCTAssertEqual(subscriptionState, [0,1,2,3])
+        XCTAssertFalse(subscriptionIsDisposed, "Bindings have been disposed of prematurely.")
     }
 }
 
