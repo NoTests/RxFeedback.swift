@@ -1,5 +1,9 @@
 ## Master
 
+## [1.0.2](https://github.com/kzaher/RxFeedback/releases/tag/1.0.3)
+
+* Fixes problem with feedback loop termination.
+
 ## [1.0.2](https://github.com/kzaher/RxFeedback/releases/tag/1.0.2)
 
 * Fixes duplicated plist inclusion.

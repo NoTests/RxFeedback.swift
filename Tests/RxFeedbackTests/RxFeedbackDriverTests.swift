@@ -323,7 +323,7 @@ extension RxFeedbackDriverTests {
                 return timer.map { _ in 1 }
             })
 
-            let mockUIBindings: Feedback = bind { state in
+            let mockUIBindings: Feedback = RxFeedback.bind { (state: Driver<State>) in
                 let subscriptions: [Disposable] = [
                     state.drive(onNext:{ subscriptionState.append($0) })
                 ]

@@ -349,7 +349,7 @@ extension RxFeedbackObservableTests {
             return timer.map { _ in 1 }
         })
 
-        let mockUIBindings: Feedback = bind { state in
+        let mockUIBindings: Feedback = RxFeedback.bind { state in
             let subscriptions: [Disposable] = [
                 state
                     .do(onDispose: { subscriptionIsDisposed = true })
