@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
         * =>  It's just state + CQRS
     * Straightforward
         * if it's state -> State
-        * if it's a way to modify state -> Event/Command
+        * if it's a way to modify state -> Mutation
         * it it's an effect -> encode it into part of state and then design a feedback loop
     * Declarative
         * System behavior is first declaratively specified and effects begin after subscribe is called => Compile time proof there are no "unhandled states"
