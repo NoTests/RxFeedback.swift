@@ -9,12 +9,12 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/RxFeedback.png" width="502px" />
 
 ```swift
-    typealias Feedback<State, Event> = (Observable<State>) -> Observable<Event>
+    typealias Feedback<State, Mutation> = (Observable<State>) -> Observable<Mutation>
 
-    public static func system<State, Event>(
+    public static func system<State, Mutation>(
             initialState: State,
-            reduce: @escaping (State, Event) -> State,
-            feedback: Feedback<State, Event>...
+            reduce: @escaping (State, Mutation) -> State,
+            feedback: Feedback<State, Mutation>...
         ) -> Observable<State>
 ```
 
@@ -22,7 +22,7 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 
 * Straightforward
     * if it's state -> State
-    * if it's a way to modify state -> Event/Command
+    * if it's a way to modify state -> Mutation/Command
     * it it's an effect -> encode it into part of state and then design a feedback loop
 * Declarative
     * System behavior is first declaratively specified and effects begin after subscribe is called => Compile time proof there are no "unhandled states"
@@ -49,8 +49,8 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 ```swift
 Observable.system(
     initialState: 0,
-    reduce: { (state, event) -> State in
-            switch event {
+    reduce: { (state: State, mutation: Mutation) -> State in
+            switch mutation {
             case .increment:
                 return state + 1
             case .decrement:
@@ -64,8 +64,8 @@ Observable.system(
             ([
                 state.map(String.init).bind(to: label.rx.text)
             ], [
-                plus.rx.tap.map { Event.increment },
-                minus.rx.tap.map { Event.decrement }
+                plus.rx.tap.map { Mutation.increment },
+                minus.rx.tap.map { Mutation.decrement }
             ])
         }
     )
@@ -80,8 +80,8 @@ Simple automatic feedback loop.
 ```swift
 Observable.system(
     initialState: State.humanHasIt,
-    reduce: { (state: State, event: Event) -> State in
-        switch event {
+    reduce: { (state: State, mutation: Mutation) -> State in
+        switch mutation {
             case .throwToMachine:
                 return .machineHasIt
             case .throwToHuman:
@@ -93,10 +93,10 @@ Observable.system(
         // UI is human feedback
         bindUI,
         // NoUI, machine feedback
-        react(query: { $0.machinePitching }, effects: { () -> Observable<Event> in
+        react(query: { $0.machinePitching }, effects: { () -> Observable<Mutation> in
             return Observable<Int>
                 .timer(1.0, scheduler: MainScheduler.instance)
-                .map { _ in Event.throwToHuman }
+                .map { _ in Mutation.throwToHuman }
         })
 )
 
@@ -117,7 +117,7 @@ Driver.system(
         react(query: { $0.loadNextPage }, effects: { resource in
             return URLSession.shared.loadRepositories(resource: resource)
                 .asDriver(onErrorJustReturn: .failure(.offline))
-                .map(Event.response)
+                .map(Mutation.response)
         })
     )
 ```
