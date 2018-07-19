@@ -43,7 +43,7 @@ fileprivate struct State {
     var lastError: GitHubServiceError?
 }
 
-fileprivate enum Event {
+fileprivate enum Mutation {
     case searchChanged(String)
     case response(SearchRepositoriesResponse)
     case startLoadingNextPage
@@ -54,8 +54,9 @@ extension State {
     static var empty: State {
         return State(search: "", nextPageURL: nil, shouldLoadNextPage: true, results: [], lastError: nil)
     }
-    static func reduce(state: State, event: Event) -> State {
-        switch event {
+
+    static func reduce(state: State, mutation: Mutation) -> State {
+        switch mutation {
         case .searchChanged(let search):
             var result = state
             result.search = search
@@ -109,17 +110,17 @@ class GithubPaginatedSearchViewController: UIViewController {
             return cell
         }
 
-        let triggerLoadNextPage: (Driver<State>) -> Signal<Event> = { state in
-            return state.flatMapLatest { state -> Signal<Event> in
+        let triggerLoadNextPage: (Driver<State>) -> Signal<Mutation> = { state in
+            return state.flatMapLatest { state -> Signal<Mutation> in
                 if state.shouldLoadNextPage {
                     return Signal.empty()
                 }
                 
-                return searchResults.rx.nearBottom.map { _ in Event.startLoadingNextPage }
+                return searchResults.rx.nearBottom.map { _ in Mutation.startLoadingNextPage }
             }
         }
 
-        let bindUI: (Driver<State>) -> Signal<Event> = bind(self) { me, state in
+        let bindUI: (Driver<State>) -> Signal<Mutation> = bind(self) { me, state in
             let subscriptions = [
                 state.map { $0.search }.drive(me.searchText!.rx.text),
                 state.map { $0.lastError?.displayMessage }.drive(me.status!.rx.textOrHide),
@@ -127,11 +128,13 @@ class GithubPaginatedSearchViewController: UIViewController {
 
                 state.map { $0.loadNextPage?.description }.drive(me.loadNextPage!.rx.textOrHide),
                 ]
-            let events: [Signal<Event>] = [
-                me.searchText!.rx.text.orEmpty.changed.asSignal().map(Event.searchChanged),
+
+            let mutations: [Signal<Mutation>] = [
+                me.searchText!.rx.text.orEmpty.changed.asSignal().map(Mutation.searchChanged),
                 triggerLoadNextPage(state)
             ]
-            return Bindings(subscriptions: subscriptions, events: events)
+
+            return Bindings(subscriptions: subscriptions, mutations: mutations)
         }
 
         Driver.system(
@@ -144,7 +147,7 @@ class GithubPaginatedSearchViewController: UIViewController {
                     react(query: { $0.loadNextPage }, effects: { resource in
                         return URLSession.shared.loadRepositories(resource: resource)
                             .asSignal(onErrorJustReturn: .failure(.offline))
-                            .map(Event.response)
+                            .map(Mutation.response)
                     })
             )
             .drive()

@@ -22,15 +22,16 @@ class CounterViewController: UIViewController {
         super.viewDidLoad()
 
         typealias State = Int
-        enum Event {
+
+        enum Mutation {
             case increment
             case decrement
         }
 
         Observable.system(
             initialState: 0,
-            reduce: { (state, event) -> State in
-                switch event {
+            reduce: { (state, mutation) -> State in
+                switch mutation {
                 case .increment:
                     return state + 1
                 case .decrement:
@@ -40,15 +41,18 @@ class CounterViewController: UIViewController {
             scheduler: MainScheduler.instance,
             scheduledFeedback:
                 // UI is user feedback
-                bind(self) { me, state -> Bindings<Event> in
+                bind(self) { me, state -> Bindings<Mutation> in
                     let subscriptions = [
                         state.map(String.init).bind(to: me.label!.rx.text)
                     ]
-                    let events = [
-                        me.plus!.rx.tap.map { Event.increment },
-                        me.minus!.rx.tap.map { Event.decrement }
+
+                    let mutations = [
+                        me.plus!.rx.tap.map { Mutation.increment },
+                        me.minus!.rx.tap.map { Mutation.decrement }
                     ]
-                    return Bindings(subscriptions: subscriptions, events: events)
+
+                    return Bindings(subscriptions: subscriptions,
+                                    mutations: mutations)
                 }
             )
             .subscribe()
