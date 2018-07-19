@@ -272,6 +272,18 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
     }
 }
 
+public extension Bindings {
+    @available(*, deprecated, message: "Please use Bindings(subscriptions:mutations:) instead.")
+    convenience init(subscriptions: [Disposable], events: [Observable<Mutation>]) {
+        self.init(subscriptions: subscriptions, mutations: events)
+    }
+
+    @available(*, deprecated, message: "Please use Bindings(subscriptions:mutations:) instead.")
+    convenience init(subscriptions: [Disposable], events: [Signal<Mutation>]) {
+        self.init(subscriptions: subscriptions, mutations: events)
+    }
+}
+
 @available(*, deprecated, message: "Please use free members from RxFeedback module (`RxFeedback.Bindings`, `RxFeedback.bind`, ...).")
 public struct UI {
     /**
