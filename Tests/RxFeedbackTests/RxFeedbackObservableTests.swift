@@ -17,7 +17,7 @@ class RxFeedbackObservableTests: RxTest {
 }
 
 extension RxFeedbackObservableTests {
-    func testEventsAreArrivingOnCorrectScheduler() {
+    func testMutationsAreArrivingOnCorrectScheduler() {
         let scheduler = SerialDispatchQueueScheduler(qos: .userInitiated)
         let system = Observable.system(
             initialState: "initial",
@@ -270,7 +270,8 @@ extension RxFeedbackObservableTests {
                         return Observable.never()
                     }
                 }
-                return Bindings(subscriptions: [], events: [results])
+
+                return Bindings(subscriptions: [], mutations: [results])
         })
 
         let result = (try?
@@ -313,7 +314,8 @@ extension RxFeedbackObservableTests {
                         return Observable.never()
                     }
                 }
-                return Bindings(subscriptions: [], events: [results])
+
+                return Bindings(subscriptions: [], mutations: [results])
         })
 
         let result = (try?
@@ -332,10 +334,10 @@ extension RxFeedbackObservableTests {
             ])
     }
 
-    func testBindingsAreNotDisposedWhenNoEventsAreSpecifiedOnObservableSystem() {
+    func testBindingsAreNotDisposedWhenNoMutationsAreSpecifiedOnObservableSystem() {
         typealias State = Int
-        typealias Event = Int
-        typealias Feedback = (ObservableSchedulerContext<State>) -> Observable<Event>
+        typealias Mutation = Int
+        typealias Feedback = (ObservableSchedulerContext<State>) -> Observable<Mutation>
 
         let testScheduler = TestScheduler(initialClock: 0)
         let timer = testScheduler.createColdObservable([
@@ -355,12 +357,14 @@ extension RxFeedbackObservableTests {
                     .do(onDispose: { subscriptionIsDisposed = true })
                     .subscribe(onNext:{ subscriptionState.append($0) })
             ]
-            return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
+
+            return Bindings(subscriptions: subscriptions, mutations: [Observable<Mutation>]())
         }
+
         let system = Observable.system(
             initialState: 0,
-            reduce: { oldState, event in
-                return  oldState + event
+            reduce: { oldState, mutation in
+                return oldState + mutation
             },
             scheduler: testScheduler,
             scheduledFeedback: mockUIBindings, player

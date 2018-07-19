@@ -56,18 +56,18 @@ extension ReactHashableLoopsTests {
         }
         let effects: (String) -> Observable<String> = { .just($0 + "_a") }
         let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
-        let events = PublishSubject<String>()
+        let mutations = PublishSubject<String>()
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: feedback, { _ in events.asObservable() }
+            scheduledFeedback: feedback, { _ in mutations.asObservable() }
         )
 
         // Run
-        scheduler.scheduleAt(210) { events.onNext("+") }
+        scheduler.scheduleAt(210) { mutations.onNext("+") }
         let results = scheduler.start { system }
 
         // Test
