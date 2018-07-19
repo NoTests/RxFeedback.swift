@@ -63,12 +63,12 @@ extension TodoViewController {
         let promptForTask = UIAlertController.prompt(message: "Please enter task name", title: "Adding task", actions: [AlertAction.ok, AlertAction.cancel], parent: self) { controller in
             controller.addTextField(configurationHandler: nil)
         }
-            .flatMapLatest { (controller, action) -> Observable<Todo.Event> in
+            .flatMapLatest { (controller, action) -> Observable<Todo.Mutation> in
                 guard case .ok = action else {
                     return Observable.empty()
                 }
                 let task = Version(Task.create(title: controller.textFields?.first?.text ?? "", date: Date()))
-                return Observable.just(Todo.Event.created(task))
+                return Observable.just(Todo.Mutation.created(task))
             }
 
         let tableView = self.tableView!
@@ -80,24 +80,24 @@ extension TodoViewController {
             let editButtonTitle = editing.map { $0 ? "Done" : "Edit" }
             
             let subscriptions = [
-                    tasks.drive(tableView.rx.items(cellIdentifier: "Cell"))(bindCell),
-                    editing.drive(tableView.rx.isEditing),
-                    editButtonTitle.drive(editDone.rx.title)
-                ]
-            let events = [
-                    editDone.rx.tap.asSignal().map { _ in Todo.Event.toggleEditingMode },
-                    
-                    tableView.rx.modelSelected(Row.self).asSignal()
-                        .flatMapLatest { row in row.selectedEvent(prompt: promptForTask) },
-                    tableView.rx.itemDeleted.asSignal()
-                        .flatMapLatest { (try! tableView.rx.model(at: $0) as Row).deletedEvent },
-                    tableView.rx.itemInserted.asSignal()
-                        .flatMapLatest { _ in
-                            return promptForTask.asSignal(onErrorSignalWith: Signal.empty())
-                        }
+                tasks.drive(tableView.rx.items(cellIdentifier: "Cell"))(bindCell),
+                editing.drive(tableView.rx.isEditing),
+                editButtonTitle.drive(editDone.rx.title)
+            ]
 
-                ]
-            return Bindings(subscriptions: subscriptions, events: events)
+            let mutations = [
+                editDone.rx.tap.asSignal().map { _ in Todo.Mutation.toggleEditingMode },
+                tableView.rx.modelSelected(Row.self).asSignal()
+                    .flatMapLatest { row in row.selectedMutation(prompt: promptForTask) },
+                tableView.rx.itemDeleted.asSignal()
+                    .flatMapLatest { (try! tableView.rx.model(at: $0) as Row).deletedMutation },
+                tableView.rx.itemInserted.asSignal()
+                    .flatMapLatest { _ in
+                        return promptForTask.asSignal(onErrorSignalWith: Signal.empty())
+                    }
+            ]
+
+            return Bindings(subscriptions: subscriptions, mutations: mutations)
         }
     }
 }
@@ -150,18 +150,18 @@ extension Row {
         }
     }
 
-    func selectedEvent(prompt: Observable<Todo.Event>) -> Signal<Todo.Event> {
+    func selectedMutation(prompt: Observable<Todo.Mutation>) -> Signal<Todo.Mutation> {
         switch self {
         case .new: return prompt.asSignal(onErrorSignalWith: Signal.empty())
-        case .task(let task): return Signal.just(Todo.Event.toggleCompleted(task))
+        case .task(let task): return Signal.just(Todo.Mutation.toggleCompleted(task))
         }
     }
 
-    var deletedEvent: Signal<Todo.Event> {
+    var deletedMutation: Signal<Todo.Mutation> {
         get {
             switch self {
             case .new: return Signal.empty()
-            case .task(let task): return Signal.just(Todo.Event.archive(task))
+            case .task(let task): return Signal.just(Todo.Mutation.archive(task))
             }
         }
     }
