@@ -23,11 +23,11 @@ import RxCocoa
  - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query, Event>(
+public func react<State, Query, Mutation>(
     query: @escaping (State) -> Query?,
     areEqual: @escaping (Query, Query) -> Bool,
-    effects: @escaping (Query) -> Observable<Event>
-    ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+    effects: @escaping (Query) -> Observable<Mutation>
+    ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { lhs, rhs in
@@ -38,9 +38,9 @@ public func react<State, Query, Event>(
                 case (.some(let lhs), .some(let rhs)): return areEqual(lhs, rhs)
                 }
             }
-            .flatMapLatest { (control: Query?) -> Observable<Event> in
+            .flatMapLatest { (control: Query?) -> Observable<Mutation> in
                 guard let control = control else {
-                    return Observable<Event>.empty()
+                    return Observable<Mutation>.empty()
                 }
 
                 return effects(control)
@@ -62,10 +62,10 @@ public func react<State, Query, Event>(
  - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query: Equatable, Event>(
+public func react<State, Query: Equatable, Mutation>(
         query: @escaping (State) -> Query?,
-        effects: @escaping (Query) -> Observable<Event>
-    ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+        effects: @escaping (Query) -> Observable<Mutation>
+    ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return react(query: query, areEqual: { $0 == $1 }, effects: effects)
 }
 
@@ -83,15 +83,15 @@ public func react<State, Query: Equatable, Event>(
  - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query, Event>(
+public func react<State, Query, Mutation>(
     query: @escaping (State) -> Query?,
     areEqual: @escaping (Query, Query) -> Bool,
-    effects: @escaping (Query) -> Signal<Event>
-    ) -> (Driver<State>) -> Signal<Event> {
+    effects: @escaping (Query) -> Signal<Mutation>
+    ) -> (Driver<State>) -> Signal<Mutation> {
     return { state in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
             source: state.asObservable(),
-            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+            scheduler: Signal<Mutation>.SharingStrategy.scheduler.async
         )
         return react(query: query, areEqual: areEqual, effects: { effects($0).asObservable() })(observableSchedulerContext)
             .asSignal(onErrorSignalWith: .empty())
@@ -111,14 +111,14 @@ public func react<State, Query, Event>(
  - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query: Equatable, Event>(
+public func react<State, Query: Equatable, Mutation>(
     query: @escaping (State) -> Query?,
-    effects: @escaping (Query) -> Signal<Event>
-) -> (Driver<State>) -> Signal<Event> {
+    effects: @escaping (Query) -> Signal<Mutation>
+) -> (Driver<State>) -> Signal<Mutation> {
     return { state in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
             source: state.asObservable(),
-            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+            scheduler: Signal<Mutation>.SharingStrategy.scheduler.async
         )
         return react(query: query, effects: { effects($0).asObservable() })(observableSchedulerContext)
             .asSignal(onErrorSignalWith: .empty())
@@ -138,16 +138,16 @@ public func react<State, Query: Equatable, Event>(
  - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query, Event>(
+public func react<State, Query, Mutation>(
     query: @escaping (State) -> Query?,
-    effects: @escaping (Query) -> Observable<Event>
-) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+    effects: @escaping (Query) -> Observable<Mutation>
+) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (control: Query?) -> Observable<Event> in
+            .flatMapLatest { (control: Query?) -> Observable<Mutation> in
                 guard let control = control else {
-                    return Observable<Event>.empty()
+                    return Observable<Mutation>.empty()
                 }
 
                 return effects(control)
@@ -169,14 +169,14 @@ public func react<State, Query, Event>(
  - parameter effects: Chooses which effects to perform for certain query result.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query, Event>(
+public func react<State, Query, Mutation>(
     query: @escaping (State) -> Query?,
-    effects: @escaping (Query) -> Signal<Event>
-) -> (Driver<State>) -> Signal<Event> {
+    effects: @escaping (Query) -> Signal<Mutation>
+) -> (Driver<State>) -> Signal<Mutation> {
     return { state in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
             source: state.asObservable(),
-            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+            scheduler: Signal<Mutation>.SharingStrategy.scheduler.async
         )
         return react(query: query, effects: { effects($0).asObservable() })(observableSchedulerContext)
             .asSignal(onErrorSignalWith: .empty())
@@ -197,10 +197,10 @@ public func react<State, Query, Event>(
  - parameter effects: Chooses which effects to perform for certain query element.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query, Event>(
+public func react<State, Query, Mutation>(
     query: @escaping (State) -> Set<Query>,
-    effects: @escaping (Query) -> Observable<Event>
-    ) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+    effects: @escaping (Query) -> Observable<Mutation>
+    ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return { state in
         let query = state.map(query)
             .share(replay: 1)
@@ -209,7 +209,7 @@ public func react<State, Query, Event>(
         let asyncScheduler = state.scheduler.async
 
         return newQueries.flatMap { controls in
-            return Observable<Event>.merge(controls.map { control -> Observable<Event> in
+            return Observable<Mutation>.merge(controls.map { control -> Observable<Mutation> in
                 return effects(control)
                     .enqueue(state.scheduler)
                     .takeUntilWithCompletedAsync(query.filter { !$0.contains(control) }, scheduler: asyncScheduler)
@@ -219,16 +219,16 @@ public func react<State, Query, Event>(
 }
 
 extension ObservableType {
-    // This is important to avoid reentrancy issues. Completed event is only used for cleanup
+    // This is important to avoid reentrancy issues. Completed mutation is only used for cleanup
     fileprivate func takeUntilWithCompletedAsync<O>(_ other: Observable<O>, scheduler: ImmediateSchedulerType) -> Observable<E> {
-            // this little piggy will delay completed event
+            // this little piggy will delay completed mutation
             let completeAsSoonAsPossible = Observable<E>.empty().observeOn(scheduler)
             return other
                 .take(1)
                 .map { _ in completeAsSoonAsPossible }
                 // this little piggy will ensure self is being run first
                 .startWith(self.asObservable())
-                // this little piggy will ensure that new events are being blocked immediatelly
+                // this little piggy will ensure that new mutations are being blocked immediatelly
                 .switchLatest()
     }
 }
@@ -247,14 +247,14 @@ extension ObservableType {
  - parameter effects: Chooses which effects to perform for certain query element.
  - returns: Feedback loop performing the effects.
  */
-public func react<State, Query, Event>(
+public func react<State, Query, Mutation>(
     query: @escaping (State) -> Set<Query>,
-    effects: @escaping (Query) -> Signal<Event>
-    ) -> (Driver<State>) -> Signal<Event> {
-    return { (state: Driver<State>) -> Signal<Event> in
+    effects: @escaping (Query) -> Signal<Mutation>
+    ) -> (Driver<State>) -> Signal<Mutation> {
+    return { (state: Driver<State>) -> Signal<Mutation> in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
             source: state.asObservable(),
-            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+            scheduler: Signal<Mutation>.SharingStrategy.scheduler.async
         )
         return react(query: query, effects: { effects($0).asObservable() })(observableSchedulerContext)
             .asSignal(onErrorSignalWith: .empty())
@@ -274,32 +274,32 @@ extension Observable {
 }
 
 /**
- Contains subscriptions and events.
+ Contains subscriptions and mutations.
  - `subscriptions` map a system state to UI presentation.
- - `events` map events from UI to events of a given system.
+ - `mutations` map mutations from UI to mutations of a given system.
 */
-public class Bindings<Event>: Disposable {
+public class Bindings<Mutation>: Disposable {
     fileprivate let subscriptions: [Disposable]
-    fileprivate let events: [Observable<Event>]
+    fileprivate let mutations: [Observable<Mutation>]
 
     /**
      - parameters:
         - subscriptions: mappings of a system state to UI presentation.
-        - events: mappings of events from UI to events of a given system
+        - mutations: mappings of mutations from UI to mutations of a given system
      */
-    public init(subscriptions: [Disposable], events: [Observable<Event>]) {
+    public init(subscriptions: [Disposable], mutations: [Observable<Mutation>]) {
         self.subscriptions = subscriptions
-        self.events = events
+        self.mutations = mutations
     }
 
     /**
      - parameters:
         - subscriptions: mappings of a system state to UI presentation.
-        - events: mappings of events from UI to events of a given system
+        - mutations: mappings of mutations from UI to mutations of a given system
      */
-    public init(subscriptions: [Disposable], events: [Signal<Event>]) {
+    public init(subscriptions: [Disposable], mutations: [Signal<Mutation>]) {
         self.subscriptions = subscriptions
-        self.events = events.map { $0.asObservable() }
+        self.mutations = mutations.map { $0.asObservable() }
     }
 
     public func dispose() {
@@ -310,58 +310,60 @@ public class Bindings<Event>: Disposable {
 }
 
 /**
- Bi-directional binding of a system State to external state machine and events from it.
+ Bi-directional binding of a system State to external state machine and mutations from it.
  */
-public func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Event>)) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
-    return { (state: ObservableSchedulerContext<State>) -> Observable<Event> in
-        return Observable<Event>.using({ () -> Bindings<Event> in
+public func bind<State, Mutation>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Mutation>)) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
+    return { (state: ObservableSchedulerContext<State>) -> Observable<Mutation> in
+        return Observable<Mutation>.using({ () -> Bindings<Mutation> in
             return bindings(state)
-        }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-            return Observable<Event>.merge(bindings.events).concat(Observable.never())
-                .enqueue(state.scheduler)
+        }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
+            return Observable<Mutation>
+                    .merge(bindings.mutations)
+                    .concat(Observable.never())
+                    .enqueue(state.scheduler)
         })
     }
 }
 
 /**
- Bi-directional binding of a system State to external state machine and events from it.
+ Bi-directional binding of a system State to external state machine and mutations from it.
  Strongify owner.
  */
-public func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Event>))
-    -> (ObservableSchedulerContext<State>) -> Observable<Event> where WeakOwner: AnyObject {
+public func bind<State, Mutation, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Mutation>))
+    -> (ObservableSchedulerContext<State>) -> Observable<Mutation> where WeakOwner: AnyObject {
         return bind(bindingsStrongify(owner, bindings))
 }
 
 /**
- Bi-directional binding of a system State to external state machine and events from it.
+ Bi-directional binding of a system State to external state machine and mutations from it.
  */
-public func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Signal<Event> {
-    return { (state: Driver<State>) -> Signal<Event> in
-        return Observable<Event>.using({ () -> Bindings<Event> in
+public func bind<State, Mutation>(_ bindings: @escaping (Driver<State>) -> (Bindings<Mutation>)) -> (Driver<State>) -> Signal<Mutation> {
+    return { (state: Driver<State>) -> Signal<Mutation> in
+        return Observable<Mutation>.using({ () -> Bindings<Mutation> in
             return bindings(state)
-        }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-            return Observable<Event>.merge(bindings.events).concat(Observable.never())
+        }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
+            return Observable<Mutation>.merge(bindings.mutations).concat(Observable.never())
         })
-            .enqueue(Signal<Event>.SharingStrategy.scheduler)
+            .enqueue(Signal<Mutation>.SharingStrategy.scheduler)
             .asSignal(onErrorSignalWith: .empty())
 
     }
 }
 
 /**
- Bi-directional binding of a system State to external state machine and events from it.
+ Bi-directional binding of a system State to external state machine and mutations from it.
  Strongify owner.
  */
-public func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
-    -> (Driver<State>) -> Signal<Event> where WeakOwner: AnyObject {
+public func bind<State, Mutation, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Mutation>))
+    -> (Driver<State>) -> Signal<Mutation> where WeakOwner: AnyObject {
     return bind(bindingsStrongify(owner, bindings))
 }
 
-private func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Event>))
-    -> (O) -> (Bindings<Event>) where WeakOwner: AnyObject {
-    return { [weak owner] state -> Bindings<Event> in
+private func bindingsStrongify<Mutation, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Mutation>))
+    -> (O) -> (Bindings<Mutation>) where WeakOwner: AnyObject {
+    return { [weak owner] state -> Bindings<Mutation> in
         guard let strongOwner = owner else {
-            return Bindings(subscriptions: [], events: [Observable<Event>]())
+            return Bindings(subscriptions: [], mutations: [Observable<Mutation>]())
         }
         return bindings(strongOwner, state)
     }

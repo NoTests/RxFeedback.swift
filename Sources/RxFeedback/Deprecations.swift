@@ -24,10 +24,10 @@ import RxCocoa
  - returns: Feedback loop performing the effects.
  */
 @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "react(query:effects:)")
-public func react<State, Control: Equatable, Event>(
+public func react<State, Control: Equatable, Mutation>(
     query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Observable<Event>
-) -> (Observable<State>) -> Observable<Event> {
+    effects: @escaping (Control) -> Observable<Mutation>
+) -> (Observable<State>) -> Observable<Mutation> {
     return { state in
         let context = ObservableSchedulerContext(source: state, scheduler: CurrentThreadScheduler.instance)
         return react(query: query, effects: effects)(context)
@@ -49,10 +49,10 @@ public func react<State, Control: Equatable, Event>(
  - returns: Feedback loop performing the effects.
  */
 @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "react(query:effects:)")
-public func react<State, Control, Event>(
+public func react<State, Control, Mutation>(
     query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Observable<Event>
-    ) -> (Observable<State>) -> Observable<Event> {
+    effects: @escaping (Control) -> Observable<Mutation>
+    ) -> (Observable<State>) -> Observable<Mutation> {
     return { state in
         let context = ObservableSchedulerContext(source: state, scheduler: CurrentThreadScheduler.instance)
         return react(query: query, effects: effects)(context)
@@ -71,21 +71,21 @@ extension ObservableType where E == Any {
      System simulation will be started upon subscription and stopped after subscription is disposed.
 
      System state is represented as a `State` parameter.
-     Events are represented by `Event` parameter.
+     Mutations are represented by `Mutation` parameter.
 
      - parameter initialState: Initial state of the system.
-     - parameter accumulator: Calculates new system state from existing state and a transition event (system integrator, reducer).
-     - parameter feedback: Feedback loops that produce events depending on current system state.
+     - parameter accumulator: Calculates new system state from existing state and a transition mutation (system integrator, reducer).
+     - parameter feedback: Feedback loops that produce mutations depending on current system state.
      - returns: Current state of the system.
      */
     @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "system(initialState:reduce:scheduler:scheduledFeedback:)")
-    public static func system<State, Event>(
+    public static func system<State, Mutation>(
         initialState: State,
-        reduce: @escaping (State, Event) -> State,
+        reduce: @escaping (State, Mutation) -> State,
         scheduler: ImmediateSchedulerType,
-        feedback: [(Observable<State>) -> Observable<Event>]
+        feedback: [(Observable<State>) -> Observable<Mutation>]
         ) -> Observable<State> {
-        let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Event>] = feedback.map { feedback in
+        let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Mutation>] = feedback.map { feedback in
             return { sourceSchedulerContext in
                 return feedback(sourceSchedulerContext.source)
             }
@@ -100,11 +100,11 @@ extension ObservableType where E == Any {
     }
 
     @available(*, deprecated, message: "Renamed to version that takes `ObservableSchedulerContext` as argument.", renamed: "system(initialState:reduce:scheduler:scheduledFeedback:)")
-    public static func system<State, Event>(
+    public static func system<State, Mutation>(
         initialState: State,
-        reduce: @escaping (State, Event) -> State,
+        reduce: @escaping (State, Mutation) -> State,
         scheduler: ImmediateSchedulerType,
-        feedback: (Observable<State>) -> Observable<Event>...
+        feedback: (Observable<State>) -> Observable<Mutation>...
     ) -> Observable<State> {
         return system(initialState: initialState, reduce: reduce, scheduler: scheduler, feedback: feedback)
     }
@@ -124,17 +124,17 @@ extension ObservableType where E == Any {
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
-public func react<State, Control: Equatable, Event>(
+@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Mutation>`")
+public func react<State, Control: Equatable, Mutation>(
     query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Driver<Event>
-) -> (Driver<State>) -> Driver<Event> {
+    effects: @escaping (Control) -> Driver<Mutation>
+) -> (Driver<State>) -> Driver<Mutation> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 == $1 }
-            .flatMapLatest { (control: Control?) -> Driver<Event> in
+            .flatMapLatest { (control: Control?) -> Driver<Mutation> in
                 guard let control = control else {
-                    return Driver<Event>.empty()
+                    return Driver<Mutation>.empty()
                 }
 
                 return effects(control)
@@ -157,17 +157,17 @@ public func react<State, Control: Equatable, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
-public func react<State, Control, Event>(
+@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Mutation>`")
+public func react<State, Control, Mutation>(
     query: @escaping (State) -> Control?,
-    effects: @escaping (Control) -> Driver<Event>
-) -> (Driver<State>) -> Driver<Event> {
+    effects: @escaping (Control) -> Driver<Mutation>
+) -> (Driver<State>) -> Driver<Mutation> {
     return { state in
         return state.map(query)
             .distinctUntilChanged { $0 != nil }
-            .flatMapLatest { (control: Control?) -> Driver<Event> in
+            .flatMapLatest { (control: Control?) -> Driver<Mutation> in
                 guard let control = control else {
-                    return Driver<Event>.empty()
+                    return Driver<Mutation>.empty()
                 }
 
                 return effects(control)
@@ -190,20 +190,20 @@ public func react<State, Control, Event>(
  - parameter effects: Control state which is subset of state.
  - returns: Feedback loop performing the effects.
  */
-@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
-public func react<State, Control, Event>(
+@available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Mutation>`")
+public func react<State, Control, Mutation>(
     query: @escaping (State) -> Set<Control>,
-    effects: @escaping (Control) -> Driver<Event>
-    ) -> (Driver<State>) -> Driver<Event> {
+    effects: @escaping (Control) -> Driver<Mutation>
+    ) -> (Driver<State>) -> Driver<Mutation> {
     return { state in
         let query = state.map(query)
 
         let newQueries = Driver.zip(query, query.startWith(Set())) { $0.subtracting($1) }
 
         return newQueries.flatMap { controls in
-            return Driver.merge(controls.map { control -> Driver<Event> in
+            return Driver.merge(controls.map { control -> Driver<Mutation> in
                 return query.filter { !$0.contains(control) }
-                    .map { _ in Driver<Event>.empty() }
+                    .map { _ in Driver<Mutation>.empty() }
                     .startWith(effects(control).enqueue())
                     .switchLatest()
             })
@@ -227,26 +227,26 @@ extension SharedSequence where SharingStrategy == DriverSharingStrategy {
 extension SharedSequenceConvertibleType where E == Any, SharingStrategy == DriverSharingStrategy {
     /// Feedback loop
     @available(*, deprecated, message: "Please use Feedback")
-    public typealias FeedbackLoop<State, Event> = (Driver<State>) -> Driver<Event>
+    public typealias FeedbackLoop<State, Mutation> = (Driver<State>) -> Driver<Mutation>
 
     /**
      System simulation will be started upon subscription and stopped after subscription is disposed.
 
      System state is represented as a `State` parameter.
-     Events are represented by `Event` parameter.
+     Mutations are represented by `Mutation` parameter.
 
      - parameter initialState: Initial state of the system.
-     - parameter accumulator: Calculates new system state from existing state and a transition event (system integrator, reducer).
-     - parameter feedback: Feedback loops that produce events depending on current system state.
+     - parameter accumulator: Calculates new system state from existing state and a transition mutation (system integrator, reducer).
+     - parameter feedback: Feedback loops that produce mutations depending on current system state.
      - returns: Current state of the system.
      */
-    @available(*, deprecated, message: "Please use version that uses feedbacks with this signature `Driver<State> -> Signal<Event>`")
-    public static func system<State, Event>(
+    @available(*, deprecated, message: "Please use version that uses feedbacks with this signature `Driver<State> -> Signal<Mutation>`")
+    public static func system<State, Mutation>(
             initialState: State,
-            reduce: @escaping (State, Event) -> State,
-            feedback: [FeedbackLoop<State, Event>]
+            reduce: @escaping (State, Mutation) -> State,
+            feedback: [FeedbackLoop<State, Mutation>]
         ) -> Driver<State> {
-        let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Event>] = feedback.map { feedback in
+        let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Mutation>] = feedback.map { feedback in
             return { sharedSequence in
                 return feedback(sharedSequence.source.asDriver(onErrorDriveWith: Driver<State>.empty()))
                     .asObservable()
@@ -262,11 +262,11 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
             .asDriver(onErrorDriveWith: .empty())
     }
 
-    @available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Event>`")
-    public static func system<State, Event>(
+    @available(*, deprecated, message: "Please use version that uses feedback with this signature `Driver<State> -> Signal<Mutation>`")
+    public static func system<State, Mutation>(
             initialState: State,
-            reduce: @escaping (State, Event) -> State,
-            feedback: FeedbackLoop<State, Event>...
+            reduce: @escaping (State, Mutation) -> State,
+            feedback: FeedbackLoop<State, Mutation>...
         ) -> Driver<State> {
         return system(initialState: initialState, reduce: reduce, feedback: feedback)
     }
@@ -275,32 +275,32 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
 @available(*, deprecated, message: "Please use free members from RxFeedback module (`RxFeedback.Bindings`, `RxFeedback.bind`, ...).")
 public struct UI {
     /**
-     Contains subscriptions and events.
+     Contains subscriptions and mutations.
      - `subscriptions` map a system state to UI presentation.
-     - `events` map events from UI to events of a given system.
+     - `mutations` map mutations from UI to mutations of a given system.
     */
-    public class Bindings<Event>: Disposable {
+    public class Bindings<Mutation>: Disposable {
         fileprivate let subscriptions: [Disposable]
-        fileprivate let events: [Observable<Event>]
+        fileprivate let mutations: [Observable<Mutation>]
 
         /**
          - parameters:
             - subscriptions: mappings of a system state to UI presentation.
-            - events: mappings of events from UI to events of a given system
+            - mutations: mappings of mutations from UI to mutations of a given system
          */
-        public init(subscriptions: [Disposable], events: [Observable<Event>]) {
+        public init(subscriptions: [Disposable], mutations: [Observable<Mutation>]) {
             self.subscriptions = subscriptions
-            self.events = events
+            self.mutations = mutations
         }
 
         /**
          - parameters:
             - subscriptions: mappings of a system state to UI presentation.
-            - events: mappings of events from UI to events of a given system
+            - mutations: mappings of mutations from UI to mutations of a given system
          */
-        public init(subscriptions: [Disposable], events: [Driver<Event>]) {
+        public init(subscriptions: [Disposable], mutations: [Driver<Mutation>]) {
             self.subscriptions = subscriptions
-            self.events = events.map { $0.asObservable() }
+            self.mutations = mutations.map { $0.asObservable() }
         }
 
         public func dispose() {
@@ -311,58 +311,59 @@ public struct UI {
     }
 
     /**
-     Bi-directional binding of a system State to UI and UI into Events.
+     Bi-directional binding of a system State to UI and UI into Mutations.
      */
-    public static func bind<State, Event>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Event>)) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+    public static func bind<State, Mutation>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Mutation>)) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
 
-        return { (state: ObservableSchedulerContext<State>) -> Observable<Event> in
-            return Observable<Event>.using({ () -> Bindings<Event> in
+        return { (state: ObservableSchedulerContext<State>) -> Observable<Mutation> in
+            return Observable<Mutation>.using({ () -> Bindings<Mutation> in
                 return bindings(state)
-            }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-                return Observable<Event>.merge(bindings.events)
-                    .enqueue(state.scheduler)
+            }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
+                return Observable<Mutation>
+                        .merge(bindings.mutations)
+                        .enqueue(state.scheduler)
             })
         }
     }
 
     /**
-     Bi-directional binding of a system State to UI and UI into Events,
+     Bi-directional binding of a system State to UI and UI into Mutations,
      Strongify owner.
      */
-    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Event>))
-        -> (ObservableSchedulerContext<State>) -> Observable<Event> where WeakOwner: AnyObject {
+    public static func bind<State, Mutation, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Mutation>))
+        -> (ObservableSchedulerContext<State>) -> Observable<Mutation> where WeakOwner: AnyObject {
             return bind(bindingsStrongify(owner, bindings))
     }
 
     /**
-     Bi-directional binding of a system State to UI and UI into Events.
+     Bi-directional binding of a system State to UI and UI into Mutations.
      */
-    public static func bind<State, Event>(_ bindings: @escaping (Driver<State>) -> (Bindings<Event>)) -> (Driver<State>) -> Driver<Event> {
+    public static func bind<State, Mutation>(_ bindings: @escaping (Driver<State>) -> (Bindings<Mutation>)) -> (Driver<State>) -> Driver<Mutation> {
 
-        return { (state: Driver<State>) -> Driver<Event> in
-            return Observable<Event>.using({ () -> Bindings<Event> in
+        return { (state: Driver<State>) -> Driver<Mutation> in
+            return Observable<Mutation>.using({ () -> Bindings<Mutation> in
                 return bindings(state)
-            }, observableFactory: { (bindings: Bindings<Event>) -> Observable<Event> in
-                return Observable<Event>.merge(bindings.events)
+            }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
+                return Observable<Mutation>.merge(bindings.mutations)
             }).asDriver(onErrorDriveWith: Driver.empty())
                 .enqueue()
         }
     }
 
     /**
-     Bi-directional binding of a system State to UI and UI into Events,
+     Bi-directional binding of a system State to UI and UI into Mutations,
      Strongify owner.
      */
-    public static func bind<State, Event, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Event>))
-        -> (Driver<State>) -> Driver<Event> where WeakOwner: AnyObject {
+    public static func bind<State, Mutation, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, Driver<State>) -> (Bindings<Mutation>))
+        -> (Driver<State>) -> Driver<Mutation> where WeakOwner: AnyObject {
             return bind(bindingsStrongify(owner, bindings))
     }
 
-    private static func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Event>))
-        -> (O) -> (Bindings<Event>) where WeakOwner: AnyObject {
-            return { [weak owner] state -> Bindings<Event> in
+    private static func bindingsStrongify<Mutation, O, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, O) -> (Bindings<Mutation>))
+        -> (O) -> (Bindings<Mutation>) where WeakOwner: AnyObject {
+            return { [weak owner] state -> Bindings<Mutation> in
                 guard let strongOwner = owner else {
-                    return Bindings(subscriptions: [], events: [Observable<Event>]())
+                    return Bindings(subscriptions: [], mutations: [Observable<Mutation>]())
                 }
                 return bindings(strongOwner, state)
             }
