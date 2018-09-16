@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "RxFeedback"
-  s.version      = "1.0.3"
+  s.version      = "1.1.0"
   s.summary      = "Simplest architecture for RxSwift. State + feedback loops."
   s.description  = <<-DESC
     Simplest architecture for RxSwift. State + feedback loops.

@@ -1,6 +1,9 @@
 ## Master
 
-- Rename `Event` to `Mutation`.
+## [1.1.0](https://github.com/kzaher/RxFeedback/releases/tag/1.1.0)
+
+* Xcode 10 compatbility
+* Renames `Event` to `Mutation`.
 
 ## [1.0.2](https://github.com/kzaher/RxFeedback/releases/tag/1.0.3)
 
