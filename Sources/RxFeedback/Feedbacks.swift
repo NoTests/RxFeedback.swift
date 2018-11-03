@@ -6,8 +6,8 @@
 //  Copyright © 2017 Krunoslav Zaher. All rights reserved.
 //
 
-import RxSwift
 import RxCocoa
+import RxSwift
 
 /**
  * State: State type of the system.
@@ -27,9 +27,9 @@ public func react<State, Query, Mutation>(
     query: @escaping (State) -> Query?,
     areEqual: @escaping (Query, Query) -> Bool,
     effects: @escaping (Query) -> Observable<Mutation>
-    ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
+) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return { state in
-        return state.map(query)
+        state.map(query)
             .distinctUntilChanged { lhs, rhs in
                 switch (lhs, rhs) {
                 case (.none, .none): return true
@@ -63,9 +63,9 @@ public func react<State, Query, Mutation>(
  - returns: Feedback loop performing the effects.
  */
 public func react<State, Query: Equatable, Mutation>(
-        query: @escaping (State) -> Query?,
-        effects: @escaping (Query) -> Observable<Mutation>
-    ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
+    query: @escaping (State) -> Query?,
+    effects: @escaping (Query) -> Observable<Mutation>
+) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return react(query: query, areEqual: { $0 == $1 }, effects: effects)
 }
 
@@ -87,7 +87,7 @@ public func react<State, Query, Mutation>(
     query: @escaping (State) -> Query?,
     areEqual: @escaping (Query, Query) -> Bool,
     effects: @escaping (Query) -> Signal<Mutation>
-    ) -> (Driver<State>) -> Signal<Mutation> {
+) -> (Driver<State>) -> Signal<Mutation> {
     return { state in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
             source: state.asObservable(),
@@ -143,7 +143,7 @@ public func react<State, Query, Mutation>(
     effects: @escaping (Query) -> Observable<Mutation>
 ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return { state in
-        return state.map(query)
+        state.map(query)
             .distinctUntilChanged { $0 != nil }
             .flatMapLatest { (control: Query?) -> Observable<Mutation> in
                 guard let control = control else {
@@ -152,7 +152,7 @@ public func react<State, Query, Mutation>(
 
                 return effects(control)
                     .enqueue(state.scheduler)
-        }
+            }
     }
 }
 
@@ -200,7 +200,7 @@ public func react<State, Query, Mutation>(
 public func react<State, Query, Mutation>(
     query: @escaping (State) -> Set<Query>,
     effects: @escaping (Query) -> Observable<Mutation>
-    ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
+) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return { state in
         let query = state.map(query)
             .share(replay: 1)
@@ -209,11 +209,13 @@ public func react<State, Query, Mutation>(
         let asyncScheduler = state.scheduler.async
 
         return newQueries.flatMap { controls in
-            return Observable<Mutation>.merge(controls.map { control -> Observable<Mutation> in
-                return effects(control)
-                    .enqueue(state.scheduler)
-                    .takeUntilWithCompletedAsync(query.filter { !$0.contains(control) }, scheduler: asyncScheduler)
-            })
+            Observable<Mutation>.merge(
+                controls.map { control -> Observable<Mutation> in
+                    effects(control)
+                        .enqueue(state.scheduler)
+                        .takeUntilWithCompletedAsync(query.filter { !$0.contains(control) }, scheduler: asyncScheduler)
+                }
+            )
         }
     }
 }
@@ -221,15 +223,15 @@ public func react<State, Query, Mutation>(
 extension ObservableType {
     // This is important to avoid reentrancy issues. Completed mutation is only used for cleanup
     fileprivate func takeUntilWithCompletedAsync<O>(_ other: Observable<O>, scheduler: ImmediateSchedulerType) -> Observable<E> {
-            // this little piggy will delay completed mutation
-            let completeAsSoonAsPossible = Observable<E>.empty().observeOn(scheduler)
-            return other
-                .take(1)
-                .map { _ in completeAsSoonAsPossible }
-                // this little piggy will ensure self is being run first
-                .startWith(self.asObservable())
-                // this little piggy will ensure that new mutations are being blocked immediatelly
-                .switchLatest()
+        // this little piggy will delay completed mutation
+        let completeAsSoonAsPossible = Observable<E>.empty().observeOn(scheduler)
+        return other
+            .take(1)
+            .map { _ in completeAsSoonAsPossible }
+            // this little piggy will ensure self is being run first
+            .startWith(asObservable())
+            // this little piggy will ensure that new mutations are being blocked immediatelly
+            .switchLatest()
     }
 }
 
@@ -250,7 +252,7 @@ extension ObservableType {
 public func react<State, Query, Mutation>(
     query: @escaping (State) -> Set<Query>,
     effects: @escaping (Query) -> Signal<Mutation>
-    ) -> (Driver<State>) -> Signal<Mutation> {
+) -> (Driver<State>) -> Signal<Mutation> {
     return { (state: Driver<State>) -> Signal<Mutation> in
         let observableSchedulerContext = ObservableSchedulerContext<State>(
             source: state.asObservable(),
@@ -260,7 +262,6 @@ public func react<State, Query, Mutation>(
             .asSignal(onErrorSignalWith: .empty())
     }
 }
-
 
 extension Observable {
     fileprivate func enqueue(_ scheduler: ImmediateSchedulerType) -> Observable<Element> {
@@ -314,14 +315,16 @@ public class Bindings<Mutation>: Disposable {
  */
 public func bind<State, Mutation>(_ bindings: @escaping (ObservableSchedulerContext<State>) -> (Bindings<Mutation>)) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> {
     return { (state: ObservableSchedulerContext<State>) -> Observable<Mutation> in
-        return Observable<Mutation>.using({ () -> Bindings<Mutation> in
-            return bindings(state)
-        }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
-            return Observable<Mutation>
+        Observable<Mutation>.using(
+            { () -> Bindings<Mutation> in
+                bindings(state)
+            }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
+                Observable<Mutation>
                     .merge(bindings.mutations)
                     .concat(Observable.never())
                     .enqueue(state.scheduler)
-        })
+            }
+        )
     }
 }
 
@@ -331,7 +334,7 @@ public func bind<State, Mutation>(_ bindings: @escaping (ObservableSchedulerCont
  */
 public func bind<State, Mutation, WeakOwner>(_ owner: WeakOwner, _ bindings: @escaping (WeakOwner, ObservableSchedulerContext<State>) -> (Bindings<Mutation>))
     -> (ObservableSchedulerContext<State>) -> Observable<Mutation> where WeakOwner: AnyObject {
-        return bind(bindingsStrongify(owner, bindings))
+    return bind(bindingsStrongify(owner, bindings))
 }
 
 /**
@@ -339,14 +342,15 @@ public func bind<State, Mutation, WeakOwner>(_ owner: WeakOwner, _ bindings: @es
  */
 public func bind<State, Mutation>(_ bindings: @escaping (Driver<State>) -> (Bindings<Mutation>)) -> (Driver<State>) -> Signal<Mutation> {
     return { (state: Driver<State>) -> Signal<Mutation> in
-        return Observable<Mutation>.using({ () -> Bindings<Mutation> in
-            return bindings(state)
-        }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
-            return Observable<Mutation>.merge(bindings.mutations).concat(Observable.never())
-        })
-            .enqueue(Signal<Mutation>.SharingStrategy.scheduler)
-            .asSignal(onErrorSignalWith: .empty())
-
+        Observable<Mutation>.using(
+            { () -> Bindings<Mutation> in
+                bindings(state)
+            }, observableFactory: { (bindings: Bindings<Mutation>) -> Observable<Mutation> in
+                Observable<Mutation>.merge(bindings.mutations).concat(Observable.never())
+            }
+        )
+        .enqueue(Signal<Mutation>.SharingStrategy.scheduler)
+        .asSignal(onErrorSignalWith: .empty())
     }
 }
 

@@ -6,8 +6,8 @@
 //  Copyright © 2017 Krunoslav Zaher. All rights reserved.
 //
 
-import RxSwift
 import RxCocoa
+import RxSwift
 
 extension ObservableType where E == Any {
     /// Feedback loop
@@ -26,30 +26,34 @@ extension ObservableType where E == Any {
      - returns: Current state of the system.
      */
     public static func system<State, Mutation>(
-            initialState: State,
-            reduce: @escaping (State, Mutation) -> State,
-            scheduler: ImmediateSchedulerType,
-            scheduledFeedback: [Feedback<State, Mutation>]
-        ) -> Observable<State> {
+        initialState: State,
+        reduce: @escaping (State, Mutation) -> State,
+        scheduler: ImmediateSchedulerType,
+        scheduledFeedback: [Feedback<State, Mutation>]
+    ) -> Observable<State> {
         return Observable<State>.deferred {
             let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
 
             let asyncScheduler = scheduler.async
-            
-            let mutations: Observable<Mutation> = Observable.merge(scheduledFeedback.map { feedback in
-                let state = ObservableSchedulerContext(source: replaySubject.asObservable(), scheduler: asyncScheduler)
-                return feedback(state)
-            })
+
+            let mutations: Observable<Mutation> = Observable.merge(
+                scheduledFeedback.map { feedback in
+                    let state = ObservableSchedulerContext(source: replaySubject.asObservable(), scheduler: asyncScheduler)
+                    return feedback(state)
+                }
+            )
             // This is protection from accidental ignoring of scheduler so
             // reentracy errors can be avoided
             .observeOn(CurrentThreadScheduler.instance)
 
             return mutations.scan(initialState, accumulator: reduce)
-                .do(onNext: { output in
-                    replaySubject.onNext(output)
-                }, onSubscribed: {
-                    replaySubject.onNext(initialState)
-                })
+                .do(
+                    onNext: { output in
+                        replaySubject.onNext(output)
+                    }, onSubscribed: {
+                        replaySubject.onNext(initialState)
+                    }
+                )
                 .subscribeOn(scheduler)
                 .startWith(initialState)
                 .observeOn(scheduler)
@@ -57,11 +61,11 @@ extension ObservableType where E == Any {
     }
 
     public static func system<State, Mutation>(
-            initialState: State,
-            reduce: @escaping (State, Mutation) -> State,
-            scheduler: ImmediateSchedulerType,
-            scheduledFeedback: Feedback<State, Mutation>...
-        ) -> Observable<State> {
+        initialState: State,
+        reduce: @escaping (State, Mutation) -> State,
+        scheduler: ImmediateSchedulerType,
+        scheduledFeedback: Feedback<State, Mutation>...
+    ) -> Observable<State> {
         return system(initialState: initialState, reduce: reduce, scheduler: scheduler, scheduledFeedback: scheduledFeedback)
     }
 }
@@ -82,31 +86,31 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
      - returns: Current state of the system.
      */
     public static func system<State, Mutation>(
-            initialState: State,
-            reduce: @escaping (State, Mutation) -> State,
-            feedback: [Feedback<State, Mutation>]
-        ) -> Driver<State> {
+        initialState: State,
+        reduce: @escaping (State, Mutation) -> State,
+        feedback: [Feedback<State, Mutation>]
+    ) -> Driver<State> {
         let observableFeedbacks: [(ObservableSchedulerContext<State>) -> Observable<Mutation>] = feedback.map { feedback in
             return { sharedSequence in
-                return feedback(sharedSequence.source.asDriver(onErrorDriveWith: Driver<State>.empty()))
+                feedback(sharedSequence.source.asDriver(onErrorDriveWith: Driver<State>.empty()))
                     .asObservable()
             }
         }
-        
+
         return Observable<Any>.system(
-                initialState: initialState,
-                reduce: reduce,
-                scheduler: SharingStrategy.scheduler,
-                scheduledFeedback: observableFeedbacks
-            )
-            .asDriver(onErrorDriveWith: .empty())
+            initialState: initialState,
+            reduce: reduce,
+            scheduler: SharingStrategy.scheduler,
+            scheduledFeedback: observableFeedbacks
+        )
+        .asDriver(onErrorDriveWith: .empty())
     }
 
     public static func system<State, Mutation>(
-            initialState: State,
-            reduce: @escaping (State, Mutation) -> State,
-            feedback: Feedback<State, Mutation>...
-        ) -> Driver<State> {
+        initialState: State,
+        reduce: @escaping (State, Mutation) -> State,
+        feedback: Feedback<State, Mutation>...
+    ) -> Driver<State> {
         return system(initialState: initialState, reduce: reduce, feedback: feedback)
     }
 }
@@ -119,7 +123,6 @@ extension ImmediateSchedulerType {
         return (self as? MainScheduler).map { _ in MainScheduler.asyncInstance } ?? self
     }
 }
-
 
 /// Tuple of observable sequence and corresponding scheduler context on which that observable
 /// sequence receives elements.
@@ -142,6 +145,6 @@ public struct ObservableSchedulerContext<Element>: ObservableType {
     }
 
     public func subscribe<O: ObserverType>(_ observer: O) -> Disposable where O.E == E {
-        return self.source.subscribe(observer)
+        return source.subscribe(observer)
     }
 }
