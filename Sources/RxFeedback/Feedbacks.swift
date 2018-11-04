@@ -6,6 +6,7 @@
 //  Copyright © 2017 Krunoslav Zaher. All rights reserved.
 //
 
+import RxAtomic
 import RxCocoa
 import RxSwift
 
@@ -121,8 +122,7 @@ public func react<State, Query: Equatable, Mutation>(
             scheduler: Signal<Mutation>.SharingStrategy.scheduler.async
         )
         return react(query: query, effects: { effects($0).asObservable() })(observableSchedulerContext)
-            .asSignal(onErrorSignalWith: .empty())
-    }
+            .asSignal(onErrorSignalWith: .empty()) }
 }
 
 /**
@@ -263,6 +263,192 @@ public func react<State, Query, Mutation>(
     }
 }
 
+/// This is defined outside of `react` because Swift compiler generates an `error` :(.
+fileprivate class ChildLifetimeTracking<Child: Identifiable, Mutation> where Child: Equatable {
+    class LifetimeToken {}
+
+    let state = AsyncSynchronized(
+        (
+            isDisposed: false,
+            lifetimeByIdentifier: [Child.Identity: ChildLifetime]()
+        )
+    )
+
+    typealias ChildLifetime = (
+        identifier: Child.Identity,
+        subscription: Disposable,
+        lifetimeIdentifier: LifetimeToken,
+        stateBehavior: BehaviorSubject<Child>
+    )
+
+    let effects: (_ initial: Child, _ state: Observable<Child>) -> Observable<Mutation>
+    let scheduler: ImmediateSchedulerType
+    let observer: AnyObserver<Mutation>
+
+    init(
+        effects: @escaping (_ initial: Child, _ state: Observable<Child>) -> Observable<Mutation>,
+        scheduler: ImmediateSchedulerType,
+        observer: AnyObserver<Mutation>
+    ) {
+        self.effects = effects
+        self.scheduler = scheduler
+        self.observer = observer
+    }
+
+    func forwardChildState(_ childStates: [Child]) {
+        self.state.async { state in
+            guard !state.isDisposed else { return }
+            var lifetimeToUnsubscribeByIdentifier = state.lifetimeByIdentifier
+            for childState in childStates {
+                if let childLifetime = state.lifetimeByIdentifier[childState.identifier] {
+                    lifetimeToUnsubscribeByIdentifier.removeValue(forKey: childState.identifier)
+                    guard (try? childLifetime.stateBehavior.value()) != childState else {
+                        continue
+                    }
+                    childLifetime.stateBehavior.onNext(childState)
+                } else {
+                    let subscription = SingleAssignmentDisposable()
+                    let childStateSubject = BehaviorSubject(value: childState)
+                    let lifetime = LifetimeToken()
+                    state.lifetimeByIdentifier[childState.identifier] = (
+                        identifier: childState.identifier,
+                        subscription: subscription,
+                        lifetimeIdentifier: lifetime,
+                        stateBehavior: childStateSubject
+                    )
+                    let childSubscription = self.effects(childState, childStateSubject.asObservable())
+                        .observeOn(self.scheduler)
+                        .subscribe { event in
+                            self.state.async { state in
+                                guard state.lifetimeByIdentifier[childState.identifier]?.lifetimeIdentifier === lifetime else { return }
+                                guard !state.isDisposed else { return }
+                                switch event {
+                                case .next(let mutation):
+                                    self.observer.onNext(mutation)
+                                case .error(let error):
+                                    self.observer.onError(error)
+                                case .completed:
+                                    break
+                                }
+                            }
+                        }
+
+                    subscription.setDisposable(childSubscription)
+                }
+            }
+
+            lifetimeToUnsubscribeByIdentifier.values.forEach { $0.subscription.dispose() }
+        }
+    }
+
+    func dispose() {
+        self.state.async { state in
+            defer {
+                state.lifetimeByIdentifier = [:]
+                state.isDisposed = true
+            }
+
+            state.lifetimeByIdentifier.values.forEach { $0.subscription.dispose() }
+        }
+    }
+}
+
+enum DisposeState: Int32 {
+    case subscribed = 0
+    case disposed = 1
+}
+
+/**
+ * State: State type of the system.
+ * Child: Subset of state used to control the feedback loop.
+
+ For every uniquely identifiable child value `effects` closure is invoked with the initial value of child state and future values corresponding to the same identifier.
+
+ Subsequent equal values of child state are not emitted.
+
+ - parameter query: Selects child states.
+ - parameter effects: Effects to perform for each unique identifier.
+ - parameter initial: Initial child state.
+ - parameter state: Changes of child state.
+ - returns: Feedback loop performing the effects.
+ */
+public func react<State, Child, Mutation>(
+    query: @escaping (State) -> [Child],
+    effects: @escaping (_ initial: Child, _ state: Observable<Child>) -> Observable<Mutation>
+) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> where Child: Identifiable, Child: Equatable {
+    return { stateContext in
+        Observable.create { observer in
+            // This additional check is needed because `state.dispose()` is async.
+            var isDisposed = AtomicInt()
+            isDisposed.initialize(DisposeState.subscribed.rawValue)
+
+            let state = ChildLifetimeTracking<Child, Mutation>(
+                effects: effects,
+                scheduler: stateContext.scheduler,
+                observer: AnyObserver { event in
+                    guard isDisposed.load() == DisposeState.subscribed.rawValue else { return }
+                    observer.on(event)
+                }
+            )
+
+            let subscription = stateContext.source
+                .map(query)
+                .subscribe { event in
+                    switch event {
+                    case .next(let childStates):
+                        state.forwardChildState(childStates)
+                    case .error(let error):
+                        observer.on(.error(error))
+                    case .completed:
+                        observer.on(.completed)
+                    }
+                }
+
+            return Disposables.create {
+                isDisposed.fetchOr(DisposeState.disposed.rawValue)
+                state.dispose()
+                subscription.dispose()
+            }
+        }
+    }
+}
+
+/**
+ * State: State type of the system.
+ * Child: Subset of state used to control the feedback loop.
+
+ For every uniquely identifiable child value `effects` closure is invoked with the initial value of child state and future values corresponding to the same identifier.
+
+ Subsequent equal values of child state are not emitted.
+
+ - parameter query: Selects child states.
+ - parameter effects: Effects to perform for each unique identifier.
+ - parameter initial: Initial child state.
+ - parameter state: Changes of child state.
+ - returns: Feedback loop performing the effects.
+ */
+public func react<State, Child, Mutation>(
+    query: @escaping (State) -> [Child],
+    effects: @escaping (_ initial: Child, _ state: Driver<Child>) -> Signal<Mutation>
+) -> (Driver<State>) -> Signal<Mutation> where Child: Identifiable, Child: Equatable {
+    return { state in
+        let observableSchedulerContext = ObservableSchedulerContext<State>(
+            source: state.asObservable(),
+            scheduler: Signal<Mutation>.SharingStrategy.scheduler.async
+        )
+        return react(
+            query: query,
+            effects: { initial, state in
+                effects(
+                    initial,
+                    state.asDriver(onErrorDriveWith: .empty())
+                ).asObservable()
+            }
+        )(observableSchedulerContext)
+            .asSignal(onErrorSignalWith: .empty())
+    }
+}
+
 extension Observable {
     fileprivate func enqueue(_ scheduler: ImmediateSchedulerType) -> Observable<Element> {
         return self
@@ -304,7 +490,7 @@ public class Bindings<Mutation>: Disposable {
     }
 
     public func dispose() {
-        for subscription in subscriptions {
+        for subscription in self.subscriptions {
             subscription.dispose()
         }
     }
