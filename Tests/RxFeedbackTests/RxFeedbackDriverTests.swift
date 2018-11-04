@@ -1,4 +1,4 @@
-    //
+//
 //  RxFeedbackDriverTests.swift
 //  RxFeedbackTests
 //
@@ -7,27 +7,27 @@
 //
 
 import Foundation
-import XCTest
+import RxCocoa
 import RxFeedback
 import RxSwift
-import RxCocoa
 import RxTest
+import XCTest
 
-class RxFeedbackDriverTests: RxTest {
-}
+class RxFeedbackDriverTests: RxTest {}
 
 extension RxFeedbackDriverTests {
     func testInitial() {
         let system = Driver.system(
             initialState: "initial",
             reduce: { _, newState in
-                return newState
+                newState
             },
             feedback: [] as [Driver<Any>.Feedback<String, String>])
 
         var state = ""
-        _ = system.drive(onNext: { nextState in
-            state = nextState
+        _ = system.drive(
+            onNext: { nextState in
+                state = nextState
         })
 
         XCTAssertEqual(state, "initial")
@@ -37,10 +37,10 @@ extension RxFeedbackDriverTests {
         let system = Driver.system(
             initialState: "initial",
             reduce: { oldState, append in
-                return  oldState + append
+                oldState + append
             },
             feedback: { state in
-                return state.flatMapLatest { state -> Signal<String> in
+                state.flatMapLatest { state -> Signal<String> in
                     if state == "initial" {
                         return Signal.just("_a").delay(0.01)
                     }
@@ -56,26 +56,27 @@ extension RxFeedbackDriverTests {
                 }
         })
 
-        let result = (try?
-            system
+        let result = (
+            try?
+                system
                 .asObservable()
                 .take(4)
                 .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
+                .toArray()) ?? []
 
-        XCTAssertEqual(result, [
-            "initial",
-            "initial_a",
-            "initial_a_b",
-            "initial_a_b_c"
+        XCTAssertEqual(
+            result, [
+                "initial",
+                "initial_a",
+                "initial_a_b",
+                "initial_a_b_c",
         ])
     }
 
     func testImmediateFeedbackLoopParallel() {
         let feedbackLoop: (Driver<String>) -> Signal<String> = { state in
-            return state.flatMapLatest { state -> Signal<String> in
+            state.flatMapLatest { state -> Signal<String> in
                 if state == "initial" {
                     return Signal.just("_a")
                 }
@@ -94,27 +95,28 @@ extension RxFeedbackDriverTests {
         let system = Driver.system(
             initialState: "initial",
             reduce: { oldState, append in
-                return  oldState + append
+                oldState + append
             },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
-        let result = (try?
-            system
+        let result = (
+            try?
+                system
                 .asObservable()
                 .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
+                .toArray()) ?? []
 
-        XCTAssertEqual(result, [
-            "initial",
-            "initial_a",
-            "initial_a_a",
-            "initial_a_a_a",
-            "initial_a_a_a_b",
-            "initial_a_a_a_b_b",
-            "initial_a_a_a_b_b_b",
-            ])
+        XCTAssertEqual(
+            result, [
+                "initial",
+                "initial_a",
+                "initial_a_a",
+                "initial_a_a_a",
+                "initial_a_a_a_b",
+                "initial_a_a_a_b_b",
+                "initial_a_a_a_b_b_b",
+        ])
     }
 }
 
@@ -128,52 +130,54 @@ extension RxFeedbackDriverTests {
         let system = Driver.system(
             initialState: "initial",
             reduce: { oldState, append in
-                return  oldState + append
+                oldState + append
             },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
-        let result = (try?
-            system
+        let result = (
+            try?
+                system
                 .asObservable()
                 .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
+                .toArray()) ?? []
 
-        XCTAssertEqual(result, [
-            "initial",
-            "initial_.",
-            "initial_._.",
-            "initial_._._.",
-            ])
+        XCTAssertEqual(
+            result, [
+                "initial",
+                "initial_.",
+                "initial_._.",
+                "initial_._._.",
+        ])
     }
 
     func testImmediateFeedbackLoopParallel_react_equatable() {
-        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppend }) { (value) in
+        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppend }) { value in
             return Signal.just(value)
         }
 
         let system = Driver.system(
             initialState: "initial",
             reduce: { oldState, append in
-                return  oldState + append
+                oldState + append
             },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
-        let result = (try?
-            system
+        let result = (
+            try?
+                system
                 .asObservable()
                 .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
+                .toArray()) ?? []
 
-        XCTAssertEqual(result, [
-            "initial",
-            "initial_a",
-            "initial_a_b",
-            "initial_a_b_c",
-            ])
+        XCTAssertEqual(
+            result, [
+                "initial",
+                "initial_a",
+                "initial_a_b",
+                "initial_a_b_c",
+        ])
     }
 
     func testImmediateFeedbackLoopParallel_react_set() {
@@ -184,17 +188,17 @@ extension RxFeedbackDriverTests {
         let system = Driver.system(
             initialState: "initial",
             reduce: { oldState, append in
-                return  oldState + append
+                oldState + append
             },
             feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
-        let result = (try?
-            system
+        let result = (
+            try?
+                system
                 .asObservable()
                 .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
+                .toArray()) ?? []
 
         XCTAssertTrue(result[1].contains("_a") || result[1].contains("_b"))
         XCTAssertTrue(result[2].contains("_a") || result[2].contains("_b"))
@@ -207,15 +211,16 @@ extension RxFeedbackDriverTests {
             ignoringAB[i] = ignoringAB[i].replacingOccurrences(of: "_a", with: "_x")
             ignoringAB[i] = ignoringAB[i].replacingOccurrences(of: "_b", with: "_x")
         }
-        
-        XCTAssertEqual(ignoringAB, [
-            "initial",
-            "initial_x",
-            "initial_x_x",
-            "initial_x_x_c",
-            "initial_x_x_c_c",
-            "initial_x_x_c_c_c",
-            ])
+
+        XCTAssertEqual(
+            ignoringAB, [
+                "initial",
+                "initial_x",
+                "initial_x_x",
+                "initial_x_x_c",
+                "initial_x_x_c_c",
+                "initial_x_x_c_c_c",
+        ])
     }
 }
 
@@ -224,9 +229,9 @@ extension RxFeedbackDriverTests {
         let system = Driver.system(
             initialState: "initial",
             reduce: { oldState, append in
-                return  oldState + append
+                oldState + append
             },
-            feedback: RxFeedback.bind { (stateAndScheduler) in
+            feedback: RxFeedback.bind { stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
                         return Signal.just("_a").delay(0.01)
@@ -245,21 +250,22 @@ extension RxFeedbackDriverTests {
                 return Bindings(subscriptions: [], mutations: [results])
         })
 
-        let result = (try?
-            system
+        let result = (
+            try?
+                system
                 .asObservable()
                 .take(4)
                 .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
+                .toArray()) ?? []
 
-        XCTAssertEqual(result, [
-            "initial",
-            "initial_a",
-            "initial_a_b",
-            "initial_a_b_c"
-            ])
+        XCTAssertEqual(
+            result, [
+                "initial",
+                "initial_a",
+                "initial_a_b",
+                "initial_a_b_c",
+        ])
     }
 
     func testUIBindFeedbackWithOwnerLoopReentrancy() {
@@ -268,9 +274,9 @@ extension RxFeedbackDriverTests {
         let system = Driver.system(
             initialState: "initial",
             reduce: { oldState, append in
-                return  oldState + append
+                oldState + append
             },
-            feedback: RxFeedback.bind(owner) { (_, stateAndScheduler) in
+            feedback: RxFeedback.bind(owner) { _, stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
                         return Signal.just("_a").delay(0.01)
@@ -286,24 +292,26 @@ extension RxFeedbackDriverTests {
                     }
                 }
                 return Bindings(subscriptions: [], mutations: [results])
-            })
+        })
 
-        let result = (try?
-            system
+        let result = (
+            try?
+                system
                 .asObservable()
                 .take(4)
                 .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
-                .toArray()
-            ) ?? []
+                .toArray()) ?? []
 
-        XCTAssertEqual(result, [
-            "initial",
-            "initial_a",
-            "initial_a_b",
-            "initial_a_b_c"
-            ])
+        XCTAssertEqual(
+            result, [
+                "initial",
+                "initial_a",
+                "initial_a_b",
+                "initial_a_b_c",
+        ])
     }
+
     func testBindingsAreNotDisposedWhenNoMutationsAreSpecifiedOnDriverSystem() {
         typealias State = Int
         typealias Mutation = Int
@@ -312,36 +320,37 @@ extension RxFeedbackDriverTests {
         let testScheduler = TestScheduler(initialClock: 0)
         var testableObserver: TestableObserver<Int>!
         var subscriptionState: [Int] = []
-        let timer = testScheduler.createColdObservable([
-            next(50, 0),
-            completed(50)
-            ])
+        let timer = testScheduler.createColdObservable(
+            [
+                next(50, 0),
+                completed(50),
+        ])
             .asSignal(onErrorJustReturn: 0)
 
         SharingScheduler.mock(scheduler: testScheduler) {
-
-            let player: Feedback = react(query: { $0 }, effects: { state in
-                return timer.map { _ in 1 }
+            let player: Feedback = react(
+                query: { $0 }, effects: { _ in
+                    timer.map { _ in 1 }
             })
 
             let mockUIBindings: Feedback = RxFeedback.bind { (state: Driver<State>) in
                 let subscriptions: [Disposable] = [
-                    state.drive(onNext:{ subscriptionState.append($0) })
+                    state.drive(onNext: { subscriptionState.append($0) }),
                 ]
                 return Bindings(subscriptions: subscriptions, mutations: [Observable<Mutation>]())
             }
             let system = Driver.system(
                 initialState: 0,
                 reduce: { oldState, mutation in
-                    return oldState + mutation
+                    oldState + mutation
                 },
-                feedback: mockUIBindings, player
-            )
+                feedback: mockUIBindings, player)
 
             testableObserver = testScheduler.createObserver(Int.self)
-            let _ = system.drive(testableObserver)
-            testScheduler.scheduleAt(200, action: {
-                testScheduler.stop()
+            _ = system.drive(testableObserver)
+            testScheduler.scheduleAt(
+                200, action: {
+                    testScheduler.stop()
             })
             testScheduler.start()
         }
@@ -351,7 +360,8 @@ extension RxFeedbackDriverTests {
             next(57, 1),
             next(111, 2),
             next(165, 3),
-            ]
+        ]
         XCTAssertEqual(testableObserver.events, correct)
-        XCTAssertEqual(subscriptionState, [0,1,2,3])
-    }}
+        XCTAssertEqual(subscriptionState, [0, 1, 2, 3])
+    }
+}
