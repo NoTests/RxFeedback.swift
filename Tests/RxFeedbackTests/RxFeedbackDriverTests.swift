@@ -365,3 +365,211 @@ extension RxFeedbackDriverTests {
         XCTAssertEqual(subscriptionState, [0, 1, 2, 3])
     }
 }
+
+extension RxFeedbackDriverTests {
+    func testReactChildList_Subscription() {
+        let testScheduler = TestScheduler(initialClock: 0)
+        SharingScheduler.mock(scheduler: testScheduler) {
+            var verify = [Recorded<SignificantEvent>]()
+            func happened(_ event: SignificantEvent) {
+                verify.append(Recorded(time: testScheduler.clock, value: event))
+            }
+
+            let results = testScheduler.start { () -> Observable<String> in
+                let source = testScheduler.createHotObservable([
+                        next(210, [TestChild(identifier: 0, value: "1")]),
+                        next(220, [TestChild(identifier: 0, value: "2")]),
+                        next(230, [TestChild(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
+                        next(240, [TestChild(identifier: 1, value: "3")]),
+                    ])
+                    .asDriver(onErrorJustReturn: [])
+                    .do(onDispose: { happened(.disposedSource) })
+                return react(
+                    childQuery: { (state: [TestChild]) in state },
+                    effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
+                        happened(.effects(calledWithInitial: initial))
+                        return state
+                            .map { "Got \($0.value)" }
+                            .do(
+                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
+                                onDispose: { happened(.disposed(id: initial.identifier)) }
+                            )
+                            .asSignal(onErrorJustReturn: "")
+                    }
+                )(source).asObservable()
+            }
+
+            XCTAssertEqual(verify, [
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
+                Recorded(time: 231, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "3"))),
+                Recorded(time: 231, value: SignificantEvent.subscribed(id: 1)),
+                Recorded(time: 241, value: SignificantEvent.disposed(id: 0)),
+                Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
+                Recorded(time: 1000, value: SignificantEvent.disposedSource),
+            ])
+
+            XCTAssertEqual(results.events, [
+                next(215, "Got 1"),
+                next(225, "Got 2"),
+                next(235, "Got 3"),
+            ])
+        }
+    }
+
+
+    func testReactChildList_Completed() {
+        let testScheduler = TestScheduler(initialClock: 0)
+        SharingScheduler.mock(scheduler: testScheduler) {
+            var verify = [Recorded<SignificantEvent>]()
+            func happened(_ event: SignificantEvent) {
+                verify.append(Recorded(time: testScheduler.clock, value: event))
+            }
+
+            let results = testScheduler.start { () -> Observable<String> in
+                let source = testScheduler.createHotObservable([
+                    next(210, [TestChild(identifier: 0, value: "1")]),
+                    completed(220),
+                    next(230, [TestChild(identifier: 0, value: "2")])
+                ])
+                    .asDriver(onErrorJustReturn: [])
+                    .do(onDispose: { happened(.disposedSource) })
+                return react(
+                    childQuery: { (state: [TestChild]) in state },
+                    effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
+                        happened(.effects(calledWithInitial: initial))
+                        return state.map { "Got \($0.value)" }
+                            .do(
+                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
+                                onDispose: { happened(.disposed(id: initial.identifier)) }
+                            )
+                            .asSignal(onErrorJustReturn: "")
+                        }
+                    )(source).asObservable()
+            }
+
+            XCTAssertEqual(verify, [
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
+                Recorded(time: 221, value: SignificantEvent.disposed(id: 0)),
+                Recorded(time: 221, value: SignificantEvent.disposedSource),
+            ])
+
+            XCTAssertEqual(results.events, [
+                next(215, "Got 1"),
+                completed(222),
+            ])
+        }
+    }
+
+    func testReactChildList_ChildCompleted() {
+        let testScheduler = TestScheduler(initialClock: 0)
+        SharingScheduler.mock(scheduler: testScheduler) {
+            var verify = [Recorded<SignificantEvent>]()
+            func happened(_ event: SignificantEvent) {
+                verify.append(Recorded(time: testScheduler.clock, value: event))
+            }
+
+            let results = testScheduler.start { () -> Observable<String> in
+                let source = testScheduler.createHotObservable([
+                        next(210, [TestChild(identifier: 0, value: "1"), TestChild(identifier: 1, value: "2")]),
+                        next(220, [TestChild(identifier: 0, value: "3"), TestChild(identifier: 1, value: "2")]),
+                        next(230, [TestChild(identifier: 0, value: "4"), TestChild(identifier: 1, value: "2")]),
+                    ])
+                    .asDriver(onErrorJustReturn: [])
+                    .do(onDispose: { happened(.disposedSource) })
+                return react(
+                    childQuery: { (state: [TestChild]) in state },
+                    effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
+                        happened(.effects(calledWithInitial: initial))
+                        return state.asObservable()
+                            .map { childState -> Event<String> in
+                                guard childState.value != "3" else { return .completed }
+                                return Event.next("Got \(childState.value)")
+                            }
+                            .dematerialize()
+                            .do(
+                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
+                                onDispose: { happened(.disposed(id: initial.identifier)) }
+                            )
+                            .asSignal(onErrorJustReturn: "")
+                        }
+                )(source).asObservable()
+            }
+
+            XCTAssertEqual(verify, [
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 1)),
+                Recorded(time: 222, value: SignificantEvent.disposed(id: 0)),
+                Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
+                Recorded(time: 1000, value: SignificantEvent.disposedSource),
+            ])
+
+            XCTAssertEqual(results.events, [
+                next(215, "Got 1"),
+                next(216, "Got 2"),
+            ])
+        }
+    }
+
+    func testReactChildList_Dispose() {
+        let testScheduler = TestScheduler(initialClock: 0)
+        SharingScheduler.mock(scheduler: testScheduler) {
+            var verify = [Recorded<SignificantEvent>]()
+            func happened(_ event: SignificantEvent) {
+                verify.append(Recorded(time: testScheduler.clock, value: event))
+            }
+
+            let results = testScheduler.start { () -> Observable<String> in
+                let source = testScheduler.createHotObservable([
+                        next(210, [TestChild(identifier: 0, value: "1"), TestChild(identifier: 1, value: "2")]),
+                        next(230, [TestChild(identifier: 0, value: "4"), TestChild(identifier: 1, value: "2")]),
+                    ])
+                    .asDriver(onErrorJustReturn: [])
+                    .do(onDispose: { happened(.disposedSource) })
+                let result = react(
+                    childQuery: { (state: [TestChild]) in state },
+                    effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
+                        happened(.effects(calledWithInitial: initial))
+                        return state
+                            .map { "Got \($0.value)" }
+                            .do(
+                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
+                                // Ignore identifier because the ordering is non deterministic.
+                                onDispose: { happened(.disposed(id: -1)) }
+                            )
+                            .asSignal(onErrorJustReturn: "")
+                    }
+                )(source)
+
+                // Dispose on 220
+                return Observable.create { observer in
+                    let subscription = result.emit(onNext: { element in
+                        observer.onNext(element)
+                    })
+                    testScheduler.scheduleAt(220) {
+                        subscription.dispose()
+                    }
+                    return subscription
+                }
+            }
+
+            XCTAssertEqual(verify, [
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 1)),
+                Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
+                Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
+                Recorded(time: 220, value: SignificantEvent.disposedSource),
+            ])
+
+            XCTAssertEqual(results.events, [
+                next(215, "Got 1"),
+                next(216, "Got 2"),
+            ])
+        }
+    }
+}
