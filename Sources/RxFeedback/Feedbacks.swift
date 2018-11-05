@@ -373,7 +373,7 @@ enum DisposeState: Int32 {
  - returns: Feedback loop performing the effects.
  */
 public func react<State, Child, Mutation>(
-    query: @escaping (State) -> [Child],
+    childQuery: @escaping (State) -> [Child],
     effects: @escaping (_ initial: Child, _ state: Observable<Child>) -> Observable<Mutation>
 ) -> (ObservableSchedulerContext<State>) -> Observable<Mutation> where Child: Identifiable, Child: Equatable {
     return { stateContext in
@@ -392,7 +392,7 @@ public func react<State, Child, Mutation>(
             )
 
             let subscription = stateContext.source
-                .map(query)
+                .map(childQuery)
                 .subscribe { event in
                     switch event {
                     case .next(let childStates):
@@ -428,7 +428,7 @@ public func react<State, Child, Mutation>(
  - returns: Feedback loop performing the effects.
  */
 public func react<State, Child, Mutation>(
-    query: @escaping (State) -> [Child],
+    childQuery: @escaping (State) -> [Child],
     effects: @escaping (_ initial: Child, _ state: Driver<Child>) -> Signal<Mutation>
 ) -> (Driver<State>) -> Signal<Mutation> where Child: Identifiable, Child: Equatable {
     return { state in
@@ -437,7 +437,7 @@ public func react<State, Child, Mutation>(
             scheduler: Signal<Mutation>.SharingStrategy.scheduler.async
         )
         return react(
-            query: query,
+            childQuery: childQuery,
             effects: { initial, state in
                 effects(
                     initial,
