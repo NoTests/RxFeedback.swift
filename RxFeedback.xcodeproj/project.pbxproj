@@ -421,7 +421,6 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=watchsimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/watchOS";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -508,7 +507,6 @@
 				"LD_RUNPATH_SEARCH_PATHS[sdk=watchos*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/watchOS";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=watchsimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/watchOS";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;

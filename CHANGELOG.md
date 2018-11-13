@@ -1,5 +1,9 @@
 ## Master
 
+## [1.1.1](https://github.com/kzaher/RxFeedback/releases/tag/1.1.1)
+
+* Fixes problem building with Carthage. #41
+
 ## [1.1.0](https://github.com/kzaher/RxFeedback/releases/tag/1.1.0)
 
 * Xcode 10 compatbility
