@@ -21,11 +21,11 @@ extension ReactHashableLoopsTests {
     func testEmptyQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Set<String> = { _ in
+        let requests: (String) -> Set<String> = { _ in
             return Set()
         }
         let effects: (String) -> Observable<String> = { .just($0 + "_a") }
-        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
+        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(requests: requests, effects: effects)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -47,7 +47,7 @@ extension ReactHashableLoopsTests {
     func testNonEmptyAfterEmptyDoesProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Set<String> = { state in
+        let requests: (String) -> Set<String> = { state in
             if state == "initial+" {
                 return Set(["I"])
             } else {
@@ -55,7 +55,7 @@ extension ReactHashableLoopsTests {
             }
         }
         let effects: (String) -> Observable<String> = { .just($0 + "_a") }
-        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
+        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(requests: requests, effects: effects)
         let mutations = PublishSubject<String>()
         let system = Observable.system(
             initialState: "initial",
@@ -74,18 +74,18 @@ extension ReactHashableLoopsTests {
         XCTAssertEqual(results.events, [
             next(201, "initial"),
             next(211, "initial+"),
-            next(213, "initial+I_a"),
+            next(212, "initial+I_a"),
             ])
     }
 
     func testEqualQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> Set<String> = { _ in return Set(["Same"]) }
+        let requests: (String) -> Set<String> = { _ in return Set(["Same"]) }
         let effects: (String) -> Observable<String> = { _ in
             return .just("_a")
         }
-        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
+        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(requests: requests, effects: effects)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -101,21 +101,21 @@ extension ReactHashableLoopsTests {
         // Test
         XCTAssertEqual(results.events, [
             next(201, "initial"),
-            next(204, "initial_a")
+            next(203, "initial_a")
             ])
     }
 
     func testImmediateEffectsHaveTheSameOrderAsTheyArePassedToSystem() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query1: (String) -> Set<String> = { state in
+        let requests1: (String) -> Set<String> = { state in
             if state == "initial" {
                 return Set(["_I"])
             } else {
                 return Set()
             }
         }
-        let query2: (String) -> Set<String> = { state in
+        let requests2: (String) -> Set<String> = { state in
             if state == "initial_I_a" {
                 return Set(["_IA"])
             } else {
@@ -129,9 +129,9 @@ extension ReactHashableLoopsTests {
             return .just($0 + "_b")
         }
         let feedback1: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback1 = react(query: query1, effects: effects1)
+        feedback1 = react(requests: requests1, effects: effects1)
         let feedback2: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback2 = react(query: query2, effects: effects2)
+        feedback2 = react(requests: requests2, effects: effects2)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -147,8 +147,8 @@ extension ReactHashableLoopsTests {
         // Test
         XCTAssertEqual(results.events, [
             next(201, "initial"),
-            next(204, "initial_I_a"),
-            next(206, "initial_I_a_IA_b")
+            next(203, "initial_I_a"),
+            next(204, "initial_I_a_IA_b")
             ])
     }
 
@@ -156,14 +156,14 @@ extension ReactHashableLoopsTests {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let notImmediateEffect = PublishSubject<String>()
-        let query1: (String) -> Set<String> = { state in
+        let requests1: (String) -> Set<String> = { state in
             if state == "initial" {
                 return Set(["_I"])
             } else {
                 return Set()
             }
         }
-        let query2: (String) -> Set<String> = { state in
+        let requests2: (String) -> Set<String> = { state in
             if state == "initial" {
                 return Set(["_I"])
             } else {
@@ -179,9 +179,9 @@ extension ReactHashableLoopsTests {
             return .just($0 + "_b")
         }
         let feedback1: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback1 = react(query: query1, effects: effects1)
+        feedback1 = react(requests: requests1, effects: effects1)
         let feedback2: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback2 = react(query: query2, effects: effects2)
+        feedback2 = react(requests: requests2, effects: effects2)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -198,7 +198,7 @@ extension ReactHashableLoopsTests {
         // Test
         XCTAssertEqual(results.events, [
             next(201, "initial"),
-            next(204, "initial_I_b")
+            next(203, "initial_I_b")
             ])
         XCTAssertTrue(isEffects1Called)
     }
@@ -207,7 +207,7 @@ extension ReactHashableLoopsTests {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let initiator = PublishSubject<String>()
-        let query: (String) -> Set<String> = { state in
+        let requests: (String) -> Set<String> = { state in
             if state == "initial" {
                 return Set(["_I", "_I2", "_I3", "_I4"])
             } else {
@@ -215,21 +215,21 @@ extension ReactHashableLoopsTests {
             }
         }
         var isEffects1Called = false
-        let effects: (String) -> Observable<String> = { query in
-            if query == "_I" {
-                return Observable.just(query + "_done")
+        let effects: (String) -> Observable<String> = { request in
+            if request == "_I" {
+                return Observable.just(request + "_done")
                     .delay(20.0, scheduler: scheduler)
-            } else if query == "_I2" {
+            } else if request == "_I2" {
                 isEffects1Called = true
-                return Observable.just(query + "_done")
+                return Observable.just(request + "_done")
                     .delay(30.0, scheduler: scheduler)
-            } else if query == "_I3" {
+            } else if request == "_I3" {
                 isEffects1Called = true
-                return Observable.just(query + "_done")
+                return Observable.just(request + "_done")
                     .delay(30.0, scheduler: scheduler)
-            } else if query == "_I4" {
+            } else if request == "_I4" {
                 isEffects1Called = true
-                return Observable.just(query + "_done")
+                return Observable.just(request + "_done")
                     .delay(30.0, scheduler: scheduler)
             } else {
                 fatalError()
@@ -241,7 +241,7 @@ extension ReactHashableLoopsTests {
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: react(query: query, effects: effects),
+            scheduledFeedback: react(requests: requests, effects: effects),
             { _ in initiator.asObservable() }
         )
 
@@ -276,7 +276,7 @@ extension ReactHashableLoopsTests {
             next(201, ""),
             next(211, ""),
             next(216, "initial"),
-            next(238, "initial_I_done"),
+            next(237, "initial_I_done"),
             ])
         XCTAssertTrue(isEffects1Called)
     }
@@ -285,7 +285,7 @@ extension ReactHashableLoopsTests {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let initiator = PublishSubject<String>()
-        let query: (String) -> Set<String> = { state in
+        let requests: (String) -> Set<String> = { state in
             if state == "initial" {
                 return Set(["_I", "_I2"])
             } else if state == "initial_I_done" {
@@ -311,7 +311,7 @@ extension ReactHashableLoopsTests {
                 return  oldState + append
         },
             scheduler: scheduler,
-            scheduledFeedback: react(query: query, effects: effects),
+            scheduledFeedback: react(requests: requests, effects: effects),
             { _ in initiator.asObservable() }
         )
 
@@ -341,8 +341,8 @@ extension ReactHashableLoopsTests {
             next(201, ""),
             next(211, ""),
             next(216, "initial"),
-            next(238, "initial_I_done"),
-            next(248, "initial_I_done_I2_done"),
+            next(237, "initial_I_done"),
+            next(247, "initial_I_done_I2_done"),
             ])
     }
 }

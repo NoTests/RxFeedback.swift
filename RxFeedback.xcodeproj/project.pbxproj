@@ -19,7 +19,7 @@
 		C8996C7A1F40C5B6004E5D83 /* Deprecations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C791F40C5B6004E5D83 /* Deprecations.swift */; };
 		C8996C7C1F40D82A004E5D83 /* String+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C7B1F40D82A004E5D83 /* String+Test.swift */; };
 		C89B96251EB6964200BDAB24 /* Feedbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96241EB6964200BDAB24 /* Feedbacks.swift */; };
-		E11E0E1E1F766F370031D189 /* ReactNonEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */; };
+		C8DF7346218F389200945A7C /* AsyncSynchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DF7345218F389200945A7C /* AsyncSynchronized.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +58,7 @@
 		C8996C791F40C5B6004E5D83 /* Deprecations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deprecations.swift; sourceTree = "<group>"; };
 		C8996C7B1F40D82A004E5D83 /* String+Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Test.swift"; sourceTree = "<group>"; };
 		C89B96241EB6964200BDAB24 /* Feedbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedbacks.swift; sourceTree = "<group>"; };
-		E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReactNonEquatableLoopsTests.swift; sourceTree = "<group>"; };
+		C8DF7345218F389200945A7C /* AsyncSynchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSynchronized.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +120,7 @@
 				C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */,
 				C89B96241EB6964200BDAB24 /* Feedbacks.swift */,
 				C8996C791F40C5B6004E5D83 /* Deprecations.swift */,
+				C8DF7345218F389200945A7C /* AsyncSynchronized.swift */,
 			);
 			name = RxFeedback;
 			path = Sources/RxFeedback;
@@ -188,7 +189,6 @@
 				C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */,
 				C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */,
 				C8996C7B1F40D82A004E5D83 /* String+Test.swift */,
-				E11E0E0A1F766C750031D189 /* ReactNonEquatableLoopsTests.swift */,
 				C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */,
 				C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */,
 				C83596471FB24CAF00DC7B8F /* RxTest.swift */,
@@ -308,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C89B96251EB6964200BDAB24 /* Feedbacks.swift in Sources */,
+				C8DF7346218F389200945A7C /* AsyncSynchronized.swift in Sources */,
 				C8996C7A1F40C5B6004E5D83 /* Deprecations.swift in Sources */,
 				C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */,
 			);
@@ -317,7 +318,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E11E0E1E1F766F370031D189 /* ReactNonEquatableLoopsTests.swift in Sources */,
 				C83596441FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift in Sources */,
 				C83596481FB24CAF00DC7B8F /* RxTest.swift in Sources */,
 				C8996C6B1F40A7A0004E5D83 /* RxFeedbackDriverTests.swift in Sources */,

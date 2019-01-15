@@ -21,11 +21,11 @@ extension ReactEquatableLoopsTests {
     func testIntialNilQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> String? = { _ in
+        let request: (String) -> String? = { _ in
             return nil
         }
         let effects: (String) -> Observable<String> = { .just($0 + "_a") }
-        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
+        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(request: request, effects: effects)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -47,7 +47,7 @@ extension ReactEquatableLoopsTests {
     func testNotNilAfterIntialNilDoesProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> String? = { state in
+        let request: (String) -> String? = { state in
             if state == "initial+" {
                 return "I"
             } else {
@@ -55,7 +55,7 @@ extension ReactEquatableLoopsTests {
             }
         }
         let effects: (String) -> Observable<String> = { .just($0 + "_a") }
-        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
+        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(request: request, effects: effects)
         let mutations = PublishSubject<String>()
         let system = Observable.system(
             initialState: "initial",
@@ -74,18 +74,18 @@ extension ReactEquatableLoopsTests {
         XCTAssertEqual(results.events, [
             next(201, "initial"),
             next(211, "initial+"),
-            next(213, "initial+I_a"),
+            next(212, "initial+I_a"),
             ])
     }
 
     func testSecondConsecutiveEqualQueryDoesNotProduceEffects() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query: (String) -> String? = { _ in return "Same" }
+        let request: (String) -> String? = { _ in return "Same" }
         let effects: (String) -> Observable<String> = { _ in
             return .just("_a")
         }
-        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: query, effects: effects)
+        let feedback: (ObservableSchedulerContext<String>) -> Observable<String> = react(request: request, effects: effects)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -101,21 +101,21 @@ extension ReactEquatableLoopsTests {
         // Test
         XCTAssertEqual(results.events, [
             next(201, "initial"),
-            next(204, "initial_a")
+            next(203, "initial_a")
             ])
     }
 
     func testImmediateEffectsHaveTheSameOrderAsTheyArePassedToSystem() {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
-        let query1: (String) -> String? = { state in
+        let request1: (String) -> String? = { state in
             if state == "initial" {
                 return "_I"
             } else {
                 return nil
             }
         }
-        let query2: (String) -> String? = { state in
+        let request2: (String) -> String? = { state in
             if state == "initial_I_a" {
                 return "_IA"
             } else {
@@ -129,9 +129,9 @@ extension ReactEquatableLoopsTests {
             return .just($0 + "_b")
         }
         let feedback1: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback1 = react(query: query1, effects: effects1)
+        feedback1 = react(request: request1, effects: effects1)
         let feedback2: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback2 = react(query: query2, effects: effects2)
+        feedback2 = react(request: request2, effects: effects2)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -147,8 +147,8 @@ extension ReactEquatableLoopsTests {
         // Test
         XCTAssertEqual(results.events, [
             next(201, "initial"),
-            next(204, "initial_I_a"),
-            next(206, "initial_I_a_IA_b")
+            next(203, "initial_I_a"),
+            next(204, "initial_I_a_IA_b")
             ])
     }
 
@@ -156,14 +156,14 @@ extension ReactEquatableLoopsTests {
         // Prepare
         let scheduler = TestScheduler(initialClock: 0)
         let notImmediateEffect = PublishSubject<String>()
-        let query1: (String) -> String? = { state in
+        let request1: (String) -> String? = { state in
             if state == "initial" {
                 return "_I"
             } else {
                 return nil
             }
         }
-        let query2: (String) -> String? = { state in
+        let request2: (String) -> String? = { state in
             if state == "initial" {
                 return "_I"
             } else {
@@ -179,9 +179,9 @@ extension ReactEquatableLoopsTests {
             return .just($0 + "_b")
         }
         let feedback1: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback1 = react(query: query1, effects: effects1)
+        feedback1 = react(request: request1, effects: effects1)
         let feedback2: (ObservableSchedulerContext<String>) -> Observable<String>
-        feedback2 = react(query: query2, effects: effects2)
+        feedback2 = react(request: request2, effects: effects2)
         let system = Observable.system(
             initialState: "initial",
             reduce: { oldState, append in
@@ -198,7 +198,7 @@ extension ReactEquatableLoopsTests {
         // Test
         XCTAssertEqual(results.events, [
             next(201, "initial"),
-            next(204, "initial_I_b")
+            next(203, "initial_I_b")
             ])
         XCTAssertTrue(isEffects1Called)
     }
