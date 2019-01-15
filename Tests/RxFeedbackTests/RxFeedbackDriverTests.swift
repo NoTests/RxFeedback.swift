@@ -123,7 +123,7 @@ extension RxFeedbackDriverTests {
 // Feedback loops
 extension RxFeedbackDriverTests {
     func testImmediateFeedbackLoopParallel_react_non_equatable() {
-        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppendDot }) { (_: ()) -> Signal<String> in
+        let feedbackLoop: (Driver<String>) -> Signal<String> = react(request: { $0.needsToAppendDot }) { (_: Bool) -> Signal<String> in
             return Signal.just("_.")
         }
 
@@ -152,7 +152,7 @@ extension RxFeedbackDriverTests {
     }
 
     func testImmediateFeedbackLoopParallel_react_equatable() {
-        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppend }) { value in
+        let feedbackLoop: (Driver<String>) -> Signal<String> = react(request: { $0.needsToAppend }) { value in
             return Signal.just(value)
         }
 
@@ -181,7 +181,7 @@ extension RxFeedbackDriverTests {
     }
 
     func testImmediateFeedbackLoopParallel_react_set() {
-        let feedbackLoop: (Driver<String>) -> Signal<String> = react(query: { $0.needsToAppendParallel }) { value in
+        let feedbackLoop: (Driver<String>) -> Signal<String> = react(requests: { $0.needsToAppendParallel }) { value in
             return Signal.just(value)
         }
 
@@ -329,7 +329,7 @@ extension RxFeedbackDriverTests {
 
         SharingScheduler.mock(scheduler: testScheduler) {
             let player: Feedback = react(
-                query: { $0 }, effects: { _ in
+                request: { $0 }, effects: { _ in
                     timer.map { _ in 1 }
             })
 
@@ -357,9 +357,9 @@ extension RxFeedbackDriverTests {
 
         let correct = [
             next(2, 0),
-            next(57, 1),
-            next(111, 2),
-            next(165, 3),
+            next(56, 1),
+            next(109, 2),
+            next(162, 3),
         ]
         XCTAssertEqual(testableObserver.events, correct)
         XCTAssertEqual(subscriptionState, [0, 1, 2, 3])
@@ -385,7 +385,7 @@ extension RxFeedbackDriverTests {
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { happened(.disposedSource) })
                 return react(
-                    childQuery: { (state: [TestChild]) in state },
+                    requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
                         happened(.effects(calledWithInitial: initial))
                         return state
@@ -435,7 +435,7 @@ extension RxFeedbackDriverTests {
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { happened(.disposedSource) })
                 return react(
-                    childQuery: { (state: [TestChild]) in state },
+                    requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
                         happened(.effects(calledWithInitial: initial))
                         return state.map { "Got \($0.value)" }
@@ -479,7 +479,7 @@ extension RxFeedbackDriverTests {
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { happened(.disposedSource) })
                 return react(
-                    childQuery: { (state: [TestChild]) in state },
+                    requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
                         happened(.effects(calledWithInitial: initial))
                         return state.asObservable()
@@ -497,7 +497,7 @@ extension RxFeedbackDriverTests {
                 )(source).asObservable()
             }
 
-            XCTAssertEqual(verify, [
+            XCTAssertTrue(verify == [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
@@ -505,11 +505,22 @@ extension RxFeedbackDriverTests {
                 Recorded(time: 222, value: SignificantEvent.disposed(id: 0)),
                 Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
                 Recorded(time: 1000, value: SignificantEvent.disposedSource),
+            ] || verify == [
+                    Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+                    Recorded(time: 211, value: SignificantEvent.subscribed(id: 1)),
+                    Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+                    Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
+                    Recorded(time: 222, value: SignificantEvent.disposed(id: 0)),
+                    Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
+                    Recorded(time: 1000, value: SignificantEvent.disposedSource),
             ])
 
-            XCTAssertEqual(results.events, [
+            XCTAssertTrue(results.events == [
                 next(215, "Got 1"),
                 next(216, "Got 2"),
+            ] || results.events == [
+                next(215, "Got 2"),
+                next(216, "Got 1"),
             ])
         }
     }
@@ -530,7 +541,7 @@ extension RxFeedbackDriverTests {
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { happened(.disposedSource) })
                 let result = react(
-                    childQuery: { (state: [TestChild]) in state },
+                    requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestChild, state: Driver<TestChild>) -> Signal<String> in
                         happened(.effects(calledWithInitial: initial))
                         return state
@@ -556,7 +567,7 @@ extension RxFeedbackDriverTests {
                 }
             }
 
-            XCTAssertEqual(verify, [
+            XCTAssertTrue(verify == [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
@@ -564,11 +575,22 @@ extension RxFeedbackDriverTests {
                 Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
                 Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
                 Recorded(time: 220, value: SignificantEvent.disposedSource),
+            ] || verify == [
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 1)),
+                Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+                Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
+                Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
+                Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
+                Recorded(time: 220, value: SignificantEvent.disposedSource),
             ])
 
-            XCTAssertEqual(results.events, [
+            XCTAssertTrue(results.events == [
                 next(215, "Got 1"),
                 next(216, "Got 2"),
+            ] || results.events == [
+                next(215, "Got 2"),
+                next(216, "Got 1"),
             ])
         }
     }

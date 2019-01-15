@@ -144,7 +144,7 @@ class GithubPaginatedSearchViewController: UIViewController {
                     // UI, user feedback
                     bindUI,
                     // NoUI, automatic feedback
-                    react(query: { $0.loadNextPage }, effects: { resource in
+                    react(request: { $0.loadNextPage }, effects: { resource in
                         return URLSession.shared.loadRepositories(resource: resource)
                             .asSignal(onErrorJustReturn: .failure(.offline))
                             .map(Mutation.response)

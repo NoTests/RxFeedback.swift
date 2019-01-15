@@ -149,7 +149,7 @@ extension RxFeedbackObservableTests {
 // Feedback loops
 extension RxFeedbackObservableTests {
     func testImmediateFeedbackLoopParallel_react_non_equatable() {
-        let feedbackLoop: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: { $0.needsToAppendDot }) { _ in
+        let feedbackLoop: (ObservableSchedulerContext<String>) -> Observable<String> = react(request: { $0.needsToAppendDot }) { _ in
             return Observable.just("_.")
         }
 
@@ -179,7 +179,7 @@ extension RxFeedbackObservableTests {
     }
 
     func testImmediateFeedbackLoopParallel_react_equatable() {
-        let feedbackLoop: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: { $0.needsToAppend }) { value in
+        let feedbackLoop: (ObservableSchedulerContext<String>) -> Observable<String> = react(request: { $0.needsToAppend }) { value in
             return Observable.just(value)
         }
 
@@ -209,7 +209,7 @@ extension RxFeedbackObservableTests {
     }
 
     func testImmediateFeedbackLoopParallel_react_set() {
-        let feedbackLoop: (ObservableSchedulerContext<String>) -> Observable<String> = react(query: { $0.needsToAppendParallel }) { value in
+        let feedbackLoop: (ObservableSchedulerContext<String>) -> Observable<String> = react(requests: { $0.needsToAppendParallel }) { value in
             return Observable.just(value)
         }
 
@@ -356,10 +356,7 @@ extension RxFeedbackObservableTests {
 
         var subscriptionState: [Int] = []
         var subscriptionIsDisposed = false
-        let player: Feedback = react(
-            query: { $0 }, effects: { _ in
-                timer.map { _ in 1 }
-        })
+        let player: Feedback = react(request: { $0 }, effects: { _ in timer.map { _ in 1 } })
 
         let mockUIBindings: Feedback = RxFeedback.bind { state in
             let subscriptions: [Disposable] = [
@@ -388,9 +385,9 @@ extension RxFeedbackObservableTests {
         testScheduler.start()
         let correct = [
             next(1, 0),
-            next(54, 1),
-            next(106, 2),
-            next(158, 3),
+            next(53, 1),
+            next(104, 2),
+            next(155, 3),
         ]
         XCTAssertEqual(observer.events, correct)
         XCTAssertEqual(subscriptionState, [0, 1, 2, 3])
@@ -431,7 +428,7 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                childQuery: { (state: [TestChild]) in state },
+                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                 effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { "Got \($0.value)" }
@@ -481,7 +478,7 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                childQuery: { (state: [TestChild]) in state },
+                requests: { (state: [TestChild]) in state.indexBy { $0.identifier }},
                 effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { "Got \($0.value)" }
@@ -526,7 +523,7 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                childQuery: { (state: [TestChild]) in state },
+                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                 effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state
@@ -571,7 +568,7 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                childQuery: { (state: [TestChild]) in state },
+                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                 effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map {
@@ -586,7 +583,7 @@ extension RxFeedbackObservableTests {
             )(context)
         }
 
-        XCTAssertEqual(verify, [
+        XCTAssertTrue(verify == [
             Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
@@ -594,9 +591,21 @@ extension RxFeedbackObservableTests {
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 221, value: SignificantEvent.disposedSource),
             Recorded(time: 221, value: SignificantEvent.disposed(id: 1))
+        ] || verify == [
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
+            Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
+            Recorded(time: 221, value: SignificantEvent.disposedSource),
+            Recorded(time: 221, value: SignificantEvent.disposed(id: 1))
         ])
 
-        XCTAssertEqual(results.events, [
+        XCTAssertTrue(results.events == [
+            next(211, "Got 1"),
+            next(211, "Got 2"),
+            error(221, TestError.error1)
+        ] || results.events == [
             next(211, "Got 1"),
             next(211, "Got 2"),
             error(221, TestError.error1)
@@ -623,7 +632,7 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                childQuery: { (state: [TestChild]) in state },
+                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                 effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { childState -> Event<String> in
@@ -639,7 +648,7 @@ extension RxFeedbackObservableTests {
             )(context)
         }
 
-        XCTAssertEqual(verify, [
+        XCTAssertTrue(verify == [
             Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
@@ -647,11 +656,22 @@ extension RxFeedbackObservableTests {
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
             Recorded(time: 1000, value: SignificantEvent.disposedSource),
+        ] || verify == [
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
+            Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
+            Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
+            Recorded(time: 1000, value: SignificantEvent.disposedSource),
         ])
 
-        XCTAssertEqual(results.events, [
+        XCTAssertTrue(results.events == [
             next(211, "Got 1"),
             next(211, "Got 2"),
+        ] || results.events == [
+            next(211, "Got 2"),
+            next(211, "Got 1"),
         ])
     }
 
@@ -674,7 +694,7 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             let result = react(
-                childQuery: { (state: [TestChild]) in state },
+                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
                 effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { childState -> Event<String> in
@@ -700,7 +720,15 @@ extension RxFeedbackObservableTests {
             }
         }
 
-        XCTAssertEqual(verify, [
+        XCTAssertTrue(verify == [
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
+            Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
+            Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
+            Recorded(time: 220, value: SignificantEvent.disposedSource),
+        ] || verify == [
             Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
@@ -710,14 +738,23 @@ extension RxFeedbackObservableTests {
             Recorded(time: 220, value: SignificantEvent.disposedSource),
         ])
 
-        XCTAssertEqual(results.events, [
+        XCTAssertTrue(results.events == [
             next(211, "Got 1"),
             next(211, "Got 2"),
-            ])
+        ] || results.events == [
+            next(211, "Got 2"),
+            next(211, "Got 1"),
+        ])
     }
 }
 
-struct TestChild: Equatable, Identifiable {
+extension Array {
+    func indexBy<Key>(_ keySelector: (Element) -> Key) -> [Key: Element] {
+        return Dictionary(self.map { (keySelector($0), $0) }, uniquingKeysWith: { first, _ in first })
+    }
+}
+
+struct TestChild: Equatable {
     var identifier: Int
     var value: String
 }

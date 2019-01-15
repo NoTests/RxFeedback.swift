@@ -18,7 +18,7 @@ extension Todo {
                        ui: @escaping Feedback,
                        synchronizeTask: @escaping (Task) -> Single<SyncState>) -> Driver<Todo> {
 
-        let synchronizeFeedback: Feedback = react(query: { $0.tasksToSynchronize }) { task -> Signal<Todo.Mutation> in
+        let synchronizeFeedback: Feedback = react(requests: { $0.tasksToSynchronize }) { task -> Signal<Todo.Mutation> in
             return synchronizeTask(task.value)
                 .map { Todo.Mutation.synchronizationChanged(task, $0) }
                 .asSignal(onErrorRecover: { error in Signal.just(.synchronizationChanged(task, .failed(error)))

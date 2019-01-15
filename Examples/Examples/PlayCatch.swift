@@ -55,13 +55,13 @@ class PlayCatchViewController: UIViewController {
                 case .throwToHuman:
                     return .humanHasIt
                 }
-        },
+            },
             scheduler: MainScheduler.instance,
             scheduledFeedback:
                 // UI is human feedback
                 bindUI,
                 // NoUI, machine feedback
-                react(query: { $0.machinePitching }, effects: { () -> Observable<Mutation> in
+                react(request: { $0.machinePitching }, effects: { (_) -> Observable<Mutation> in
                     return Observable<Int>
                         .timer(1.0, scheduler: MainScheduler.instance)
                         .map { _ in Mutation.throwToHuman }
@@ -100,7 +100,9 @@ extension State {
         }
     }
 
-    var machinePitching: ()? {
-        return self == .machineHasIt ? () : nil
+    var machinePitching: PitchRequest? {
+        return self == .machineHasIt ? PitchRequest() : nil
     }
 }
+
+struct PitchRequest: Equatable {}

@@ -93,7 +93,7 @@ Observable.system(
         // UI is human feedback
         bindUI,
         // NoUI, machine feedback
-        react(query: { $0.machinePitching }, effects: { () -> Observable<Mutation> in
+        react(request: { $0.machinePitching }, effects: { () -> Observable<Mutation> in
             return Observable<Int>
                 .timer(1.0, scheduler: MainScheduler.instance)
                 .map { _ in Mutation.throwToHuman }
@@ -114,7 +114,7 @@ Driver.system(
         // UI, user feedback
         bindUI,
         // NoUI, automatic feedback
-        react(query: { $0.loadNextPage }, effects: { resource in
+        react(request: { $0.loadNextPage }, effects: { resource in
             return URLSession.shared.loadRepositories(resource: resource)
                 .asDriver(onErrorJustReturn: .failure(.offline))
                 .map(Mutation.response)

@@ -9,9 +9,9 @@
 import Foundation
 
 extension String {
-    var needsToAppendDot: ()? {
+    var needsToAppendDot: Bool? {
         if self == "initial" || self == "initial_." || self == "initial_._." {
-            return ()
+            return true
         }
         else {
             return nil
