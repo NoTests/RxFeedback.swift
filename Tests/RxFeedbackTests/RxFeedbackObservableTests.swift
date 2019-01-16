@@ -24,7 +24,7 @@ extension RxFeedbackObservableTests {
                 oldState + "_" + append
             },
             scheduler: scheduler,
-            scheduledFeedback: { _ in .just("a") })
+            feedback: { _ in .just("a") })
 
         let results = try! system
             .take(2)
@@ -47,7 +47,7 @@ extension RxFeedbackObservableTests {
                 newState
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: [])
+            feedback: [])
 
         var state = ""
         _ = system.subscribe(
@@ -65,7 +65,7 @@ extension RxFeedbackObservableTests {
                 oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: { stateAndScheduler in
+            feedback: { stateAndScheduler in
                 stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
                         return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
@@ -80,7 +80,7 @@ extension RxFeedbackObservableTests {
                         return Observable.never()
                     }
                 }
-        })
+            })
 
         let result = (
             try?
@@ -123,7 +123,7 @@ extension RxFeedbackObservableTests {
                 oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (
             try?
@@ -159,7 +159,7 @@ extension RxFeedbackObservableTests {
                 oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (
             try?
@@ -189,7 +189,7 @@ extension RxFeedbackObservableTests {
                 oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (
             try?
@@ -219,7 +219,7 @@ extension RxFeedbackObservableTests {
                 oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: feedbackLoop, feedbackLoop, feedbackLoop)
+            feedback: feedbackLoop, feedbackLoop, feedbackLoop)
 
         let result = (
             try?
@@ -261,7 +261,7 @@ extension RxFeedbackObservableTests {
                 oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: RxFeedback.bind { stateAndScheduler in
+            feedback: RxFeedback.bind { stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
                         return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
@@ -278,7 +278,7 @@ extension RxFeedbackObservableTests {
                 }
 
                 return Bindings(subscriptions: [], mutations: [results])
-        })
+            })
 
         let result = (
             try?
@@ -306,7 +306,7 @@ extension RxFeedbackObservableTests {
                 oldState + append
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback: RxFeedback.bind(owner) { _, stateAndScheduler in
+            feedback: RxFeedback.bind(owner) { _, stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
                         return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
@@ -323,7 +323,7 @@ extension RxFeedbackObservableTests {
                 }
 
                 return Bindings(subscriptions: [], mutations: [results])
-        })
+            })
 
         let result = (
             try?
@@ -374,7 +374,7 @@ extension RxFeedbackObservableTests {
                 oldState + mutation
             },
             scheduler: testScheduler,
-            scheduledFeedback: mockUIBindings, player)
+            feedback: mockUIBindings, player)
 
         let observer = testScheduler.createObserver(Int.self)
         _ = system.subscribe(observer)

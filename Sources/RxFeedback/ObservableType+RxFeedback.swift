@@ -15,21 +15,21 @@ extension ObservableType where E == Any {
     public typealias FeedbackLoop = Feedback
 
     /**
-     System simulation will be started upon subscription and stopped after subscription is disposed.
+     The system simulation will be started upon subscription and stopped after subscription is disposed.
 
      System state is represented as a `State` parameter.
      Mutations are represented by `Mutation` parameter.
 
-     - parameter initialState: Initial state of the system.
-     - parameter accumulator: Calculates new system state from existing state and a transition mutation (system integrator, reducer).
-     - parameter feedback: Feedback loops that produce mutations depending on current system state.
-     - returns: Current state of the system.
+     - parameter initialState: The initial state of the system.
+     - parameter reduce: Calculates the new system state from the existing state and a transition mutation (system integrator, reducer).
+     - parameter feedback: The feedback loops that produce mutations depending on the current system state.
+     - returns: The current state of the system.
      */
     public static func system<State, Mutation>(
         initialState: State,
         reduce: @escaping (State, Mutation) -> State,
         scheduler: ImmediateSchedulerType,
-        scheduledFeedback: [Feedback<State, Mutation>]
+        feedback: [Feedback<State, Mutation>]
     ) -> Observable<State> {
         return Observable<State>.deferred {
             let replaySubject = ReplaySubject<State>.create(bufferSize: 1)
@@ -37,7 +37,7 @@ extension ObservableType where E == Any {
             let asyncScheduler = scheduler.async
 
             let mutations: Observable<Mutation> = Observable.merge(
-                scheduledFeedback.map { feedback in
+                feedback.map { feedback in
                     let state = ObservableSchedulerContext(source: replaySubject.asObservable(), scheduler: asyncScheduler)
                     return feedback(state)
                 }
@@ -60,13 +60,24 @@ extension ObservableType where E == Any {
         }
     }
 
+    /**
+     The system simulation will be started upon subscription and stopped after subscription is disposed.
+
+     System state is represented as a `State` parameter.
+     Mutations are represented by `Mutation` parameter.
+
+     - parameter initialState: The initial state of the system.
+     - parameter reduce: Calculates the new system state from the existing state and a transition mutation (system integrator, reducer).
+     - parameter feedback: The feedback loops that produce mutations depending on the current system state.
+     - returns: The current state of the system.
+     */
     public static func system<State, Mutation>(
         initialState: State,
         reduce: @escaping (State, Mutation) -> State,
         scheduler: ImmediateSchedulerType,
-        scheduledFeedback: Feedback<State, Mutation>...
+        feedback: Feedback<State, Mutation>...
     ) -> Observable<State> {
-        return system(initialState: initialState, reduce: reduce, scheduler: scheduler, scheduledFeedback: scheduledFeedback)
+        return system(initialState: initialState, reduce: reduce, scheduler: scheduler, feedback: feedback)
     }
 }
 
@@ -75,15 +86,15 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
     public typealias Feedback<State, Mutation> = (Driver<State>) -> Signal<Mutation>
 
     /**
-     System simulation will be started upon subscription and stopped after subscription is disposed.
+     The system simulation will be started upon subscription and stopped after subscription is disposed.
 
      System state is represented as a `State` parameter.
      Mutations are represented by `Mutation` parameter.
 
-     - parameter initialState: Initial state of the system.
-     - parameter accumulator: Calculates new system state from existing state and a transition mutation (system integrator, reducer).
-     - parameter feedback: Feedback loops that produce mutations depending on current system state.
-     - returns: Current state of the system.
+     - parameter initialState: The initial state of the system.
+     - parameter reduce: Calculates the new system state from the existing state and a transition mutation (system integrator, reducer).
+     - parameter feedback: The feedback loops that produce mutations depending on the current system state.
+     - returns: The current state of the system.
      */
     public static func system<State, Mutation>(
         initialState: State,
@@ -101,11 +112,22 @@ extension SharedSequenceConvertibleType where E == Any, SharingStrategy == Drive
             initialState: initialState,
             reduce: reduce,
             scheduler: SharingStrategy.scheduler,
-            scheduledFeedback: observableFeedbacks
+            feedback: observableFeedbacks
         )
         .asDriver(onErrorDriveWith: .empty())
     }
 
+    /**
+     The system simulation will be started upon subscription and stopped after subscription is disposed.
+
+     System state is represented as a `State` parameter.
+     Mutations are represented by `Mutation` parameter.
+
+     - parameter initialState: The initial state of the system.
+     - parameter reduce: Calculates the new system state from the existing state and a transition mutation (system integrator, reducer).
+     - parameter feedback: The feedback loops that produce mutations depending on the current system state.
+     - returns: The current state of the system.
+     */
     public static func system<State, Mutation>(
         initialState: State,
         reduce: @escaping (State, Mutation) -> State,

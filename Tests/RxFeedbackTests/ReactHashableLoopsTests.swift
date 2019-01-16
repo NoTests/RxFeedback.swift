@@ -30,9 +30,9 @@ extension ReactHashableLoopsTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             scheduler: scheduler,
-            scheduledFeedback: feedback
+            feedback: feedback
         )
 
         // Run
@@ -61,9 +61,9 @@ extension ReactHashableLoopsTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             scheduler: scheduler,
-            scheduledFeedback: feedback, { _ in mutations.asObservable() }
+            feedback: feedback, { _ in mutations.asObservable() }
         )
 
         // Run
@@ -90,9 +90,9 @@ extension ReactHashableLoopsTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             scheduler: scheduler,
-            scheduledFeedback: feedback
+            feedback: feedback
         )
 
         // Run
@@ -136,9 +136,9 @@ extension ReactHashableLoopsTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             scheduler: scheduler,
-            scheduledFeedback: feedback1, feedback2
+            feedback: feedback1, feedback2
         )
 
         // Run
@@ -186,9 +186,9 @@ extension ReactHashableLoopsTests {
             initialState: "initial",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             scheduler: scheduler,
-            scheduledFeedback: feedback1, feedback2
+            feedback: feedback1, feedback2
         )
 
         // Run
@@ -239,9 +239,9 @@ extension ReactHashableLoopsTests {
             initialState: "",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             scheduler: scheduler,
-            scheduledFeedback: react(requests: requests, effects: effects),
+            feedback: react(requests: requests, effects: effects),
             { _ in initiator.asObservable() }
         )
 
@@ -309,9 +309,9 @@ extension ReactHashableLoopsTests {
             initialState: "",
             reduce: { oldState, append in
                 return  oldState + append
-        },
+            },
             scheduler: scheduler,
-            scheduledFeedback: react(requests: requests, effects: effects),
+            feedback: react(requests: requests, effects: effects),
             { _ in initiator.asObservable() }
         )
 
