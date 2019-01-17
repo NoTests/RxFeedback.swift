@@ -37,9 +37,9 @@ class CounterViewController: UIViewController {
                 case .decrement:
                     return state - 1
                 }
-        },
+            },
             scheduler: MainScheduler.instance,
-            scheduledFeedback:
+            feedback:
                 // UI is user feedback
                 bind(self) { me, state -> Bindings<Mutation> in
                     let subscriptions = [

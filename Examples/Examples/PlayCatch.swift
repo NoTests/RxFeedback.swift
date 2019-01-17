@@ -57,7 +57,7 @@ class PlayCatchViewController: UIViewController {
                 }
             },
             scheduler: MainScheduler.instance,
-            scheduledFeedback:
+            feedback:
                 // UI is human feedback
                 bindUI,
                 // NoUI, machine feedback
