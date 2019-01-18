@@ -606,8 +606,8 @@ extension RxFeedbackObservableTests {
             next(211, "Got 2"),
             error(221, TestError.error1)
         ] || results.events == [
-            next(211, "Got 1"),
             next(211, "Got 2"),
+            next(211, "Got 1"),
             error(221, TestError.error1)
         ])
     }
@@ -729,10 +729,10 @@ extension RxFeedbackObservableTests {
             Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
             Recorded(time: 220, value: SignificantEvent.disposedSource),
         ] || verify == [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
-            Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
             Recorded(time: 220, value: SignificantEvent.disposedSource),
