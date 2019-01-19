@@ -370,9 +370,9 @@ extension RxFeedbackDriverTests {
     func testReactRequestsWithLatest_Subscription() {
         let testScheduler = TestScheduler(initialClock: 0)
         SharingScheduler.mock(scheduler: testScheduler) {
-            var verify = [Recorded<SignificantEvent>]()
-            func happened(_ event: SignificantEvent) {
-                verify.append(Recorded(time: testScheduler.clock, value: event))
+            var recordedEvents = [Recorded<SignificantEvent>]()
+            func recordEvent(_ event: SignificantEvent) {
+                recordedEvents.append(Recorded(time: testScheduler.clock, value: event))
             }
 
             let results = testScheduler.start { () -> Observable<String> in
@@ -383,23 +383,23 @@ extension RxFeedbackDriverTests {
                         next(240, [TestRequest(identifier: 1, value: "3")]),
                     ])
                     .asDriver(onErrorJustReturn: [])
-                    .do(onDispose: { happened(.disposedSource) })
+                    .do(onDispose: { recordEvent(.disposedSource) })
                 return react(
                     requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestRequest, state: Driver<TestRequest>) -> Signal<String> in
-                        happened(.effects(calledWithInitial: initial))
+                        recordEvent(.effects(calledWithInitial: initial))
                         return state
                             .map { "Got \($0.value)" }
                             .do(
-                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
-                                onDispose: { happened(.disposed(id: initial.identifier)) }
+                                onSubscribed: { recordEvent(.subscribed(id: initial.identifier)) },
+                                onDispose: { recordEvent(.disposed(id: initial.identifier)) }
                             )
                             .asSignal(onErrorJustReturn: "")
                     }
                 )(source).asObservable()
             }
 
-            XCTAssertEqual(verify, [
+            XCTAssertEqual(recordedEvents, [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
                 Recorded(time: 231, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "3"))),
@@ -421,9 +421,9 @@ extension RxFeedbackDriverTests {
     func testReactRequestsWithLatest_Completed() {
         let testScheduler = TestScheduler(initialClock: 0)
         SharingScheduler.mock(scheduler: testScheduler) {
-            var verify = [Recorded<SignificantEvent>]()
-            func happened(_ event: SignificantEvent) {
-                verify.append(Recorded(time: testScheduler.clock, value: event))
+            var recordedEvents = [Recorded<SignificantEvent>]()
+            func recordEvent(_ event: SignificantEvent) {
+                recordedEvents.append(Recorded(time: testScheduler.clock, value: event))
             }
 
             let results = testScheduler.start { () -> Observable<String> in
@@ -433,22 +433,22 @@ extension RxFeedbackDriverTests {
                     next(230, [TestRequest(identifier: 0, value: "2")])
                 ])
                     .asDriver(onErrorJustReturn: [])
-                    .do(onDispose: { happened(.disposedSource) })
+                    .do(onDispose: { recordEvent(.disposedSource) })
                 return react(
                     requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestRequest, state: Driver<TestRequest>) -> Signal<String> in
-                        happened(.effects(calledWithInitial: initial))
+                        recordEvent(.effects(calledWithInitial: initial))
                         return state.map { "Got \($0.value)" }
                             .do(
-                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
-                                onDispose: { happened(.disposed(id: initial.identifier)) }
+                                onSubscribed: { recordEvent(.subscribed(id: initial.identifier)) },
+                                onDispose: { recordEvent(.disposed(id: initial.identifier)) }
                             )
                             .asSignal(onErrorJustReturn: "")
                         }
                     )(source).asObservable()
             }
 
-            XCTAssertEqual(verify, [
+            XCTAssertEqual(recordedEvents, [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
                 Recorded(time: 221, value: SignificantEvent.disposed(id: 0)),
@@ -465,9 +465,9 @@ extension RxFeedbackDriverTests {
     func testReactRequestsWithLatest_RequestCompleted() {
         let testScheduler = TestScheduler(initialClock: 0)
         SharingScheduler.mock(scheduler: testScheduler) {
-            var verify = [Recorded<SignificantEvent>]()
-            func happened(_ event: SignificantEvent) {
-                verify.append(Recorded(time: testScheduler.clock, value: event))
+            var recordedEvents = [Recorded<SignificantEvent>]()
+            func recordEvent(_ event: SignificantEvent) {
+                recordedEvents.append(Recorded(time: testScheduler.clock, value: event))
             }
 
             let results = testScheduler.start { () -> Observable<String> in
@@ -477,11 +477,11 @@ extension RxFeedbackDriverTests {
                         next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                     ])
                     .asDriver(onErrorJustReturn: [])
-                    .do(onDispose: { happened(.disposedSource) })
+                    .do(onDispose: { recordEvent(.disposedSource) })
                 return react(
                     requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestRequest, state: Driver<TestRequest>) -> Signal<String> in
-                        happened(.effects(calledWithInitial: initial))
+                        recordEvent(.effects(calledWithInitial: initial))
                         return state.asObservable()
                             .map { childState -> Event<String> in
                                 guard childState.value != "3" else { return .completed }
@@ -489,15 +489,15 @@ extension RxFeedbackDriverTests {
                             }
                             .dematerialize()
                             .do(
-                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
-                                onDispose: { happened(.disposed(id: initial.identifier)) }
+                                onSubscribed: { recordEvent(.subscribed(id: initial.identifier)) },
+                                onDispose: { recordEvent(.disposed(id: initial.identifier)) }
                             )
                             .asSignal(onErrorJustReturn: "")
                         }
                 )(source).asObservable()
             }
 
-            XCTAssertTrue(verify == [
+            XCTAssertTrue(recordedEvents == [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
@@ -505,7 +505,7 @@ extension RxFeedbackDriverTests {
                 Recorded(time: 222, value: SignificantEvent.disposed(id: 0)),
                 Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
                 Recorded(time: 1000, value: SignificantEvent.disposedSource),
-            ] || verify == [
+            ] || recordedEvents == [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 1)),
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
@@ -528,9 +528,9 @@ extension RxFeedbackDriverTests {
     func testReactRequestsWithLatest_Dispose() {
         let testScheduler = TestScheduler(initialClock: 0)
         SharingScheduler.mock(scheduler: testScheduler) {
-            var verify = [Recorded<SignificantEvent>]()
-            func happened(_ event: SignificantEvent) {
-                verify.append(Recorded(time: testScheduler.clock, value: event))
+            var recordedEvents = [Recorded<SignificantEvent>]()
+            func recordEvent(_ event: SignificantEvent) {
+                recordedEvents.append(Recorded(time: testScheduler.clock, value: event))
             }
 
             let results = testScheduler.start { () -> Observable<String> in
@@ -539,17 +539,17 @@ extension RxFeedbackDriverTests {
                         next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                     ])
                     .asDriver(onErrorJustReturn: [])
-                    .do(onDispose: { happened(.disposedSource) })
+                    .do(onDispose: { recordEvent(.disposedSource) })
                 let result = react(
                     requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
                     effects: { (initial: TestRequest, state: Driver<TestRequest>) -> Signal<String> in
-                        happened(.effects(calledWithInitial: initial))
+                        recordEvent(.effects(calledWithInitial: initial))
                         return state
                             .map { "Got \($0.value)" }
                             .do(
-                                onSubscribed: { happened(.subscribed(id: initial.identifier)) },
+                                onSubscribed: { recordEvent(.subscribed(id: initial.identifier)) },
                                 // Ignore identifier because the ordering is non deterministic.
-                                onDispose: { happened(.disposed(id: -1)) }
+                                onDispose: { recordEvent(.disposed(id: -1)) }
                             )
                             .asSignal(onErrorJustReturn: "")
                     }
@@ -567,7 +567,7 @@ extension RxFeedbackDriverTests {
                 }
             }
 
-            XCTAssertTrue(verify == [
+            XCTAssertTrue(recordedEvents == [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 0)),
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
@@ -575,7 +575,7 @@ extension RxFeedbackDriverTests {
                 Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
                 Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
                 Recorded(time: 220, value: SignificantEvent.disposedSource),
-            ] || verify == [
+            ] || recordedEvents == [
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
                 Recorded(time: 211, value: SignificantEvent.subscribed(id: 1)),
                 Recorded(time: 211, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
