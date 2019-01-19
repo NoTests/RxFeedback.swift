@@ -396,7 +396,7 @@ extension RxFeedbackObservableTests {
 }
 
 enum SignificantEvent: Equatable {
-    case effects(calledWithInitial: TestChild)
+    case effects(calledWithInitial: TestRequest)
     case subscribed(id: Int)
     case disposed(id: Int)
     case disposedSource
@@ -416,10 +416,10 @@ extension RxFeedbackObservableTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestChild(identifier: 0, value: "1")]),
-                    next(220, [TestChild(identifier: 0, value: "2")]),
-                    next(230, [TestChild(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
-                    next(240, [TestChild(identifier: 1, value: "3")]),
+                    next(210, [TestRequest(identifier: 0, value: "1")]),
+                    next(220, [TestRequest(identifier: 0, value: "2")]),
+                    next(230, [TestRequest(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
+                    next(240, [TestRequest(identifier: 1, value: "3")]),
                 ])
                 .asObservable()
                 .do(onDispose: { happened(.disposedSource) })
@@ -428,8 +428,8 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
-                effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
+                requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
+                effects: { (initial: TestRequest, state: Observable<TestRequest>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { "Got \($0.value)" }
                         .do(
@@ -441,9 +441,9 @@ extension RxFeedbackObservableTests {
         }
 
         XCTAssertEqual(verify, [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
-            Recorded(time: 230, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "3"))),
+            Recorded(time: 230, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "3"))),
             Recorded(time: 230, value: SignificantEvent.subscribed(id: 1)),
             Recorded(time: 240, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
@@ -467,9 +467,9 @@ extension RxFeedbackObservableTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestChild(identifier: 0, value: "1")]),
+                    next(210, [TestRequest(identifier: 0, value: "1")]),
                     error(220, TestError.error1),
-                    next(230, [TestChild(identifier: 0, value: "2")])
+                    next(230, [TestRequest(identifier: 0, value: "2")])
                 ])
                 .asObservable()
                 .do(onDispose: { happened(.disposedSource) })
@@ -478,8 +478,8 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                requests: { (state: [TestChild]) in state.indexBy { $0.identifier }},
-                effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
+                requests: { (state: [TestRequest]) in state.indexBy { $0.identifier }},
+                effects: { (initial: TestRequest, state: Observable<TestRequest>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { "Got \($0.value)" }
                         .do(
@@ -491,7 +491,7 @@ extension RxFeedbackObservableTests {
         }
 
         XCTAssertEqual(verify, [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposedSource),
@@ -512,9 +512,9 @@ extension RxFeedbackObservableTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestChild(identifier: 0, value: "1")]),
+                    next(210, [TestRequest(identifier: 0, value: "1")]),
                     completed(220),
-                    next(230, [TestChild(identifier: 0, value: "2")])
+                    next(230, [TestRequest(identifier: 0, value: "2")])
                 ])
                 .asObservable()
                 .do(onDispose: { happened(.disposedSource) })
@@ -523,8 +523,8 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
-                effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
+                requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
+                effects: { (initial: TestRequest, state: Observable<TestRequest>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state
                         .map { "Got \($0.value)" }
@@ -537,7 +537,7 @@ extension RxFeedbackObservableTests {
         }
 
         XCTAssertEqual(verify, [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposedSource),
@@ -549,7 +549,7 @@ extension RxFeedbackObservableTests {
         ])
     }
 
-    func testReactRequestsWithLatest_ChildError() {
+    func testReactRequestsWithLatest_RequestError() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {
@@ -558,8 +558,10 @@ extension RxFeedbackObservableTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestChild(identifier: 0, value: "1"), TestChild(identifier: 1, value: "2")]),
-                    next(220, [TestChild(identifier: 0, value: "3"), TestChild(identifier: 1, value: "2")]),
+                    next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                    next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
+                    // This should be ignored.
+                    next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                 ])
                 .asObservable()
                 .do(onDispose: { happened(.disposedSource) })
@@ -568,8 +570,8 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
-                effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
+                requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
+                effects: { (initial: TestRequest, state: Observable<TestRequest>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map {
                             guard $0.value != "3" else { throw TestError.error1 }
@@ -584,17 +586,17 @@ extension RxFeedbackObservableTests {
         }
 
         XCTAssertTrue(verify == [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 221, value: SignificantEvent.disposedSource),
             Recorded(time: 221, value: SignificantEvent.disposed(id: 1))
         ] || verify == [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 221, value: SignificantEvent.disposedSource),
@@ -612,7 +614,7 @@ extension RxFeedbackObservableTests {
         ])
     }
 
-    func testReactRequestsWithLatest_ChildCompleted() {
+    func testReactRequestsWithLatest_RequestCompleted() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {
@@ -621,9 +623,9 @@ extension RxFeedbackObservableTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestChild(identifier: 0, value: "1"), TestChild(identifier: 1, value: "2")]),
-                    next(220, [TestChild(identifier: 0, value: "3"), TestChild(identifier: 1, value: "2")]),
-                    next(230, [TestChild(identifier: 0, value: "4"), TestChild(identifier: 1, value: "2")]),
+                    next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                    next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
+                    next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                 ])
                 .asObservable()
                 .do(onDispose: { happened(.disposedSource) })
@@ -632,8 +634,8 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             return react(
-                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
-                effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
+                requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
+                effects: { (initial: TestRequest, state: Observable<TestRequest>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { childState -> Event<String> in
                             guard childState.value != "3" else { return .completed }
@@ -649,17 +651,17 @@ extension RxFeedbackObservableTests {
         }
 
         XCTAssertTrue(verify == [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
             Recorded(time: 1000, value: SignificantEvent.disposedSource),
         ] || verify == [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
@@ -684,8 +686,8 @@ extension RxFeedbackObservableTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestChild(identifier: 0, value: "1"), TestChild(identifier: 1, value: "2")]),
-                    next(230, [TestChild(identifier: 0, value: "4"), TestChild(identifier: 1, value: "2")]),
+                    next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                    next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                 ])
                 .asObservable()
                 .do(onDispose: { happened(.disposedSource) })
@@ -694,8 +696,8 @@ extension RxFeedbackObservableTests {
                 scheduler: testScheduler
             )
             let result = react(
-                requests: { (state: [TestChild]) in state.indexBy { $0.identifier } },
-                effects: { (initial: TestChild, state: Observable<TestChild>) -> Observable<String> in
+                requests: { (state: [TestRequest]) in state.indexBy { $0.identifier } },
+                effects: { (initial: TestRequest, state: Observable<TestRequest>) -> Observable<String> in
                     happened(.effects(calledWithInitial: initial))
                     return state.map { childState -> Event<String> in
                             guard childState.value != "3" else { return .completed }
@@ -721,17 +723,17 @@ extension RxFeedbackObservableTests {
         }
 
         XCTAssertTrue(verify == [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
             Recorded(time: 220, value: SignificantEvent.disposedSource),
         ] || verify == [
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 1, value: "2"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "2"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 1)),
-            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestChild(identifier: 0, value: "1"))),
+            Recorded(time: 210, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "1"))),
             Recorded(time: 210, value: SignificantEvent.subscribed(id: 0)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
             Recorded(time: 220, value: SignificantEvent.disposed(id: -1)),
@@ -754,7 +756,7 @@ extension Array {
     }
 }
 
-struct TestChild: Equatable {
+struct TestRequest: Equatable {
     var identifier: Int
     var value: String
 }
