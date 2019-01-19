@@ -407,7 +407,7 @@ enum TestError: Error {
 }
 
 extension RxFeedbackObservableTests {
-    func testReactChildList_Subscription() {
+    func testReactRequestsWithLatest_Subscription() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {
@@ -458,7 +458,7 @@ extension RxFeedbackObservableTests {
     }
 
 
-    func testReactChildList_Error() {
+    func testReactRequestsWithLatest_Error() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {
@@ -503,7 +503,7 @@ extension RxFeedbackObservableTests {
         ])
     }
 
-    func testReactChildList_Completed() {
+    func testReactRequestsWithLatest_Completed() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {
@@ -549,7 +549,7 @@ extension RxFeedbackObservableTests {
         ])
     }
 
-    func testReactChildList_ChildError() {
+    func testReactRequestsWithLatest_ChildError() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {
@@ -612,7 +612,7 @@ extension RxFeedbackObservableTests {
         ])
     }
 
-    func testReactChildList_ChildCompleted() {
+    func testReactRequestsWithLatest_ChildCompleted() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {
@@ -675,7 +675,7 @@ extension RxFeedbackObservableTests {
         ])
     }
 
-    func testReactChildList_Dispose() {
+    func testReactRequestsWithLatest_Dispose() {
         let testScheduler = TestScheduler(initialClock: 0)
         var verify = [Recorded<SignificantEvent>]()
         func happened(_ event: SignificantEvent) {

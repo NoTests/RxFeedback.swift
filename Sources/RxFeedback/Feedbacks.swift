@@ -11,17 +11,17 @@ import RxCocoa
 import RxSwift
 
 /**
- * State: State type of the system.
- * Request: Subset of state used to control the feedback loop.
+ State: State type of the system.
+ Request: Subset of state used to control the feedback loop.
 
  When `request` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
  In case new `request` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
  When `request` returns `nil`, feedback loops doesn't perform any effect.
 
- - parameter request: Part of state that controls feedback loop.
- - parameter effects: Chooses which effects to perform for certain request result.
- - returns: Feedback loop performing the effects.
+ - parameter request: The request to perform some effects.
+ - parameter effects: The request effects.
+ - returns: The feedback loop performing the effects.
  */
 public func react<State, Request: Equatable, Mutation>(
     request: @escaping (State) -> Request?,
@@ -36,17 +36,17 @@ public func react<State, Request: Equatable, Mutation>(
 }
 
 /**
- * State: State type of the system.
- * Request: Subset of state used to control the feedback loop.
+ State: State type of the system.
+ Request: Subset of state used to control the feedback loop.
 
  When `request` returns a value, that value is being passed into `effects` lambda to decide which effects should be performed.
  In case new `request` is different from the previous one, new effects are calculated by using `effects` lambda and then performed.
 
  When `request` returns `nil`, feedback loops doesn't perform any effect.
 
- - parameter request: Part of state that controls feedback loop.
- - parameter effects: Chooses which effects to perform for certain request result.
- - returns: Feedback loop performing the effects.
+ - parameter request: The request to perform some effects.
+ - parameter effects: The request effects.
+ - returns: The feedback loop performing the effects.
  */
 public func react<State, Request: Equatable, Mutation>(
     request: @escaping (State) -> Request?,
@@ -62,8 +62,8 @@ public func react<State, Request: Equatable, Mutation>(
 }
 
 /**
- * State: State type of the system.
- * Request: Subset of state used to control the feedback loop.
+ State: State type of the system.
+ Request: Subset of state used to control the feedback loop.
 
  When `request` returns some set of values, each value is being passed into `effects` lambda to decide which effects should be performed.
 
@@ -71,9 +71,9 @@ public func react<State, Request: Equatable, Mutation>(
  * Effects are cancelled for elements present in `old` request but not in `new` request.
  * In case new elements are present in `new` request (and not in `old` request) they are being passed to the `effects` lambda and resulting effects are being performed.
 
- - parameter requests: Part of state that controls feedback loop.
- - parameter effects: Chooses which effects to perform for certain request element.
- - returns: Feedback loop performing the effects.
+ - parameter requests: requests to perform some effects.
+ - parameter effects: The request effects.
+ - returns: The feedback loop performing the effects.
  */
 public func react<State, Request, Mutation>(
     requests: @escaping (State) -> Set<Request>,
@@ -87,8 +87,8 @@ public func react<State, Request, Mutation>(
 }
 
 /**
- * State: State type of the system.
- * Request: Subset of state used to control the feedback loop.
+ State: State type of the system.
+ Request: Subset of state used to control the feedback loop.
 
  When `request` returns some set of values, each value is being passed into `effects` lambda to decide which effects should be performed.
 
@@ -96,9 +96,9 @@ public func react<State, Request, Mutation>(
  * Effects are cancelled for elements present in `old` request but not in `new` request.
  * In case new elements are present in `new` request (and not in `old` request) they are being passed to the `effects` lambda and resulting effects are being performed.
 
- - parameter requests: Part of state that controls feedback loop.
- - parameter effects: Chooses which effects to perform for certain request element.
- - returns: Feedback loop performing the effects.
+ - parameter requests: Requests to perform some effects.
+ - parameter effects: The request effects.
+ - returns: The feedback loop performing the effects.
  */
 public func react<State, Request, Mutation>(
     requests: @escaping (State) -> Set<Request>,
@@ -206,18 +206,18 @@ enum DisposeState: Int32 {
 }
 
 /**
- * State: State type of the system.
- * Request: Subset of state used to control the feedback loop.
+ State: State type of the system.
+ Request: Subset of state used to control the feedback loop.
 
  For every uniquely identifiable request `effects` closure is invoked with the initial value of the request and future requests corresponding to the same identifier.
 
  Subsequent equal values of request are not emitted from the effects state parameter.
 
- - parameter requests: Selects requests.
- - parameter effects: Effects to perform per request identifier.
+ - parameter requests: Requests to perform some effects.
+ - parameter effects: The request effects.
  - parameter initial: Initial request.
  - parameter state: Latest request state.
- - returns: Feedback loop performing the effects.
+ - returns: The feedback loop performing the effects.
  */
 public func react<State, Request: Equatable, RequestID, Mutation>(
     requests: @escaping (State) -> [RequestID: Request],
@@ -253,18 +253,18 @@ public func react<State, Request: Equatable, RequestID, Mutation>(
 }
 
 /**
- * State: State type of the system.
- * Request: Subset of state used to control the feedback loop.
+ State: State type of the system.
+ Request: Subset of state used to control the feedback loop.
 
  For every uniquely identifiable request `effects` closure is invoked with the initial value of the request and future requests corresponding to the same identifier.
 
  Subsequent equal values of request are not emitted from the effects state parameter.
 
- - parameter requests: Selects requests.
- - parameter effects: Effects to perform per request identifier.
+ - parameter requests: Requests to perform some effects.
+ - parameter effects: The request effects.
  - parameter initial: Initial request.
  - parameter state: Latest request state.
- - returns: Feedback loop performing the effects.
+ - returns: The feedback loop performing the effects.
  */
 public func react<State, Request: Equatable, RequestID, Mutation>(
     requests: @escaping (State) -> [RequestID: Request],
