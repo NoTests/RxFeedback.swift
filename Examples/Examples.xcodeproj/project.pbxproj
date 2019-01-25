@@ -43,6 +43,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1E2CFDAD21FB44A7002543C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C8A56AD61AD7424700B4673B;
+			remoteInfo = RxSwift;
+		};
+		1E2CFDAF21FB44AA002543C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C80938F51B8A71760088E94D;
+			remoteInfo = RxCocoa;
+		};
 		1E5EB1EE21FB432A00396CAE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
@@ -154,20 +168,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = C8093B4B1B8A71F00088E94D;
 			remoteInfo = "RxBlocking-iOS";
-		};
-		C89B961B1EB6941900BDAB24 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C8A56AD61AD7424700B4673B;
-			remoteInfo = "RxSwift-iOS";
-		};
-		C89B96201EB6942400BDAB24 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C80938F51B8A71760088E94D;
-			remoteInfo = "RxCocoa-iOS";
 		};
 		E11E0E1F1F7674530031D189 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -445,9 +445,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				1E2CFDB021FB44AA002543C8 /* PBXTargetDependency */,
+				1E2CFDAE21FB44A7002543C8 /* PBXTargetDependency */,
 				C888B5561EB67EB000FA27B0 /* PBXTargetDependency */,
-				C89B961C1EB6941900BDAB24 /* PBXTargetDependency */,
-				C89B96211EB6942400BDAB24 /* PBXTargetDependency */,
 			);
 			name = Example;
 			productName = Example;
@@ -678,6 +678,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1E2CFDAE21FB44A7002543C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RxSwift;
+			targetProxy = 1E2CFDAD21FB44A7002543C8 /* PBXContainerItemProxy */;
+		};
+		1E2CFDB021FB44AA002543C8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RxCocoa;
+			targetProxy = 1E2CFDAF21FB44AA002543C8 /* PBXContainerItemProxy */;
+		};
 		1E5EB1EF21FB432A00396CAE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = RxSwift;
@@ -707,16 +717,6 @@
 			isa = PBXTargetDependency;
 			name = "RxBlocking-iOS";
 			targetProxy = C8996C751F40AD55004E5D83 /* PBXContainerItemProxy */;
-		};
-		C89B961C1EB6941900BDAB24 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "RxSwift-iOS";
-			targetProxy = C89B961B1EB6941900BDAB24 /* PBXContainerItemProxy */;
-		};
-		C89B96211EB6942400BDAB24 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "RxCocoa-iOS";
-			targetProxy = C89B96201EB6942400BDAB24 /* PBXContainerItemProxy */;
 		};
 		E11E0E201F7674530031D189 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
