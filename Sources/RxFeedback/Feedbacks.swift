@@ -6,7 +6,6 @@
 //  Copyright © 2017 Krunoslav Zaher. All rights reserved.
 //
 
-import RxAtomic
 import RxCocoa
 import RxSwift
 
@@ -198,11 +197,6 @@ fileprivate class RequestLifetimeTracking<Request: Equatable, RequestID: Hashabl
             state.lifetimeByIdentifier.values.forEach { $0.subscription.dispose() }
         }
     }
-}
-
-enum DisposeState: Int32 {
-    case subscribed = 0
-    case disposed = 1
 }
 
 /**

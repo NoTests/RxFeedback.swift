@@ -46,7 +46,7 @@ fileprivate struct State {
 fileprivate enum Mutation {
     case searchChanged(String)
     case response(SearchRepositoriesResponse)
-    case startLoadingNextPage
+    case scrollingNearBottom
 }
 
 // transitions
@@ -62,7 +62,7 @@ extension State {
             result.search = search
             result.results = []
             return result
-        case .startLoadingNextPage:
+        case .scrollingNearBottom:
             var result = state
             result.shouldLoadNextPage = true
             return result
@@ -116,7 +116,7 @@ class GithubPaginatedSearchViewController: UIViewController {
                     return Signal.empty()
                 }
                 
-                return searchResults.rx.nearBottom.map { _ in Mutation.startLoadingNextPage }
+                return searchResults.rx.nearBottom.map { _ in Mutation.scrollingNearBottom }
             }
         }
 
