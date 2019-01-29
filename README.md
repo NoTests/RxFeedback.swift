@@ -46,29 +46,35 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 
 ## Simple UI Feedback loop
 
+[Complete example](https://github.com/NoTests/RxFeedback.swift/blob/master/Examples/Examples/Counter.swift)
 ```swift
-Observable.system(
+ Observable.system(
     initialState: 0,
-    reduce: { (state: State, event: Event) -> State in
-            switch event {
-            case .increment:
-                return state + 1
-            case .decrement:
-                return state - 1
-            }
-        },
-    scheduler: MainScheduler.instance,
-    scheduledFeedback:
-        // UI is user feedback
-        bind { state in
-            ([
-                state.map(String.init).bind(to: label.rx.text)
-            ], [
-                plus.rx.tap.map { Mutation.increment },
-                minus.rx.tap.map { Mutation.decrement }
-            ])
+    reduce: { (state, event) -> State in
+        switch event {
+        case .increment:
+            return state + 1
+        case .decrement:
+            return state - 1
         }
-    )
+    },
+    scheduler: MainScheduler.instance,
+    feedback:
+        // UI is user feedback
+        bind(self) { me, state -> Bindings<Event> in
+            let subscriptions = [
+                state.map(String.init).bind(to: me.label.rx.text)
+            ]
+
+            let events = [
+                me.plus.rx.tap.map { Event.increment },
+                me.minus.rx.tap.map { Event.decrement }
+            ]
+
+            return Bindings(subscriptions: subscriptions,
+                            events: events)
+        }
+)
 ```
 
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/Counter.gif" width="320px" />
@@ -77,35 +83,36 @@ Observable.system(
 
 Simple automatic feedback loop.
 
+[Complete example](https://github.com/NoTests/RxFeedback.swift/blob/master/Examples/Examples/PlayCatch.swift)
 ```swift
 Observable.system(
     initialState: State.humanHasIt,
-    reduce: { (state: State, mutation: Mutation) -> State in
-        switch mutation {
-            case .throwToMachine:
-                return .machineHasIt
-            case .throwToHuman:
-                return .humanHasIt
-            }
-        },
+    reduce: { (state: State, event: Event) -> State in
+        switch event {
+        case .throwToMachine:
+            return .machineHasIt
+        case .throwToHuman:
+            return .humanHasIt
+        }
+    },
     scheduler: MainScheduler.instance,
-    scheduledFeedback:
+    feedback:
         // UI is human feedback
         bindUI,
         // NoUI, machine feedback
-        react(request: { $0.machinePitching }, effects: { () -> Observable<Mutation> in
+        react(request: { $0.machinePitching }, effects: { (_) -> Observable<Event> in
             return Observable<Int>
                 .timer(1.0, scheduler: MainScheduler.instance)
-                .map { _ in Mutation.throwToHuman }
+                .map { _ in Event.throwToHuman }
         })
 )
-
 ```
 
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/PlayCatch.gif" width="320px" />
 
 ## Paging
 
+[Complete example](https://github.com/NoTests/RxFeedback.swift/blob/master/Examples/Examples/GithubPaginatedSearch.swift)
 ```swift
 Driver.system(
     initialState: State.empty,
@@ -116,10 +123,10 @@ Driver.system(
         // NoUI, automatic feedback
         react(request: { $0.loadNextPage }, effects: { resource in
             return URLSession.shared.loadRepositories(resource: resource)
-                .asDriver(onErrorJustReturn: .failure(.offline))
-                .map(Mutation.response)
+                .asSignal(onErrorJustReturn: .failure(.offline))
+                .map(Event.response)
         })
-    )
+)
 ```
 
 Run `RxFeedback.xcodeproj` > `Example` to find out more.

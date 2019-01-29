@@ -277,7 +277,7 @@ extension RxFeedbackObservableTests {
                     }
                 }
 
-                return Bindings(subscriptions: [], mutations: [results])
+                return Bindings(subscriptions: [], events: [results])
             })
 
         let result = (
@@ -322,7 +322,7 @@ extension RxFeedbackObservableTests {
                     }
                 }
 
-                return Bindings(subscriptions: [], mutations: [results])
+                return Bindings(subscriptions: [], events: [results])
             })
 
         let result = (
@@ -365,7 +365,7 @@ extension RxFeedbackObservableTests {
                     .subscribe(onNext: { subscriptionState.append($0) }),
             ]
 
-            return Bindings(subscriptions: subscriptions, mutations: [Observable<Event>]())
+            return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
         }
 
         let system = Observable.system(

@@ -247,7 +247,7 @@ extension RxFeedbackDriverTests {
                     }
                 }
 
-                return Bindings(subscriptions: [], mutations: [results])
+                return Bindings(subscriptions: [], events: [results])
         })
 
         let result = (
@@ -291,7 +291,7 @@ extension RxFeedbackDriverTests {
                         return Signal.never()
                     }
                 }
-                return Bindings(subscriptions: [], mutations: [results])
+                return Bindings(subscriptions: [], events: [results])
         })
 
         let result = (
@@ -337,7 +337,7 @@ extension RxFeedbackDriverTests {
                 let subscriptions: [Disposable] = [
                     state.drive(onNext: { subscriptionState.append($0) }),
                 ]
-                return Bindings(subscriptions: subscriptions, mutations: [Observable<Event>]())
+                return Bindings(subscriptions: subscriptions, events: [Observable<Event>]())
             }
             let system = Driver.system(
                 initialState: 0,
