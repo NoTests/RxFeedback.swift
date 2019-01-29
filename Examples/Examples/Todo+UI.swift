@@ -63,12 +63,12 @@ extension TodoViewController {
         let promptForTask = UIAlertController.prompt(message: "Please enter task name", title: "Adding task", actions: [AlertAction.ok, AlertAction.cancel], parent: self) { controller in
             controller.addTextField(configurationHandler: nil)
         }
-            .flatMapLatest { (controller, action) -> Observable<Todo.Mutation> in
+            .flatMapLatest { (controller, action) -> Observable<Todo.Event> in
                 guard case .ok = action else {
                     return Observable.empty()
                 }
                 let task = Version(Task.create(title: controller.textFields?.first?.text ?? "", date: Date()))
-                return Observable.just(Todo.Mutation.created(task))
+                return Observable.just(Todo.Event.created(task))
             }
 
         let tableView = self.tableView!
@@ -85,19 +85,19 @@ extension TodoViewController {
                 editButtonTitle.drive(editDone.rx.title)
             ]
 
-            let mutations = [
-                editDone.rx.tap.asSignal().map { _ in Todo.Mutation.toggleEditingMode },
+            let events = [
+                editDone.rx.tap.asSignal().map { _ in Todo.Event.toggleEditingMode },
                 tableView.rx.modelSelected(Row.self).asSignal()
-                    .flatMapLatest { row in row.selectedMutation(prompt: promptForTask) },
+                    .flatMapLatest { row in row.selectedEvent(prompt: promptForTask) },
                 tableView.rx.itemDeleted.asSignal()
-                    .flatMapLatest { (try! tableView.rx.model(at: $0) as Row).deletedMutation },
+                    .flatMapLatest { (try! tableView.rx.model(at: $0) as Row).deletedEvent },
                 tableView.rx.itemInserted.asSignal()
                     .flatMapLatest { _ in
                         return promptForTask.asSignal(onErrorSignalWith: Signal.empty())
                     }
             ]
 
-            return Bindings(subscriptions: subscriptions, mutations: mutations)
+            return Bindings(subscriptions: subscriptions, events: events)
         }
     }
 }
@@ -150,18 +150,18 @@ extension Row {
         }
     }
 
-    func selectedMutation(prompt: Observable<Todo.Mutation>) -> Signal<Todo.Mutation> {
+    func selectedEvent(prompt: Observable<Todo.Event>) -> Signal<Todo.Event> {
         switch self {
         case .new: return prompt.asSignal(onErrorSignalWith: Signal.empty())
-        case .task(let task): return Signal.just(Todo.Mutation.toggleCompleted(task))
+        case .task(let task): return Signal.just(Todo.Event.toggleCompleted(task))
         }
     }
 
-    var deletedMutation: Signal<Todo.Mutation> {
+    var deletedEvent: Signal<Todo.Event> {
         get {
             switch self {
             case .new: return Signal.empty()
-            case .task(let task): return Signal.just(Todo.Mutation.archive(task))
+            case .task(let task): return Signal.just(Todo.Event.archive(task))
             }
         }
     }

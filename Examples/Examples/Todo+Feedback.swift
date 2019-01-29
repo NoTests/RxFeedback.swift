@@ -12,15 +12,15 @@ import RxCocoa
 import RxFeedback
 
 extension Todo {
-    typealias Feedback = (Driver<Todo>) -> Signal<Todo.Mutation>
+    typealias Feedback = (Driver<Todo>) -> Signal<Todo.Event>
     
     static func system(initialState: Todo,
                        ui: @escaping Feedback,
                        synchronizeTask: @escaping (Task) -> Single<SyncState>) -> Driver<Todo> {
 
-        let synchronizeFeedback: Feedback = react(requests: { $0.tasksToSynchronize }) { task -> Signal<Todo.Mutation> in
+        let synchronizeFeedback: Feedback = react(requests: { $0.tasksToSynchronize }) { task -> Signal<Todo.Event> in
             return synchronizeTask(task.value)
-                .map { Todo.Mutation.synchronizationChanged(task, $0) }
+                .map { Todo.Event.synchronizationChanged(task, $0) }
                 .asSignal(onErrorRecover: { error in Signal.just(.synchronizationChanged(task, .failed(error)))
                 })
         }

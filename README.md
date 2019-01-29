@@ -9,21 +9,21 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 <img src="https://github.com/kzaher/rxswiftcontent/raw/master/RxFeedback.png" width="502px" />
 
 ```swift
-    typealias Feedback<State, Mutation> = (Observable<State>) -> Observable<Mutation>
+    typealias Feedback<State, Event> = (Observable<State>) -> Observable<Event>
 
-    public static func system<State, Mutation>(
-            initialState: State,
-            reduce: @escaping (State, Mutation) -> State,
-            feedback: Feedback<State, Mutation>...
-        ) -> Observable<State>
+    public static func system<State, Event>(
+        initialState: State,
+        reduce: @escaping (State, Event) -> State,
+        feedback: Feedback<State, Event>...
+    ) -> Observable<State>
 ```
 
 # Why
 
 * Straightforward
-    * if it's state -> State
-    * if it's a way to modify state -> Mutation/Command
-    * it it's an effect -> encode it into part of state and then design a feedback loop
+    * If it did happen -> Event
+    * If it should happen -> Request
+    * To fulfill Request -> Feedback loop
 * Declarative
     * System behavior is first declaratively specified and effects begin after subscribe is called => Compile time proof there are no "unhandled states"
 * Debugging is easier
@@ -49,8 +49,8 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
 ```swift
 Observable.system(
     initialState: 0,
-    reduce: { (state: State, mutation: Mutation) -> State in
-            switch mutation {
+    reduce: { (state: State, event: Event) -> State in
+            switch event {
             case .increment:
                 return state + 1
             case .decrement:

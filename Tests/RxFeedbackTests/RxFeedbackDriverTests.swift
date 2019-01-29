@@ -314,8 +314,8 @@ extension RxFeedbackDriverTests {
 
     func testBindingsAreNotDisposedWhenNoMutationsAreSpecifiedOnDriverSystem() {
         typealias State = Int
-        typealias Mutation = Int
-        typealias Feedback = (Driver<State>) -> Signal<Mutation>
+        typealias Event = Int
+        typealias Feedback = (Driver<State>) -> Signal<Event>
 
         let testScheduler = TestScheduler(initialClock: 0)
         var testableObserver: TestableObserver<Int>!
@@ -337,12 +337,12 @@ extension RxFeedbackDriverTests {
                 let subscriptions: [Disposable] = [
                     state.drive(onNext: { subscriptionState.append($0) }),
                 ]
-                return Bindings(subscriptions: subscriptions, mutations: [Observable<Mutation>]())
+                return Bindings(subscriptions: subscriptions, mutations: [Observable<Event>]())
             }
             let system = Driver.system(
                 initialState: 0,
-                reduce: { oldState, mutation in
-                    oldState + mutation
+                reduce: { oldState, event in
+                    oldState + event
                 },
                 feedback: mockUIBindings, player)
 

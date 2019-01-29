@@ -344,8 +344,8 @@ extension RxFeedbackObservableTests {
 
     func testBindingsAreNotDisposedWhenNoMutationsAreSpecifiedOnObservableSystem() {
         typealias State = Int
-        typealias Mutation = Int
-        typealias Feedback = (ObservableSchedulerContext<State>) -> Observable<Mutation>
+        typealias Event = Int
+        typealias Feedback = (ObservableSchedulerContext<State>) -> Observable<Event>
 
         let testScheduler = TestScheduler(initialClock: 0)
         let timer = testScheduler.createColdObservable(
@@ -365,13 +365,13 @@ extension RxFeedbackObservableTests {
                     .subscribe(onNext: { subscriptionState.append($0) }),
             ]
 
-            return Bindings(subscriptions: subscriptions, mutations: [Observable<Mutation>]())
+            return Bindings(subscriptions: subscriptions, mutations: [Observable<Event>]())
         }
 
         let system = Observable.system(
             initialState: 0,
-            reduce: { oldState, mutation in
-                oldState + mutation
+            reduce: { oldState, event in
+                oldState + event
             },
             scheduler: testScheduler,
             feedback: mockUIBindings, player)

@@ -3,17 +3,10 @@ Pod::Spec.new do |s|
   s.version      = "1.1.1"
   s.summary      = "Simplest architecture for RxSwift. State + feedback loops."
   s.description  = <<-DESC
-    Simplest architecture for RxSwift. State + feedback loops.
-    
-    * Simple
-        * If the system doesn't have state -> congrats, you have either a pure function or an observable sequence
-        * It the system does have state, here we are :)
-        * Interaction with that state is by definition a feedback loop.
-        * =>  It's just state + CQRS
     * Straightforward
-        * if it's state -> State
-        * if it's a way to modify state -> Mutation
-        * it it's an effect -> encode it into part of state and then design a feedback loop
+        * If it did happen -> Event
+        * If it should happen -> Request
+        * To fulfill Request -> Feedback loop
     * Declarative
         * System behavior is first declaratively specified and effects begin after subscribe is called => Compile time proof there are no "unhandled states"
     * Debugging is easier

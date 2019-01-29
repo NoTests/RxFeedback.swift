@@ -29,7 +29,7 @@ struct Task {
 }
 
 struct Todo {
-    enum Mutation {
+    enum Event {
         case created(Version<Task>)
         case toggleCompleted(Version<Task>)
         case archive(Version<Task>)
@@ -45,8 +45,8 @@ struct Todo {
 }
 
 extension Todo {
-    static func reduce(state: Todo, mutation: Mutation) -> Todo {
-        switch mutation {
+    static func reduce(state: Todo, event: Event) -> Todo {
+        switch event {
         case .created(let task):
             return state.map(task: task, transform: Version<Task>.mutate { _ in })
         case .toggleCompleted(let task):
@@ -64,7 +64,7 @@ extension Todo {
 extension Todo {
     static func `for`(tasks: [Task]) -> Todo {
         return tasks.reduce(Todo()) { (all, task) in
-            Todo.reduce(state: all, mutation: .created(Version(task)))
+            Todo.reduce(state: all, event: .created(Version(task)))
         }
     }
 }

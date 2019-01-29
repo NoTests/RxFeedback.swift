@@ -7,20 +7,20 @@
 //
 
 extension Task {
-    static func mutate(_ mutation: @escaping (inout Task) -> ()) -> (Task) -> Task {
+    static func mutate(_ event: @escaping (inout Task) -> ()) -> (Task) -> Task {
         return { task in
             var newTask = task
-            mutation(&newTask)
+            event(&newTask)
             return newTask
         }
     }
 }
 
 extension Version {
-    static func mutate(_ mutation: @escaping (inout Value) -> ()) -> (Version<Value>) -> Version<Value> {
+    static func mutate(_ event: @escaping (inout Value) -> ()) -> (Version<Value>) -> Version<Value> {
         return { version in
             var value = version.value
-            mutation(&value)
+            event(&value)
             return Version(value)
         }
     }

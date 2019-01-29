@@ -17,7 +17,7 @@ private enum State {
     case machineHasIt
 }
 
-private enum Mutation {
+private enum Event {
     case throwToMachine
     case throwToHuman
 }
@@ -32,24 +32,24 @@ class PlayCatchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let bindUI: (ObservableSchedulerContext<State>) -> Observable<Mutation> = bind(self) { me, state in
+        let bindUI: (ObservableSchedulerContext<State>) -> Observable<Event> = bind(self) { me, state in
             let subscriptions = [
                 state.map { $0.myStateOfMind }.bind(to: me.myLabel!.rx.text),
                 state.map { $0.machineStateOfMind }.bind(to: me.machinesLabel!.rx.text),
                 state.map { !$0.doIHaveTheBall }.bind(to: me.throwTheBallButton!.rx.isHidden),
             ]
 
-            let mutations = [
-                me.throwTheBallButton!.rx.tap.map { Mutation.throwToMachine }
+            let events = [
+                me.throwTheBallButton!.rx.tap.map { Event.throwToMachine }
             ]
 
-            return Bindings(subscriptions: subscriptions, mutations: mutations)
+            return Bindings(subscriptions: subscriptions, events: events)
         }
 
         Observable.system(
             initialState: State.humanHasIt,
-            reduce: { (state: State, mutation: Mutation) -> State in
-                switch mutation {
+            reduce: { (state: State, event: Event) -> State in
+                switch event {
                 case .throwToMachine:
                     return .machineHasIt
                 case .throwToHuman:
@@ -61,10 +61,10 @@ class PlayCatchViewController: UIViewController {
                 // UI is human feedback
                 bindUI,
                 // NoUI, machine feedback
-                react(request: { $0.machinePitching }, effects: { (_) -> Observable<Mutation> in
+                react(request: { $0.machinePitching }, effects: { (_) -> Observable<Event> in
                     return Observable<Int>
                         .timer(1.0, scheduler: MainScheduler.instance)
-                        .map { _ in Mutation.throwToHuman }
+                        .map { _ in Event.throwToHuman }
                 })
         )
         .subscribe()
