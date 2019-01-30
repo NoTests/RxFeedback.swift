@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E2F2DE02201DCFF00DEEE9C /* ReactWithLatestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2F2DDF2201DCFF00DEEE9C /* ReactWithLatestTests.swift */; };
 		52D6D9871BEFF229002C0205 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
 		C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
 		C83596441FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E2F2DDF2201DCFF00DEEE9C /* ReactWithLatestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactWithLatestTests.swift; sourceTree = "<group>"; };
 		52D6D97C1BEFF229002C0205 /* RxFeedback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxFeedback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6D9861BEFF229002C0205 /* RxFeedbackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RxFeedbackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8047ABB1F41099F0089721B /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				C8996C7B1F40D82A004E5D83 /* String+Test.swift */,
 				C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */,
 				C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */,
+				1E2F2DDF2201DCFF00DEEE9C /* ReactWithLatestTests.swift */,
 				C83596471FB24CAF00DC7B8F /* RxTest.swift */,
 			);
 			path = RxFeedbackTests;
@@ -322,6 +325,7 @@
 				C83596481FB24CAF00DC7B8F /* RxTest.swift in Sources */,
 				C8996C6B1F40A7A0004E5D83 /* RxFeedbackDriverTests.swift in Sources */,
 				C8996C6D1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift in Sources */,
+				1E2F2DE02201DCFF00DEEE9C /* ReactWithLatestTests.swift in Sources */,
 				C8996C7C1F40D82A004E5D83 /* String+Test.swift in Sources */,
 				C83596461FB2312D00DC7B8F /* ReactHashableLoopsTests.swift in Sources */,
 			);

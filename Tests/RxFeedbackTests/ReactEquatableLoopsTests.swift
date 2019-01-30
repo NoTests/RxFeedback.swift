@@ -12,8 +12,7 @@ import RxFeedback
 import RxSwift
 import RxTest
 
-class ReactEquatableLoopsTests: RxTest {
-}
+class ReactEquatableLoopsTests: RxTest {}
 
 // Tests on the react function with not an equatable or hashable Control.
 extension ReactEquatableLoopsTests {

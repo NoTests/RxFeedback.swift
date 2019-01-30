@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		52D6D9871BEFF229002C0205 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
 		C80987441EC4882E00EE2C23 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80987431EC4882E00EE2C23 /* Todo.swift */; };
 		C80987621EC4A28300EE2C23 /* Todo+Plumbing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809875E1EC49F7400EE2C23 /* Todo+Plumbing.swift */; };
 		C80987631EC4A28E00EE2C23 /* Todo+Lenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */; };
@@ -155,27 +154,6 @@
 			remoteGlobalIDString = 52D6D97B1BEFF229002C0205;
 			remoteInfo = "RxFeedback-iOS";
 		};
-		C8996C701F40AA49004E5D83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52D6D9731BEFF229002C0205 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52D6D97B1BEFF229002C0205;
-			remoteInfo = RxFeedback;
-		};
-		C8996C751F40AD55004E5D83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C8093B4B1B8A71F00088E94D;
-			remoteInfo = "RxBlocking-iOS";
-		};
-		E11E0E1F1F7674530031D189 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C834A8881EB67A8A00E6B15E /* Rx.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = C88FA4FD1C25C44800CCFEA4;
-			remoteInfo = "RxTest-iOS";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -196,7 +174,6 @@
 
 /* Begin PBXFileReference section */
 		52D6D97C1BEFF229002C0205 /* RxFeedback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxFeedback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		52D6D9861BEFF229002C0205 /* RxFeedbackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RxFeedbackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C80987431EC4882E00EE2C23 /* Todo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		C80987581EC4916000EE2C23 /* Todo+Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+Feedback.swift"; sourceTree = "<group>"; };
 		C809875C1EC49F4900EE2C23 /* Todo+Lenses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+Lenses.swift"; sourceTree = "<group>"; };
@@ -237,14 +214,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		52D6D9831BEFF229002C0205 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				52D6D9871BEFF229002C0205 /* RxFeedback.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C834A8731EB679FB00E6B15E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -274,7 +243,6 @@
 			isa = PBXGroup;
 			children = (
 				52D6D97C1BEFF229002C0205 /* RxFeedback.framework */,
-				52D6D9861BEFF229002C0205 /* RxFeedbackTests.xctest */,
 				C834A8761EB679FB00E6B15E /* Example.app */,
 			);
 			name = Products;
@@ -413,26 +381,6 @@
 			productReference = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		52D6D9851BEFF229002C0205 /* RxFeedbackTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 52D6D9931BEFF229002C0205 /* Build configuration list for PBXNativeTarget "RxFeedbackTests" */;
-			buildPhases = (
-				52D6D9821BEFF229002C0205 /* Sources */,
-				52D6D9831BEFF229002C0205 /* Frameworks */,
-				52D6D9841BEFF229002C0205 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E11E0E201F7674530031D189 /* PBXTargetDependency */,
-				C8996C761F40AD55004E5D83 /* PBXTargetDependency */,
-				C8996C711F40AA49004E5D83 /* PBXTargetDependency */,
-			);
-			name = RxFeedbackTests;
-			productName = RxFeedbackTests;
-			productReference = 52D6D9861BEFF229002C0205 /* RxFeedbackTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		C834A8751EB679FB00E6B15E /* Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C834A8851EB679FB00E6B15E /* Build configuration list for PBXNativeTarget "Example" */;
@@ -469,10 +417,6 @@
 						DevelopmentTeam = 783T66X79Y;
 						LastSwiftMigration = 0820;
 					};
-					52D6D9851BEFF229002C0205 = {
-						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
-					};
 					C834A8751EB679FB00E6B15E = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Manual;
@@ -504,7 +448,6 @@
 			projectRoot = "";
 			targets = (
 				52D6D97B1BEFF229002C0205 /* RxFeedback */,
-				52D6D9851BEFF229002C0205 /* RxFeedbackTests */,
 				C834A8751EB679FB00E6B15E /* Example */,
 				C83B7CCE1EB7BCE5003055E0 /* Dependencies */,
 			);
@@ -594,13 +537,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		52D6D9841BEFF229002C0205 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		C834A8741EB679FB00E6B15E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -639,13 +575,6 @@
 				C8576BEB214EE1F1000A62AE /* Deprecations.swift in Sources */,
 				C8576BEA214EE1F0000A62AE /* Feedbacks.swift in Sources */,
 				C8576BEC214EE1F1000A62AE /* ObservableType+RxFeedback.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52D6D9821BEFF229002C0205 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -706,21 +635,6 @@
 			isa = PBXTargetDependency;
 			target = 52D6D97B1BEFF229002C0205 /* RxFeedback */;
 			targetProxy = C888B5551EB67EB000FA27B0 /* PBXContainerItemProxy */;
-		};
-		C8996C711F40AA49004E5D83 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52D6D97B1BEFF229002C0205 /* RxFeedback */;
-			targetProxy = C8996C701F40AA49004E5D83 /* PBXContainerItemProxy */;
-		};
-		C8996C761F40AD55004E5D83 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "RxBlocking-iOS";
-			targetProxy = C8996C751F40AD55004E5D83 /* PBXContainerItemProxy */;
-		};
-		E11E0E201F7674530031D189 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "RxTest-iOS";
-			targetProxy = E11E0E1F1F7674530031D189 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -911,32 +825,6 @@
 			};
 			name = Release;
 		};
-		52D6D9941BEFF229002C0205 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS-Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = Debug;
-		};
-		52D6D9951BEFF229002C0205 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS-Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-			};
-			name = Release;
-		};
 		C834A8861EB679FB00E6B15E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1025,15 +913,6 @@
 			buildConfigurations = (
 				52D6D9911BEFF229002C0205 /* Debug */,
 				52D6D9921BEFF229002C0205 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		52D6D9931BEFF229002C0205 /* Build configuration list for PBXNativeTarget "RxFeedbackTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				52D6D9941BEFF229002C0205 /* Debug */,
-				52D6D9951BEFF229002C0205 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
