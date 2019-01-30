@@ -420,6 +420,8 @@ extension RxFeedbackObservableTests {
                     next(220, [TestRequest(identifier: 0, value: "2")]),
                     next(230, [TestRequest(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
                     next(240, [TestRequest(identifier: 1, value: "3")]),
+                    next(250, [TestRequest(identifier: 0, value: "2"), TestRequest(identifier: 1, value: "3")]),
+                    next(260, [TestRequest(identifier: 1, value: "3")]),
                 ])
                 .asObservable()
                 .do(onDispose: { recordEvent(.disposedSource) })
@@ -446,6 +448,9 @@ extension RxFeedbackObservableTests {
             Recorded(time: 230, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 1, value: "3"))),
             Recorded(time: 230, value: SignificantEvent.subscribed(id: 1)),
             Recorded(time: 240, value: SignificantEvent.disposed(id: 0)),
+            Recorded(time: 250, value: SignificantEvent.effects(calledWithInitial: TestRequest(identifier: 0, value: "2"))),
+            Recorded(time: 250, value: SignificantEvent.subscribed(id: 0)),
+            Recorded(time: 260, value: SignificantEvent.disposed(id: 0)),
             Recorded(time: 1000, value: SignificantEvent.disposed(id: 1)),
             Recorded(time: 1000, value: SignificantEvent.disposedSource),
         ])
@@ -454,6 +459,7 @@ extension RxFeedbackObservableTests {
             next(211, "Got 1"),
             next(221, "Got 2"),
             next(231, "Got 3"),
+            next(251, "Got 2"),
         ])
     }
 

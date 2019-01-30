@@ -183,6 +183,9 @@ fileprivate class RequestLifetimeTracking<Request: Equatable, RequestID: Hashabl
                 }
             }
 
+            lifetimeToUnsubscribeByIdentifier.keys.forEach {
+              state.lifetimeByIdentifier.removeValue(forKey: $0)
+            }
             lifetimeToUnsubscribeByIdentifier.values.forEach { $0.subscription.dispose() }
         }
     }
