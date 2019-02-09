@@ -1,5 +1,19 @@
 ## Master
 
+## [2.0.0](https://github.com/kzaher/RxFeedback/releases/tag/2.0.0)
+
+* Renames `Event` to `Mutation`.
+* Removes deprecated APIs.
+* Adds the most general version of feedback loop 
+```swift
+public func react<State, Request: Equatable, RequestID, Event>(
+    requests: @escaping (State) -> [RequestID: Request],
+    effects: @escaping (_ initial: Request, _ state: Observable<Request>) -> Observable<Event>
+) -> (ObservableSchedulerContext<State>) -> Observable<Event> {
+```
+* Simpler feedback loops are now just a specialization of the general one.
+* Removes hacky versions of feedback loops that existed because Swift compiler didn't generate automatic `Equality` conformance.
+
 ## [1.1.1](https://github.com/kzaher/RxFeedback/releases/tag/1.1.1)
 
 * Fixes problem building with Carthage. #41

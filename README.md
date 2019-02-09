@@ -71,8 +71,10 @@ The simplest architecture for [RxSwift](https://github.com/ReactiveX/RxSwift)
                 me.minus.rx.tap.map { Event.decrement }
             ]
 
-            return Bindings(subscriptions: subscriptions,
-                            events: events)
+            return Bindings(
+                subscriptions: subscriptions,
+                events: events
+            )
         }
 )
 ```
