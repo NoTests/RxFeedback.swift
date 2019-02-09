@@ -2,7 +2,7 @@
 
 ## [2.0.0](https://github.com/kzaher/RxFeedback/releases/tag/2.0.0)
 
-* Renames `Event` to `Mutation`.
+* Renames `Mutation` to `Event`.
 * Removes deprecated APIs.
 * Adds the most general version of feedback loop 
 ```swift
