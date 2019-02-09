@@ -116,7 +116,9 @@ class GithubPaginatedSearchViewController: UIViewController {
                     return Signal.empty()
                 }
                 
-                return searchResults.rx.nearBottom.map { _ in Event.scrollingNearBottom }
+                return searchResults.rx.nearBottom
+                    .skip(1)
+                    .map { _ in Event.scrollingNearBottom }
             }
         }
 
