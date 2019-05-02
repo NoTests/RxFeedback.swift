@@ -39,7 +39,7 @@ extension ReactEquatableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial")
+            Recorded.next(201, "initial")
             ])
     }
 
@@ -71,9 +71,9 @@ extension ReactEquatableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(211, "initial+"),
-            next(212, "initial+I_a"),
+            Recorded.next(201, "initial"),
+            Recorded.next(211, "initial+"),
+            Recorded.next(212, "initial+I_a"),
             ])
     }
 
@@ -99,8 +99,8 @@ extension ReactEquatableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(203, "initial_a")
+            Recorded.next(201, "initial"),
+            Recorded.next(203, "initial_a")
             ])
     }
 
@@ -145,9 +145,9 @@ extension ReactEquatableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(203, "initial_I_a"),
-            next(204, "initial_I_a_IA_b")
+            Recorded.next(201, "initial"),
+            Recorded.next(203, "initial_I_a"),
+            Recorded.next(204, "initial_I_a_IA_b")
             ])
     }
 
@@ -196,8 +196,8 @@ extension ReactEquatableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(203, "initial_I_b")
+            Recorded.next(201, "initial"),
+            Recorded.next(203, "initial_I_b")
             ])
         XCTAssertTrue(isEffects1Called)
     }

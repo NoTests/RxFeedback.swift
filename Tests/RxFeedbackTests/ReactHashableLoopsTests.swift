@@ -39,7 +39,7 @@ extension ReactHashableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial")
+            Recorded.next(201, "initial")
             ])
     }
 
@@ -71,9 +71,9 @@ extension ReactHashableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(211, "initial+"),
-            next(212, "initial+I_a"),
+            Recorded.next(201, "initial"),
+            Recorded.next(211, "initial+"),
+            Recorded.next(212, "initial+I_a"),
             ])
     }
 
@@ -99,8 +99,8 @@ extension ReactHashableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(203, "initial_a")
+            Recorded.next(201, "initial"),
+            Recorded.next(203, "initial_a")
             ])
     }
 
@@ -145,9 +145,9 @@ extension ReactHashableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(203, "initial_I_a"),
-            next(204, "initial_I_a_IA_b")
+            Recorded.next(201, "initial"),
+            Recorded.next(203, "initial_I_a"),
+            Recorded.next(204, "initial_I_a_IA_b")
             ])
     }
 
@@ -196,8 +196,8 @@ extension ReactHashableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, "initial"),
-            next(203, "initial_I_b")
+            Recorded.next(201, "initial"),
+            Recorded.next(203, "initial_I_b")
             ])
         XCTAssertTrue(isEffects1Called)
     }
@@ -217,19 +217,19 @@ extension ReactHashableLoopsTests {
         let effects: (String) -> Observable<String> = { request in
             if request == "_I" {
                 return Observable.just(request + "_done")
-                    .delay(20.0, scheduler: scheduler)
+                    .delay(.seconds(20), scheduler: scheduler)
             } else if request == "_I2" {
                 isEffects1Called = true
                 return Observable.just(request + "_done")
-                    .delay(30.0, scheduler: scheduler)
+                    .delay(.seconds(30), scheduler: scheduler)
             } else if request == "_I3" {
                 isEffects1Called = true
                 return Observable.just(request + "_done")
-                    .delay(30.0, scheduler: scheduler)
+                    .delay(.seconds(30), scheduler: scheduler)
             } else if request == "_I4" {
                 isEffects1Called = true
                 return Observable.just(request + "_done")
-                    .delay(30.0, scheduler: scheduler)
+                    .delay(.seconds(30), scheduler: scheduler)
             } else {
                 fatalError()
             }
@@ -272,10 +272,10 @@ extension ReactHashableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, ""),
-            next(211, ""),
-            next(216, "initial"),
-            next(237, "initial_I_done"),
+            Recorded.next(201, ""),
+            Recorded.next(211, ""),
+            Recorded.next(216, "initial"),
+            Recorded.next(237, "initial_I_done"),
             ])
         XCTAssertTrue(isEffects1Called)
     }
@@ -296,10 +296,10 @@ extension ReactHashableLoopsTests {
         let effects: (String) -> Observable<String> = { query in
             if query == "_I" {
                 return Observable.just(query + "_done")
-                    .delay(20.0, scheduler: scheduler)
+                    .delay(.seconds(20), scheduler: scheduler)
             } else if query == "_I2" {
                 return Observable.just(query + "_done")
-                    .delay(30.0, scheduler: scheduler)
+                    .delay(.seconds(30), scheduler: scheduler)
             } else {
                 fatalError()
             }
@@ -337,11 +337,11 @@ extension ReactHashableLoopsTests {
 
         // Test
         XCTAssertEqual(results.events, [
-            next(201, ""),
-            next(211, ""),
-            next(216, "initial"),
-            next(237, "initial_I_done"),
-            next(247, "initial_I_done_I2_done"),
+            Recorded.next(201, ""),
+            Recorded.next(211, ""),
+            Recorded.next(216, "initial"),
+            Recorded.next(237, "initial_I_done"),
+            Recorded.next(247, "initial_I_done_I2_done"),
             ])
     }
 }

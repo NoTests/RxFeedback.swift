@@ -401,7 +401,5 @@ private func bindingsStrongify<Event, O, WeakOwner>(_ owner: WeakOwner, _ bindin
 fileprivate struct ConstHashable<Value: Equatable>: Hashable {
     var value: Value
 
-    var hashValue: Int {
-        return 0
-    }
+    func hash(into hasher: inout Hasher) { }
 }

@@ -42,7 +42,7 @@ extension RxFeedbackDriverTests {
             feedback: { state in
                 state.flatMapLatest { state -> Signal<String> in
                     if state == "initial" {
-                        return Signal.just("_a").delay(0.01)
+                        return Signal.just("_a").delay(.milliseconds(1))
                     }
                     else if state == "initial_a" {
                         return Signal.just("_b")
@@ -61,7 +61,7 @@ extension RxFeedbackDriverTests {
                 system
                 .asObservable()
                 .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -103,7 +103,7 @@ extension RxFeedbackDriverTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -138,7 +138,7 @@ extension RxFeedbackDriverTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -167,7 +167,7 @@ extension RxFeedbackDriverTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(5), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -196,7 +196,7 @@ extension RxFeedbackDriverTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -234,7 +234,7 @@ extension RxFeedbackDriverTests {
             feedback: RxFeedback.bind { stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
-                        return Signal.just("_a").delay(0.01)
+                        return Signal.just("_a").delay(.milliseconds(1))
                     }
                     else if state == "initial_a" {
                         return Signal.just("_b")
@@ -255,7 +255,7 @@ extension RxFeedbackDriverTests {
                 system
                 .asObservable()
                 .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(5), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -279,7 +279,7 @@ extension RxFeedbackDriverTests {
             feedback: RxFeedback.bind(owner) { _, stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Signal<String> in
                     if state == "initial" {
-                        return Signal.just("_a").delay(0.01)
+                        return Signal.just("_a").delay(.milliseconds(1))
                     }
                     else if state == "initial_a" {
                         return Signal.just("_b")
@@ -299,7 +299,7 @@ extension RxFeedbackDriverTests {
                 system
                 .asObservable()
                 .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -322,8 +322,8 @@ extension RxFeedbackDriverTests {
         var subscriptionState: [Int] = []
         let timer = testScheduler.createColdObservable(
             [
-                next(50, 0),
-                completed(50),
+                Recorded.next(50, 0),
+                Recorded.completed(50),
         ])
             .asSignal(onErrorJustReturn: 0)
 
@@ -356,10 +356,10 @@ extension RxFeedbackDriverTests {
         }
 
         let correct = [
-            next(2, 0),
-            next(56, 1),
-            next(109, 2),
-            next(162, 3),
+            Recorded.next(2, 0),
+            Recorded.next(56, 1),
+            Recorded.next(109, 2),
+            Recorded.next(162, 3),
         ]
         XCTAssertEqual(testableObserver.events, correct)
         XCTAssertEqual(subscriptionState, [0, 1, 2, 3])
@@ -377,10 +377,10 @@ extension RxFeedbackDriverTests {
 
             let results = testScheduler.start { () -> Observable<String> in
                 let source = testScheduler.createHotObservable([
-                        next(210, [TestRequest(identifier: 0, value: "1")]),
-                        next(220, [TestRequest(identifier: 0, value: "2")]),
-                        next(230, [TestRequest(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
-                        next(240, [TestRequest(identifier: 1, value: "3")]),
+                        Recorded.next(210, [TestRequest(identifier: 0, value: "1")]),
+                        Recorded.next(220, [TestRequest(identifier: 0, value: "2")]),
+                        Recorded.next(230, [TestRequest(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
+                        Recorded.next(240, [TestRequest(identifier: 1, value: "3")]),
                     ])
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { recordEvent(.disposedSource) })
@@ -410,9 +410,9 @@ extension RxFeedbackDriverTests {
             ])
 
             XCTAssertEqual(results.events, [
-                next(215, "Got 1"),
-                next(225, "Got 2"),
-                next(235, "Got 3"),
+                Recorded.next(215, "Got 1"),
+                Recorded.next(225, "Got 2"),
+                Recorded.next(235, "Got 3"),
             ])
         }
     }
@@ -428,9 +428,9 @@ extension RxFeedbackDriverTests {
 
             let results = testScheduler.start { () -> Observable<String> in
                 let source = testScheduler.createHotObservable([
-                    next(210, [TestRequest(identifier: 0, value: "1")]),
-                    completed(220),
-                    next(230, [TestRequest(identifier: 0, value: "2")])
+                    Recorded.next(210, [TestRequest(identifier: 0, value: "1")]),
+                    Recorded.completed(220),
+                    Recorded.next(230, [TestRequest(identifier: 0, value: "2")])
                 ])
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { recordEvent(.disposedSource) })
@@ -456,8 +456,8 @@ extension RxFeedbackDriverTests {
             ])
 
             XCTAssertEqual(results.events, [
-                next(215, "Got 1"),
-                completed(222),
+                Recorded.next(215, "Got 1"),
+                Recorded.completed(222),
             ])
         }
     }
@@ -472,9 +472,9 @@ extension RxFeedbackDriverTests {
 
             let results = testScheduler.start { () -> Observable<String> in
                 let source = testScheduler.createHotObservable([
-                        next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
-                        next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
-                        next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
+                        Recorded.next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                        Recorded.next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
+                        Recorded.next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                     ])
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { recordEvent(.disposedSource) })
@@ -516,11 +516,11 @@ extension RxFeedbackDriverTests {
             ])
 
             XCTAssertTrue(results.events == [
-                next(215, "Got 1"),
-                next(216, "Got 2"),
+                Recorded.next(215, "Got 1"),
+                Recorded.next(216, "Got 2"),
             ] || results.events == [
-                next(215, "Got 2"),
-                next(216, "Got 1"),
+                Recorded.next(215, "Got 2"),
+                Recorded.next(216, "Got 1"),
             ])
         }
     }
@@ -535,8 +535,8 @@ extension RxFeedbackDriverTests {
 
             let results = testScheduler.start { () -> Observable<String> in
                 let source = testScheduler.createHotObservable([
-                        next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
-                        next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
+                        Recorded.next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                        Recorded.next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                     ])
                     .asDriver(onErrorJustReturn: [])
                     .do(onDispose: { recordEvent(.disposedSource) })
@@ -586,11 +586,11 @@ extension RxFeedbackDriverTests {
             ])
 
             XCTAssertTrue(results.events == [
-                next(215, "Got 1"),
-                next(216, "Got 2"),
+                Recorded.next(215, "Got 1"),
+                Recorded.next(216, "Got 2"),
             ] || results.events == [
-                next(215, "Got 2"),
-                next(216, "Got 1"),
+                Recorded.next(215, "Got 2"),
+                Recorded.next(216, "Got 1"),
             ])
         }
     }

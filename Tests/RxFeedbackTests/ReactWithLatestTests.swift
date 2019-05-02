@@ -35,12 +35,12 @@ extension ReactWithLatestLoopsTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestRequest(identifier: 0, value: "1")]),
-                    next(220, [TestRequest(identifier: 0, value: "2")]),
-                    next(230, [TestRequest(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
-                    next(240, [TestRequest(identifier: 1, value: "3")]),
-                    next(250, [TestRequest(identifier: 0, value: "2"), TestRequest(identifier: 1, value: "3")]),
-                    next(260, [TestRequest(identifier: 1, value: "3")]),
+                    Recorded.next(210, [TestRequest(identifier: 0, value: "1")]),
+                    Recorded.next(220, [TestRequest(identifier: 0, value: "2")]),
+                    Recorded.next(230, [TestRequest(identifier: 0, value: "2"), .init(identifier: 1, value: "3")]),
+                    Recorded.next(240, [TestRequest(identifier: 1, value: "3")]),
+                    Recorded.next(250, [TestRequest(identifier: 0, value: "2"), TestRequest(identifier: 1, value: "3")]),
+                    Recorded.next(260, [TestRequest(identifier: 1, value: "3")]),
                 ])
                 .asObservable()
                 .do(onDispose: { recordEvent(.disposedSource) })
@@ -75,10 +75,10 @@ extension ReactWithLatestLoopsTests {
         ])
 
         XCTAssertEqual(results.events, [
-            next(211, "Got 1"),
-            next(221, "Got 2"),
-            next(231, "Got 3"),
-            next(251, "Got 2"),
+            Recorded.next(211, "Got 1"),
+            Recorded.next(221, "Got 2"),
+            Recorded.next(231, "Got 3"),
+            Recorded.next(251, "Got 2"),
         ])
     }
 
@@ -92,9 +92,9 @@ extension ReactWithLatestLoopsTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestRequest(identifier: 0, value: "1")]),
-                    error(220, TestError.error1),
-                    next(230, [TestRequest(identifier: 0, value: "2")])
+                    Recorded.next(210, [TestRequest(identifier: 0, value: "1")]),
+                    Recorded.error(220, TestError.error1),
+                    Recorded.next(230, [TestRequest(identifier: 0, value: "2")])
                 ])
                 .asObservable()
                 .do(onDispose: { recordEvent(.disposedSource) })
@@ -123,8 +123,8 @@ extension ReactWithLatestLoopsTests {
         ])
 
         XCTAssertEqual(results.events, [
-            next(211, "Got 1"),
-            error(220, TestError.error1)
+            Recorded.next(211, "Got 1"),
+            Recorded.error(220, TestError.error1)
         ])
     }
 
@@ -137,9 +137,9 @@ extension ReactWithLatestLoopsTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestRequest(identifier: 0, value: "1")]),
-                    completed(220),
-                    next(230, [TestRequest(identifier: 0, value: "2")])
+                    Recorded.next(210, [TestRequest(identifier: 0, value: "1")]),
+                    Recorded.completed(220),
+                    Recorded.next(230, [TestRequest(identifier: 0, value: "2")])
                 ])
                 .asObservable()
                 .do(onDispose: { recordEvent(.disposedSource) })
@@ -169,8 +169,8 @@ extension ReactWithLatestLoopsTests {
         ])
 
         XCTAssertEqual(results.events, [
-            next(211, "Got 1"),
-            completed(220),
+            Recorded.next(211, "Got 1"),
+            Recorded.completed(220),
         ])
     }
 
@@ -183,10 +183,10 @@ extension ReactWithLatestLoopsTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
-                    next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
                     // This should be ignored.
-                    next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                 ])
                 .asObservable()
                 .do(onDispose: { recordEvent(.disposedSource) })
@@ -229,13 +229,13 @@ extension ReactWithLatestLoopsTests {
         ])
 
         XCTAssertTrue(results.events == [
-            next(211, "Got 1"),
-            next(211, "Got 2"),
-            error(221, TestError.error1)
+            Recorded.next(211, "Got 1"),
+            Recorded.next(211, "Got 2"),
+            Recorded.error(221, TestError.error1)
         ] || results.events == [
-            next(211, "Got 2"),
-            next(211, "Got 1"),
-            error(221, TestError.error1)
+            Recorded.next(211, "Got 2"),
+            Recorded.next(211, "Got 1"),
+            Recorded.error(221, TestError.error1)
         ])
     }
 
@@ -248,9 +248,9 @@ extension ReactWithLatestLoopsTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
-                    next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
-                    next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(220, [TestRequest(identifier: 0, value: "3"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                 ])
                 .asObservable()
                 .do(onDispose: { recordEvent(.disposedSource) })
@@ -294,11 +294,11 @@ extension ReactWithLatestLoopsTests {
         ])
 
         XCTAssertTrue(results.events == [
-            next(211, "Got 1"),
-            next(211, "Got 2"),
+            Recorded.next(211, "Got 1"),
+            Recorded.next(211, "Got 2"),
         ] || results.events == [
-            next(211, "Got 2"),
-            next(211, "Got 1"),
+            Recorded.next(211, "Got 2"),
+            Recorded.next(211, "Got 1"),
         ])
     }
 
@@ -311,8 +311,8 @@ extension ReactWithLatestLoopsTests {
 
         let results = testScheduler.start { () -> Observable<String> in
             let source = testScheduler.createHotObservable([
-                    next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
-                    next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(210, [TestRequest(identifier: 0, value: "1"), TestRequest(identifier: 1, value: "2")]),
+                    Recorded.next(230, [TestRequest(identifier: 0, value: "4"), TestRequest(identifier: 1, value: "2")]),
                 ])
                 .asObservable()
                 .do(onDispose: { recordEvent(.disposedSource) })
@@ -366,11 +366,11 @@ extension ReactWithLatestLoopsTests {
         ])
 
         XCTAssertTrue(results.events == [
-            next(211, "Got 1"),
-            next(211, "Got 2"),
+            Recorded.next(211, "Got 1"),
+            Recorded.next(211, "Got 2"),
         ] || results.events == [
-            next(211, "Got 2"),
-            next(211, "Got 1"),
+            Recorded.next(211, "Got 2"),
+            Recorded.next(211, "Got 1"),
         ])
     }
 }

@@ -68,7 +68,7 @@ extension RxFeedbackObservableTests {
             feedback: { stateAndScheduler in
                 stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
-                        return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
+                        return Observable.just("_a").delay(.milliseconds(10), scheduler: MainScheduler.instance)
                     }
                     else if state == "initial_a" {
                         return Observable.just("_b")
@@ -86,7 +86,7 @@ extension RxFeedbackObservableTests {
             try?
                 system
                 .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -129,7 +129,7 @@ extension RxFeedbackObservableTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -165,7 +165,7 @@ extension RxFeedbackObservableTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -195,7 +195,7 @@ extension RxFeedbackObservableTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -225,7 +225,7 @@ extension RxFeedbackObservableTests {
             try?
                 system
                 .asObservable()
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(5), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -264,7 +264,7 @@ extension RxFeedbackObservableTests {
             feedback: RxFeedback.bind { stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
-                        return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
+                        return Observable.just("_a").delay(.milliseconds(10), scheduler: MainScheduler.instance)
                     }
                     else if state == "initial_a" {
                         return Observable.just("_b")
@@ -284,7 +284,7 @@ extension RxFeedbackObservableTests {
             try?
                 system
                 .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -309,7 +309,7 @@ extension RxFeedbackObservableTests {
             feedback: RxFeedback.bind(owner) { _, stateAndScheduler in
                 let results = stateAndScheduler.flatMap { state -> Observable<String> in
                     if state == "initial" {
-                        return Observable.just("_a").delay(0.01, scheduler: MainScheduler.instance)
+                        return Observable.just("_a").delay(.milliseconds(10), scheduler: MainScheduler.instance)
                     }
                     else if state == "initial_a" {
                         return Observable.just("_b")
@@ -329,7 +329,7 @@ extension RxFeedbackObservableTests {
             try?
                 system
                 .take(4)
-                .timeout(0.5, other: Observable.empty(), scheduler: MainScheduler.instance)
+                .timeout(.milliseconds(500), other: Observable.empty(), scheduler: MainScheduler.instance)
                 .toBlocking(timeout: 3.0)
                 .toArray()) ?? []
 
@@ -350,8 +350,8 @@ extension RxFeedbackObservableTests {
         let testScheduler = TestScheduler(initialClock: 0)
         let timer = testScheduler.createColdObservable(
             [
-                next(50, 1),
-                completed(50),
+                Recorded.next(50, 1),
+                Recorded.completed(50),
         ])
 
         var subscriptionState: [Int] = []
@@ -384,10 +384,10 @@ extension RxFeedbackObservableTests {
         )
         testScheduler.start()
         let correct = [
-            next(1, 0),
-            next(53, 1),
-            next(104, 2),
-            next(155, 3),
+            Recorded.next(1, 0),
+            Recorded.next(53, 1),
+            Recorded.next(104, 2),
+            Recorded.next(155, 3),
         ]
         XCTAssertEqual(observer.events, correct)
         XCTAssertEqual(subscriptionState, [0, 1, 2, 3])

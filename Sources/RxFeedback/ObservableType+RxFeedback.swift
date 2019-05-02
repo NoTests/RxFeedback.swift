@@ -9,7 +9,7 @@
 import RxCocoa
 import RxSwift
 
-extension ObservableType where E == Any {
+extension ObservableType where Element == Any {
     /// Feedback loop
     public typealias Feedback<State, Event> = (ObservableSchedulerContext<State>) -> Observable<Event>
     public typealias FeedbackLoop = Feedback
@@ -81,7 +81,7 @@ extension ObservableType where E == Any {
     }
 }
 
-extension SharedSequenceConvertibleType where E == Any, SharingStrategy == DriverSharingStrategy {
+extension SharedSequenceConvertibleType where Element == Any, SharingStrategy == DriverSharingStrategy {
     /// Feedback loop
     public typealias Feedback<State, Event> = (Driver<State>) -> Signal<Event>
 
@@ -166,7 +166,7 @@ public struct ObservableSchedulerContext<Element>: ObservableType {
         self.scheduler = scheduler
     }
 
-    public func subscribe<O: ObserverType>(_ observer: O) -> Disposable where O.E == E {
+    public func subscribe<Observer: ObserverType>(_ observer: Observer) -> Disposable where Observer.Element == Element {
         return source.subscribe(observer)
     }
 }
