@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "RxFeedback"
-  s.version      = "2.0.0"
+  s.version      = "3.0.0"
   s.summary      = "Simplest architecture for RxSwift. State + feedback loops."
   s.description  = <<-DESC
     * Straightforward
@@ -36,6 +36,6 @@ Pod::Spec.new do |s|
   s.source_files  = "Sources/**/*.swift"
   s.frameworks  = "Foundation"
 
-  s.dependency 'RxSwift', '~> 4.4'
-  s.dependency 'RxCocoa', '~> 4.4'
+  s.dependency 'RxSwift', '~> 5.0'
+  s.dependency 'RxCocoa', '~> 5.0'
 end

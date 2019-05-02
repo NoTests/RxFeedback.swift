@@ -1,5 +1,9 @@
 ## Master
 
+## [3.0.0](https://github.com/kzaher/RxFeedback/releases/tag/3.0.0)
+
+* Updates to RxSwift 5.0.
+
 ## [2.0.0](https://github.com/kzaher/RxFeedback/releases/tag/2.0.0)
 
 * Renames `Mutation` to `Event`.
