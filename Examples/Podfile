@@ -1,0 +1,3 @@
+platform :ios, '10.0'
+target 'Example'
+pod 'RxFeedback', :path => '..'

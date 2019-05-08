@@ -63,7 +63,7 @@ class PlayCatchViewController: UIViewController {
                 // NoUI, machine feedback
                 react(request: { $0.machinePitching }, effects: { (_) -> Observable<Event> in
                     return Observable<Int>
-                        .timer(1.0, scheduler: MainScheduler.instance)
+                        .timer(.seconds(1), scheduler: MainScheduler.instance)
                         .map { _ in Event.throwToHuman }
                 })
         )

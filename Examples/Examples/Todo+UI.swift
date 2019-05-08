@@ -32,7 +32,7 @@ class TodoViewController: UIViewController {
                     single(state)
                     return Disposables.create()
                 }
-                .delaySubscription(TimeInterval.random(min: 0.5, max: 2.0), scheduler: MainScheduler.instance)
+                .delaySubscription(.milliseconds(Int.random(in: 50...2000)), scheduler: MainScheduler.instance)
         }
 
         let tasks = [
@@ -103,7 +103,7 @@ extension TodoViewController {
 }
 
 extension TodoViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    internal func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         let row: Row = try! tableView.rx.model(at: indexPath)
         return row.editingStyle
     }
@@ -131,7 +131,7 @@ extension Version where Value == Task {
 }
 
 extension Row {
-    var editingStyle: UITableViewCellEditingStyle {
+    var editingStyle: UITableViewCell.EditingStyle {
         switch self {
         case .new: return .insert
         case .task: return .delete

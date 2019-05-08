@@ -5,10 +5,10 @@ os:
 language: generic
 sudo: required
 dist: trusty
-osx_image: xcode10.2.1
+osx_image: xcode10.2
 env:
-  - BUILD="pushd Examples && ./dependencies.sh && set -o pipefail && (xcodebuild -project   Examples.xcodeproj   -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build) | xcpretty"
-  - BUILD="gem install cocoapods --pre --no-rdoc --no-ri --no-document --quiet && pod repo update && pod lib lint RxFeedback.podspec --verbose"
+  - BUILD="pushd Examples && pod repo update && pod install && set -o pipefail && (xcodebuild -workspace   Examples.xcworkspace   -scheme Example -destination 'platform=iOS Simulator,name=iPhone 7' build) | xcpretty"
+  - BUILD="pod repo update && pod lib lint RxFeedback.podspec --verbose"
   - BUILD="swift build"
   - BUILD="carthage update --platform ios && carthage build --no-skip-current --platform iOS && set -o pipefail && (xcodebuild -project RxFeedback.xcodeproj   -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test) | xcpretty"
   - BUILD="carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS"

@@ -35,9 +35,9 @@ struct Version<Value: Identifiable & Syncable>: Identifiable, Syncable, Hashable
         self._unique = Unique()
         self.value = value
     }
-    
-    var hashValue: Int {
-        return self._unique.hash
+
+    func hash(into: inout Hasher) {
+      into.combine(self._unique.hash)
     }
 
     var id: Identifier {

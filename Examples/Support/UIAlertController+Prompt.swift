@@ -10,11 +10,18 @@ import UIKit
 import RxSwift
 
 public protocol ActionConvertible: CustomStringConvertible {
-    var style: UIAlertActionStyle { get }
+  var style: UIAlertAction.Style { get }
 }
 
 extension UIAlertController {
-    public static func prompt<T: ActionConvertible>(message: String, title: String?, actions: [T], parent: UIViewController, type: UIAlertControllerStyle = .alert, configure: @escaping (UIAlertController) -> () = { _ in }) -> Observable<(UIAlertController, T)> {
+  public static func prompt<T: ActionConvertible>(
+    message: String,
+    title: String?,
+    actions: [T],
+    parent: UIViewController,
+    type: UIAlertController.Style = .alert,
+    configure: @escaping (UIAlertController) -> () = { _ in }
+  ) -> Observable<(UIAlertController, T)> {
         return Observable.create { observer in
             let promptController = UIAlertController(title: title, message: message, preferredStyle: type)
             for action in actions {
@@ -58,7 +65,7 @@ extension AlertAction : ActionConvertible {
         }
     }
 
-    public var style: UIAlertActionStyle {
+    public var style: UIAlertAction.Style {
         switch self {
         case .ok:
             return .`default`

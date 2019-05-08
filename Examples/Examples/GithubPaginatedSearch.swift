@@ -227,7 +227,7 @@ extension URLSession {
                     }
                     
                     return Observable<Int>
-                        .timer(Double(attempt + 1), scheduler: MainScheduler.instance).take(1)
+                        .timer(.milliseconds((attempt + 1) * 1000), scheduler: MainScheduler.instance).take(1)
                 }
         }
     }

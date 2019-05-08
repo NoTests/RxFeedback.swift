@@ -9,7 +9,7 @@
 import RxCocoa
 
 extension ControlEvent {
-    func asSignal() -> Signal<E> {
+    func asSignal() -> Signal<Element> {
         return self.asObservable().asSignal(onErrorSignalWith: .empty())
     }
 }
