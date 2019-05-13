@@ -144,7 +144,7 @@ $ gem install cocoapods
 To integrate RxFeedback into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-pod 'RxFeedback', '~> 1.0'
+pod 'RxFeedback', '~> 3.0'
 ```
 
 Then, run the following command:
