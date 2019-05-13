@@ -166,7 +166,7 @@ $ brew install carthage
 To integrate RxFeedback into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "NoTests/RxFeedback" ~> 1.0
+github "NoTests/RxFeedback" ~> 3.0
 ```
 
 Run `carthage update` to build the framework and drag the built `RxFeedback.framework` into your Xcode project. As `RxFeedback` depends on `RxSwift` and `RxCocoa` you need to drag the `RxSwift.framework` and `RxCocoa.framework` into your Xcode project as well.
