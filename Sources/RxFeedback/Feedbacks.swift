@@ -163,7 +163,7 @@ fileprivate class RequestLifetimeTracking<Request: Equatable, RequestID: Hashabl
                         latestRequest: latestRequestSubject
                     )
                     let requestsSubscription = self.effects(request, latestRequestSubject.asObservable())
-                        .observeOn(self.scheduler)
+                        .observe(on: self.scheduler)
                         .subscribe { event in
                             self.state.async { state in
                                 guard state.lifetimeByIdentifier[requestID]?.lifetimeIdentifier === lifetime else { return }
@@ -289,10 +289,10 @@ extension Observable {
     fileprivate func enqueue(_ scheduler: ImmediateSchedulerType) -> Observable<Element> {
         return self
             // observe on is here because results should be cancelable
-            .observeOn(scheduler.async)
+            .observe(on: scheduler.async)
             // subscribe on is here because side-effects also need to be cancelable
             // (smooths out any glitches caused by start-cancel immediatelly)
-            .subscribeOn(scheduler.async)
+            .subscribe(on: scheduler.async)
     }
 }
 
