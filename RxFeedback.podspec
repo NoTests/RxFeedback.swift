@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/NoTests/RxFeedback.swift"
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author             = { "Krunoslav Zaher" => "krunoslav.zaher@gmail.com" }
-  s.ios.deployment_target = "8.0"
+  s.ios.deployment_target = "9.0"
   s.osx.deployment_target = "10.10"
   s.watchos.deployment_target = "3.0"
   s.tvos.deployment_target = "9.0"
@@ -37,6 +37,6 @@ Pod::Spec.new do |s|
   s.frameworks  = "Foundation"
   s.swift_version = '5.0'
 
-  s.dependency 'RxSwift', '~> 5.0'
-  s.dependency 'RxCocoa', '~> 5.0'
+  s.dependency 'RxSwift', '~> 6.0'
+  s.dependency 'RxCocoa', '~> 6.0'
 end
