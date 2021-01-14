@@ -220,7 +220,7 @@ extension URLSession {
             .response(request: URLRequest(url: resource))
             .retry(3)
             .map(Repository.parse)
-            .retryWhen { errorTrigger in
+            .retry(when: { errorTrigger in
                 return errorTrigger.enumerated().flatMap { (attempt, error) -> Observable<Int> in
                     if attempt >= maxAttempts - 1 {
                         return Observable.error(error)
@@ -229,7 +229,7 @@ extension URLSession {
                     return Observable<Int>
                         .timer(.milliseconds((attempt + 1) * 1000), scheduler: MainScheduler.instance).take(1)
                 }
-        }
+            })
     }
 }
 
