@@ -17,14 +17,12 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "52D6D9851BEFF229002C0205"
-               BuildableName = "RxFeedbackTests.xctest"
-               BlueprintName = "RxFeedbackTests"
+               BuildableName = "RxFeedbackTests-iOS.xctest"
+               BlueprintName = "RxFeedbackTests-iOS"
                ReferencedContainer = "container:RxFeedback.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -36,8 +34,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

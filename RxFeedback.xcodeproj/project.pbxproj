@@ -3,11 +3,27 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 47;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		1E2F2DE02201DCFF00DEEE9C /* ReactWithLatestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2F2DDF2201DCFF00DEEE9C /* ReactWithLatestTests.swift */; };
+		4EAD6B0425DC3DDE00C228C6 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6AFF25DC3DDE00C228C6 /* RxRelay.xcframework */; };
+		4EAD6B0525DC3DDE00C228C6 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0025DC3DDE00C228C6 /* RxSwift.xcframework */; };
+		4EAD6B0625DC3DDE00C228C6 /* RxBlocking.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0125DC3DDE00C228C6 /* RxBlocking.xcframework */; };
+		4EAD6B0725DC3DDE00C228C6 /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0225DC3DDE00C228C6 /* RxCocoa.xcframework */; };
+		4EAD6B0825DC3DDE00C228C6 /* RxTest.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0325DC3DDE00C228C6 /* RxTest.xcframework */; };
+		4EAD6B0A25DC3DFD00C228C6 /* RxBlocking.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0125DC3DDE00C228C6 /* RxBlocking.xcframework */; };
+		4EAD6B0B25DC3DFD00C228C6 /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0225DC3DDE00C228C6 /* RxCocoa.xcframework */; };
+		4EAD6B0C25DC3DFD00C228C6 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6AFF25DC3DDE00C228C6 /* RxRelay.xcframework */; };
+		4EAD6B0D25DC3DFD00C228C6 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0025DC3DDE00C228C6 /* RxSwift.xcframework */; };
+		4EAD6B0E25DC3DFD00C228C6 /* RxTest.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0325DC3DDE00C228C6 /* RxTest.xcframework */; };
+		4EAD6B1425DC410500C228C6 /* RxCocoa.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0225DC3DDE00C228C6 /* RxCocoa.xcframework */; };
+		4EAD6B1525DC410500C228C6 /* RxCocoa.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0225DC3DDE00C228C6 /* RxCocoa.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4EAD6B1625DC410500C228C6 /* RxRelay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6AFF25DC3DDE00C228C6 /* RxRelay.xcframework */; };
+		4EAD6B1725DC410500C228C6 /* RxRelay.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6AFF25DC3DDE00C228C6 /* RxRelay.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4EAD6B1825DC410500C228C6 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0025DC3DDE00C228C6 /* RxSwift.xcframework */; };
+		4EAD6B1925DC410500C228C6 /* RxSwift.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4EAD6B0025DC3DDE00C228C6 /* RxSwift.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		52D6D9871BEFF229002C0205 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
 		C834A8691EB6795F00E6B15E /* ObservableType+RxFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834A8681EB6795F00E6B15E /* ObservableType+RxFeedback.swift */; };
 		C83596441FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */; };
@@ -21,6 +37,14 @@
 		C8996C7C1F40D82A004E5D83 /* String+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C7B1F40D82A004E5D83 /* String+Test.swift */; };
 		C89B96251EB6964200BDAB24 /* Feedbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89B96241EB6964200BDAB24 /* Feedbacks.swift */; };
 		C8DF7346218F389200945A7C /* AsyncSynchronized.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DF7345218F389200945A7C /* AsyncSynchronized.swift */; };
+		EFC27F63246D7C260093D8B3 /* ReactEquatableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */; };
+		EFC27F64246D7C260093D8B3 /* RxTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596471FB24CAF00DC7B8F /* RxTest.swift */; };
+		EFC27F65246D7C260093D8B3 /* RxFeedbackDriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C691F40A7A0004E5D83 /* RxFeedbackDriverTests.swift */; };
+		EFC27F66246D7C260093D8B3 /* RxFeedbackObservableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C6C1F40A7C1004E5D83 /* RxFeedbackObservableTests.swift */; };
+		EFC27F67246D7C260093D8B3 /* ReactWithLatestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2F2DDF2201DCFF00DEEE9C /* ReactWithLatestTests.swift */; };
+		EFC27F68246D7C260093D8B3 /* String+Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8996C7B1F40D82A004E5D83 /* String+Test.swift */; };
+		EFC27F69246D7C260093D8B3 /* ReactHashableLoopsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */; };
+		EFC27F6B246D7C260093D8B3 /* RxFeedback.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* RxFeedback.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,8 +57,29 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4EAD6B1A25DC410500C228C6 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4EAD6B1925DC410500C228C6 /* RxSwift.xcframework in Embed Frameworks */,
+				4EAD6B1525DC410500C228C6 /* RxCocoa.xcframework in Embed Frameworks */,
+				4EAD6B1725DC410500C228C6 /* RxRelay.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		1E2F2DDF2201DCFF00DEEE9C /* ReactWithLatestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactWithLatestTests.swift; sourceTree = "<group>"; };
+		4EAD6AFF25DC3DDE00C228C6 /* RxRelay.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxRelay.xcframework; path = Carthage/Build/RxRelay.xcframework; sourceTree = "<group>"; };
+		4EAD6B0025DC3DDE00C228C6 /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
+		4EAD6B0125DC3DDE00C228C6 /* RxBlocking.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxBlocking.xcframework; path = Carthage/Build/RxBlocking.xcframework; sourceTree = "<group>"; };
+		4EAD6B0225DC3DDE00C228C6 /* RxCocoa.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxCocoa.xcframework; path = Carthage/Build/RxCocoa.xcframework; sourceTree = "<group>"; };
+		4EAD6B0325DC3DDE00C228C6 /* RxTest.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxTest.xcframework; path = Carthage/Build/RxTest.xcframework; sourceTree = "<group>"; };
 		52D6D97C1BEFF229002C0205 /* RxFeedback.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxFeedback.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52D6D9861BEFF229002C0205 /* RxFeedbackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RxFeedbackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8047ABB1F41099F0089721B /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
@@ -68,8 +113,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C83B7C981EB7BA14003055E0 /* RxSwift.framework in Frameworks */,
-				C83B7C941EB7BA14003055E0 /* RxCocoa.framework in Frameworks */,
+				4EAD6B1825DC410500C228C6 /* RxSwift.xcframework in Frameworks */,
+				4EAD6B1425DC410500C228C6 /* RxCocoa.xcframework in Frameworks */,
+				4EAD6B1625DC410500C228C6 /* RxRelay.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,7 +123,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EAD6B0425DC3DDE00C228C6 /* RxRelay.xcframework in Frameworks */,
+				4EAD6B0525DC3DDE00C228C6 /* RxSwift.xcframework in Frameworks */,
+				4EAD6B0625DC3DDE00C228C6 /* RxBlocking.xcframework in Frameworks */,
+				4EAD6B0725DC3DDE00C228C6 /* RxCocoa.xcframework in Frameworks */,
+				4EAD6B0825DC3DDE00C228C6 /* RxTest.xcframework in Frameworks */,
 				52D6D9871BEFF229002C0205 /* RxFeedback.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EFC27F6A246D7C260093D8B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EAD6B0A25DC3DFD00C228C6 /* RxBlocking.xcframework in Frameworks */,
+				4EAD6B0B25DC3DFD00C228C6 /* RxCocoa.xcframework in Frameworks */,
+				4EAD6B0C25DC3DFD00C228C6 /* RxRelay.xcframework in Frameworks */,
+				4EAD6B0D25DC3DFD00C228C6 /* RxSwift.xcframework in Frameworks */,
+				4EAD6B0E25DC3DFD00C228C6 /* RxTest.xcframework in Frameworks */,
+				EFC27F6B246D7C260093D8B3 /* RxFeedback.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,6 +263,18 @@
 			path = RxFeedbackTests;
 			sourceTree = "<group>";
 		};
+		EFC27F53246D791E0093D8B3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4EAD6B0125DC3DDE00C228C6 /* RxBlocking.xcframework */,
+				4EAD6B0225DC3DDE00C228C6 /* RxCocoa.xcframework */,
+				4EAD6AFF25DC3DDE00C228C6 /* RxRelay.xcframework */,
+				4EAD6B0025DC3DDE00C228C6 /* RxSwift.xcframework */,
+				4EAD6B0325DC3DDE00C228C6 /* RxTest.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -220,6 +296,7 @@
 				52D6D9781BEFF229002C0205 /* Frameworks */,
 				52D6D9791BEFF229002C0205 /* Headers */,
 				52D6D97A1BEFF229002C0205 /* Resources */,
+				4EAD6B1A25DC410500C228C6 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -243,9 +320,27 @@
 			dependencies = (
 				C8996C711F40AA49004E5D83 /* PBXTargetDependency */,
 			);
-			name = RxFeedbackTests;
+			name = "RxFeedbackTests-iOS";
 			productName = RxFeedbackTests;
-			productReference = 52D6D9861BEFF229002C0205 /* RxFeedbackTests.xctest */;
+			productReference = 52D6D9861BEFF229002C0205 /* RxFeedbackTests-iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EFC27F5F246D7C260093D8B3 /* RxFeedbackTests-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFC27F73246D7C260093D8B3 /* Build configuration list for PBXNativeTarget "RxFeedbackTests-macOS" */;
+			buildPhases = (
+				EFC27F62246D7C260093D8B3 /* Sources */,
+				EFC27F6A246D7C260093D8B3 /* Frameworks */,
+				EFC27F6C246D7C260093D8B3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EFC27F60246D7C260093D8B3 /* PBXTargetDependency */,
+			);
+			name = "RxFeedbackTests-macOS";
+			productName = RxFeedbackTests;
+			productReference = EFC27F76246D7C260093D8B3 /* RxFeedbackTests-macOS.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -376,33 +471,9 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"FRAMEWORK_SEARCH_PATHS[sdk=appletvos*]" = (
+				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/tvOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=appletvsimulator*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/tvOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=watchos*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/watchOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=watchsimulator*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/watchOS",
+					"$(SRCROOT)/Carthage/Build",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -419,13 +490,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				"LD_RUNPATH_SEARCH_PATHS[sdk=appletvos*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/tvOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=appletvsimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/tvOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=iphoneos*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/iOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=iphonesimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/iOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/Mac";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=watchos*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/watchOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=watchsimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/watchOS";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/Frameworks",
+					"@executable_path/Frameworks",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
@@ -471,33 +541,9 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"FRAMEWORK_SEARCH_PATHS[sdk=appletvos*]" = (
+				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/tvOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=appletvsimulator*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/tvOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=watchos*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/watchOS",
-				);
-				"FRAMEWORK_SEARCH_PATHS[sdk=watchsimulator*]" = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/watchOS",
+					"$(SRCROOT)/Carthage/Build",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -509,16 +555,16 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				"LD_RUNPATH_SEARCH_PATHS[sdk=appletvos*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/tvOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=appletvsimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/tvOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=iphoneos*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/iOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=iphonesimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/iOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/Mac";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=watchos*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/watchOS";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=watchsimulator*]" = "$(inherited) $(PROJECT_DIR)/Carthage/Build/watchOS";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@loader_path/Frameworks",
+					"@executable_path/Frameworks",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos appletvos appletvsimulator watchos watchsimulator macosx";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3,4";
 				VALIDATE_PRODUCT = YES;
@@ -579,7 +625,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS";
 				PRODUCT_NAME = RxFeedback;
 				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -601,11 +648,54 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		EFC27F74246D7C260093D8B3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-macOS-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EFC27F75246D7C260093D8B3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"$(inherited)",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-macOS-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
