@@ -28,7 +28,7 @@ class TodoViewController: UIViewController {
         // this dependency would be ideally injected in some way
         let synchronize: (Task) -> Single<SyncState> = { task in
             return Single<SyncState>.create { single in
-                    let state: SingleEvent<SyncState> = arc4random_uniform(3) != 0 ? .success(.success) : .error(SystemError(""))
+                    let state: SingleEvent<SyncState> = arc4random_uniform(3) != 0 ? .success(.success) : .failure(SystemError(""))
                     single(state)
                     return Disposables.create()
                 }

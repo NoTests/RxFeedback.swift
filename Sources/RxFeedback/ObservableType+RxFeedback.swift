@@ -44,7 +44,7 @@ extension ObservableType where Element == Any {
             )
             // This is protection from accidental ignoring of scheduler so
             // reentracy errors can be avoided
-            .observeOn(CurrentThreadScheduler.instance)
+            .observe(on: CurrentThreadScheduler.instance)
 
             return events.scan(initialState, accumulator: reduce)
                 .do(
@@ -54,9 +54,9 @@ extension ObservableType where Element == Any {
                         replaySubject.onNext(initialState)
                     }
                 )
-                .subscribeOn(scheduler)
+                .subscribe(on: scheduler)
                 .startWith(initialState)
-                .observeOn(scheduler)
+                .observe(on: scheduler)
         }
     }
 
