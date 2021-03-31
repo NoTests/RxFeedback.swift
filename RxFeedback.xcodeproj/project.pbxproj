@@ -93,14 +93,6 @@
 		C83596431FB22EE900DC7B8F /* ReactEquatableLoopsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactEquatableLoopsTests.swift; sourceTree = "<group>"; };
 		C83596451FB2312D00DC7B8F /* ReactHashableLoopsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactHashableLoopsTests.swift; sourceTree = "<group>"; };
 		C83596471FB24CAF00DC7B8F /* RxTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxTest.swift; sourceTree = "<group>"; };
-		C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
-		C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
-		C83B7C661EB7BA14003055E0 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
-		C83B7C6A1EB7BA14003055E0 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
-		C83B7C751EB7BA14003055E0 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
-		C83B7C791EB7BA14003055E0 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
-		C83B7C841EB7BA14003055E0 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = "<group>"; };
-		C83B7CCC1EB7BB41003055E0 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = "<group>"; };
 		C84645941EB794BC0008AD87 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		C84645951EB794BC0008AD87 /* RxFeedback.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = RxFeedback.podspec; sourceTree = "<group>"; };
 		C88BFC131F97881A00157318 /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
@@ -111,13 +103,7 @@
 		C8996C7B1F40D82A004E5D83 /* String+Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Test.swift"; sourceTree = "<group>"; };
 		C89B96241EB6964200BDAB24 /* Feedbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedbacks.swift; sourceTree = "<group>"; };
 		C8DF7345218F389200945A7C /* AsyncSynchronized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncSynchronized.swift; sourceTree = "<group>"; };
-		EFC27F58246D79AE0093D8B3 /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/iOS/RxBlocking.framework; sourceTree = "<group>"; };
-		EFC27F5A246D79C00093D8B3 /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/iOS/RxRelay.framework; sourceTree = "<group>"; };
-		EFC27F5C246D79CF0093D8B3 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/iOS/RxTest.framework; sourceTree = "<group>"; };
 		EFC27F76246D7C260093D8B3 /* RxFeedbackTests-macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RxFeedbackTests-macOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EFC27F7A246D7C4B0093D8B3 /* RxRelay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxRelay.framework; path = Carthage/Build/Mac/RxRelay.framework; sourceTree = "<group>"; };
-		EFC27F7C246D7C510093D8B3 /* RxTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxTest.framework; path = Carthage/Build/Mac/RxTest.framework; sourceTree = "<group>"; };
-		EFC27F7E246D7C560093D8B3 /* RxBlocking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxBlocking.framework; path = Carthage/Build/Mac/RxBlocking.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,16 +149,9 @@
 		52D6D9721BEFF229002C0205 = {
 			isa = PBXGroup;
 			children = (
-				EFC27F7E246D7C560093D8B3 /* RxBlocking.framework */,
-				EFC27F7C246D7C510093D8B3 /* RxTest.framework */,
-				EFC27F7A246D7C4B0093D8B3 /* RxRelay.framework */,
-				EFC27F5C246D79CF0093D8B3 /* RxTest.framework */,
-				EFC27F5A246D79C00093D8B3 /* RxRelay.framework */,
-				EFC27F58246D79AE0093D8B3 /* RxBlocking.framework */,
 				C8047ACF1F4109A30089721B /* Packaging */,
 				C834A8671EB6794F00E6B15E /* RxFeedback */,
 				52D6D97D1BEFF229002C0205 /* Products */,
-				C83B7C4F1EB7BA14003055E0 /* Build */,
 				C8996C661F40A7A0004E5D83 /* Tests */,
 				EFC27F53246D791E0093D8B3 /* Frameworks */,
 			);
@@ -210,54 +189,6 @@
 			);
 			name = RxFeedback;
 			path = Sources/RxFeedback;
-			sourceTree = "<group>";
-		};
-		C83B7C4F1EB7BA14003055E0 /* Build */ = {
-			isa = PBXGroup;
-			children = (
-				C83B7C501EB7BA14003055E0 /* iOS */,
-				C83B7C631EB7BA14003055E0 /* Mac */,
-				C83B7C6E1EB7BA14003055E0 /* tvOS */,
-				C83B7C7D1EB7BA14003055E0 /* watchOS */,
-			);
-			name = Build;
-			path = Carthage/Build;
-			sourceTree = "<group>";
-		};
-		C83B7C501EB7BA14003055E0 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				C83B7C5B1EB7BA14003055E0 /* RxCocoa.framework */,
-				C83B7C5F1EB7BA14003055E0 /* RxSwift.framework */,
-			);
-			path = iOS;
-			sourceTree = "<group>";
-		};
-		C83B7C631EB7BA14003055E0 /* Mac */ = {
-			isa = PBXGroup;
-			children = (
-				C83B7C661EB7BA14003055E0 /* RxCocoa.framework */,
-				C83B7C6A1EB7BA14003055E0 /* RxSwift.framework */,
-			);
-			path = Mac;
-			sourceTree = "<group>";
-		};
-		C83B7C6E1EB7BA14003055E0 /* tvOS */ = {
-			isa = PBXGroup;
-			children = (
-				C83B7C751EB7BA14003055E0 /* RxCocoa.framework */,
-				C83B7C791EB7BA14003055E0 /* RxSwift.framework */,
-			);
-			path = tvOS;
-			sourceTree = "<group>";
-		};
-		C83B7C7D1EB7BA14003055E0 /* watchOS */ = {
-			isa = PBXGroup;
-			children = (
-				C83B7CCC1EB7BB41003055E0 /* RxSwift.framework */,
-				C83B7C841EB7BA14003055E0 /* RxCocoa.framework */,
-			);
-			path = watchOS;
 			sourceTree = "<group>";
 		};
 		C8996C661F40A7A0004E5D83 /* Tests */ = {
@@ -334,7 +265,6 @@
 				52D6D9821BEFF229002C0205 /* Sources */,
 				52D6D9831BEFF229002C0205 /* Frameworks */,
 				52D6D9841BEFF229002C0205 /* Resources */,
-				EFC27F5E246D7B300093D8B3 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -371,7 +301,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0820;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Krunoslav Zaher";
 				TargetAttributes = {
 					52D6D97B1BEFF229002C0205 = {
@@ -508,6 +438,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -536,7 +467,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@loader_path/Frameworks",
 					"@executable_path/Frameworks",
@@ -577,6 +508,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -600,7 +532,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@loader_path/Frameworks",
 					"@executable_path/Frameworks",
@@ -661,10 +593,6 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -677,10 +605,6 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-iOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -694,10 +618,6 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
 					"@executable_path/../Frameworks",
@@ -721,41 +641,6 @@
 					"@loader_path/../Frameworks",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-macOS-Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-			};
-			name = Release;
-		};
-		EFC27F74246D7C260093D8B3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks @loader_path/../Frameworks $(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-macOS-Tests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-			};
-			name = Debug;
-		};
-		EFC27F75246D7C260093D8B3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = Tests/RxFeedbackTests/RxFeedbackTests.plist;
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks @loader_path/../Frameworks $(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.RxFeedback.RxFeedback-macOS-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
