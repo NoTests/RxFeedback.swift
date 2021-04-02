@@ -5,15 +5,13 @@ os:
 language: generic
 sudo: required
 dist: trusty
-osx_image: xcode12.2
+osx_image: xcode12.4
 env:
   - BUILD="pushd Examples && pod repo update && pod install && set -o pipefail && (xcodebuild -workspace Examples.xcworkspace -scheme Example -destination 'platform=iOS Simulator,name=iPhone 12' build) | xcpretty"
   - BUILD="pod repo update && pod lib lint RxFeedback.podspec --verbose"
   - BUILD="swift build"
-
-  # Carthage is still broken for Xcode 12, until support for XCFrameworks is added
-  # - BUILD="carthage update --platform ios && carthage build --no-skip-current --platform iOS && set -o pipefail && (xcodebuild -project RxFeedback.xcodeproj   -scheme RxFeedbackTests -destination 'platform=iOS Simulator,name=iPhone 7' test) | xcpretty"
-  # - BUILD="carthage update --platform tvOS && carthage build --no-skip-current --platform tvOS"
+  - BUILD="carthage update --platform ios --use-xcframeworks && carthage build --no-skip-current --platform iOS --use-xcframeworks && set -o pipefail && (xcodebuild -project RxFeedback.xcodeproj -scheme RxFeedback -destination 'platform=iOS Simulator,name=iPhone 12' test) | xcpretty"
+  - BUILD="carthage update --platform tvOS --use-xcframeworks && carthage build --no-skip-current --platform tvOS --use-xcframeworks"
 
 script: eval "${BUILD}"
 
