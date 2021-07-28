@@ -113,6 +113,33 @@ public func react<State, Request, Event>(
     }
 }
 
+/**
+State: State type of the system.
+Predicate: Query of state used to control the feedback loop.
+
+When `predicate` returns `true`, the `effects` lambda is performed.
+
+When `predicate` returns `false`, feedback loops doesn't perform any effects.
+
+- parameter predicate: The predicate to perform some effects.
+- parameter effects: The request effects.
+- returns: The feedback loop performing the effects.
+*/
+public func react<State, Event>(
+    predicate: @escaping (State) -> Bool,
+    effects: @escaping () -> Signal<Event>
+) -> (Driver<State>) -> Signal<Event> {
+    return { state in
+        let observableSchedulerContext = ObservableSchedulerContext<State>(
+            source: state.asObservable(),
+            scheduler: Signal<Event>.SharingStrategy.scheduler.async
+        )
+
+        return react(request: predicate, effects: { $0 ? effects().asObservable() : Observable.empty() })(observableSchedulerContext)
+            .asSignal(onErrorSignalWith: .empty())
+    }
+}
+
 /// This is defined outside of `react` because Swift compiler generates an `error` :(.
 fileprivate class RequestLifetimeTracking<Request: Equatable, RequestID: Hashable, Event> {
     class LifetimeToken {}
