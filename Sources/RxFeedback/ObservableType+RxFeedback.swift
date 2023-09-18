@@ -9,6 +9,8 @@
 import RxCocoa
 import RxSwift
 
+public typealias Observable = RxSwift.Observable
+
 extension ObservableType where Element == Any {
     /// Feedback loop
     public typealias Feedback<State, Event> = (ObservableSchedulerContext<State>) -> Observable<Event>
