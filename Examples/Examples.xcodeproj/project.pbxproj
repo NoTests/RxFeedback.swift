@@ -45,6 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3C4A36B82ABC362400044E24 /* Observable+Alias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observable+Alias.swift"; sourceTree = "<group>"; };
 		4DF82BBD71A140F1F2879088 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		C80987431EC4882E00EE2C23 /* Todo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		C80987581EC4916000EE2C23 /* Todo+Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Todo+Feedback.swift"; sourceTree = "<group>"; };
@@ -118,7 +119,6 @@
 				4DF82BBD71A140F1F2879088 /* Pods-Example.debug.xcconfig */,
 				D3FE2B9344D2885EA7B2671C /* Pods-Example.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -151,10 +151,11 @@
 			isa = PBXGroup;
 			children = (
 				C84893692190FAE900561487 /* AsyncSynchronized.swift */,
-				C8576BE5214EE1F0000A62AE /* RxFeedback.plist */,
-				C8576BE6214EE1F0000A62AE /* Feedbacks.swift */,
 				C8576BE7214EE1F0000A62AE /* Deprecations.swift */,
+				C8576BE6214EE1F0000A62AE /* Feedbacks.swift */,
+				3C4A36B82ABC362400044E24 /* Observable+Alias.swift */,
 				C8576BE8214EE1F0000A62AE /* ObservableType+RxFeedback.swift */,
+				C8576BE5214EE1F0000A62AE /* RxFeedback.plist */,
 			);
 			path = RxFeedback;
 			sourceTree = "<group>";
